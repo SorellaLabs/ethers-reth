@@ -1,0 +1,31 @@
+[package]
+name = "reth-middleware"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+ethers = { git = "https://github.com/gakonst/ethers-rs", default-features = false }
+tokio = "1.28.0"
+
+reth-rpc = { path = "../reth/crates/rpc/rpc" }
+reth-rpc-api = { path = "../reth/crates/rpc/rpc-api" }
+reth-rpc-types = { path = "../reth/crates/rpc/rpc-types" }
+reth-provider = { path = "../reth/crates/storage/provider" }
+reth-transaction-pool = { path = "../reth/crates/transaction-pool", features = ["test-utils"] }
+reth-network-api = { path = "../reth/crates/net/network-api", features = ["test-utils"] }
+reth-primitives = { path = "../reth/crates/primitives" }
+reth-db = { path = "../reth/crates/storage/db" }
+reth-blockchain-tree = { path = "../reth/crates/blockchain-tree" }
+reth-beacon-consensus = { path = "../reth/crates/consensus/beacon"}
+reth-revm = { path = "../reth/crates/revm"}
+
+jsonrpsee = { version = "0.16", default-features = false }
+
+async-trait = "0.1.68"
+thiserror = "1.0.40"
+
+
+[patch.crates-io]
+# patched for quantity U256 responses <https://github.com/recmo/uint/issues/224>
+ruint = { git = "https://github.com/paradigmxyz/uint" }
