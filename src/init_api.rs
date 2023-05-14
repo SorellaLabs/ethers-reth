@@ -40,7 +40,7 @@ pub type RethEthApi = EthApi<RethClient, RethTxPool, NoopNetwork>;
 
 
 
-pub type testClient = BlockchainProvider<DB, Tree = ShareableBlockchainTree>
+pub type testClient = BlockchainProvider<DB, Tree = ShareableBlockchainTree>;
 
 
 
@@ -85,7 +85,10 @@ pub fn new_reth_api<P: AsRef<std::path::Path>>(db_path: P) -> RethEthApi {
 }
 
 
+<<<<<<< HEAD
 //pub fn new(blockchain_db: B, tx_pool: P, eth_cache: EthStateCache, gas_oracle: GasPriceOracle<B>) -> RethEthApi {
 
 //}
 
+=======
+>>>>>>> 2a32ea003257a9aa802cd81c2bb84345e340a673
