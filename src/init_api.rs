@@ -70,4 +70,3 @@ pub fn new_reth_api<P: AsRef<std::path::Path>>(db_path: P) -> RethEthApi {
 }
 
 
-Provider::<IPC>::new("/tmp/geth.ipc", None, None).unwrap();
