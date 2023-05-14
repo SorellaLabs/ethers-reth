@@ -9,16 +9,20 @@ use reth_primitives::MAINNET;
 use reth_provider::{providers::BlockchainProvider, ShareableDatabase};
 use reth_revm::Factory;
 use reth_rpc::{
-    eth::cache::{EthStateCache, EthStateCacheConfig},
+    eth::{cache::{EthStateCache, EthStateCacheConfig}, gas_oracle::{GasPriceOracle, GasPriceOracleConfig}},
     EthApi,
 };
-use reth_transaction_pool::{CostOrdering, EthTransactionValidator, Pool, PooledTransaction};
+use reth_transaction_pool::{EthTransactionValidator, Pool, PooledTransaction, CostOrdering};
 use std::sync::Arc;
+
+
 
 pub type RethClient = BlockchainProvider<
     Arc<Env<NoWriteMap>>,
     ShareableBlockchainTree<Arc<Env<NoWriteMap>>, Arc<BeaconConsensus>, Factory>,
 >;
+
+
 pub type RethTxPool = Pool<
     EthTransactionValidator<
         BlockchainProvider<
@@ -29,8 +33,16 @@ pub type RethTxPool = Pool<
     >,
     CostOrdering<PooledTransaction>,
 >;
-pub type RethNetwork = NoopNetwork;
-pub type RethEthApi = EthApi<RethClient, RethTxPool, RethNetwork>;
+
+
+pub type RethEthApi = EthApi<RethClient, RethTxPool, NoopNetwork>;
+
+
+
+
+pub type testClient = BlockchainProvider<DB, Tree = ShareableBlockchainTree>
+
+
 
 pub fn new_reth_api<P: AsRef<std::path::Path>>(db_path: P) -> RethEthApi {
     let chain = Arc::new(MAINNET.clone());
@@ -57,17 +69,23 @@ pub fn new_reth_api<P: AsRef<std::path::Path>>(db_path: P) -> RethEthApi {
     );
 
     let shareable_db = ShareableDatabase::new(Arc::clone(&db), Arc::clone(&chain));
-    let blockchain_db = BlockchainProvider::new(shareable_db, blockchain_tree);
+    let blockchain_db = BlockchainProvider::new(shareable_db, blockchain_tree).unwrap();
 
-    let transaction_pool = reth_transaction_pool::Pool::eth_pool(
+
+    let tx_pool = reth_transaction_pool::Pool::eth_pool(
         EthTransactionValidator::new(blockchain_db.clone(), chain),
         Default::default(),
     );
     let state_cache = EthStateCache::spawn(blockchain_db.clone(), EthStateCacheConfig::default());
 
-    let api = EthApi::new(blockchain_db, transaction_pool, NoopNetwork, state_cache);
+    let gas_price_oracle = GasPriceOracle::new(blockchain_db.clone(), GasPriceOracleConfig::default(), state_cache.clone());
+
+    let api = EthApi::new(blockchain_db, tx_pool, NoopNetwork, state_cache, gas_price_oracle);
     api
 }
 
 
-Provider::<IPC>::new("/tmp/geth.ipc", None, None).unwrap();
+//pub fn new(blockchain_db: B, tx_pool: P, eth_cache: EthStateCache, gas_oracle: GasPriceOracle<B>) -> RethEthApi {
+
+//}
+

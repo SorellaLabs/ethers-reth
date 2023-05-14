@@ -5,17 +5,15 @@ use ethers::{
     types::{transaction::eip2718::TypedTransaction, BlockId, Bytes},
 };
 use reth_network_api::NetworkInfo;
-use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory};
+use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockProviderIdExt, BlockIdProvider, HeaderProvider};
+use reth_rpc::{eth::{EthApi, EthTransactions, *}, EthApiSpec};
 use reth_rpc_api::EthApiServer;
 use reth_transaction_pool::TransactionPool;
 
 #[async_trait]
-impl<M, Client, Pool, Network> Middleware for RethMiddleware<M, Client, Pool, Network>
+impl<M> Middleware for RethMiddleware<M>
 where
     M: Middleware,
-    Client: BlockProvider + EvmEnvProvider + StateProviderFactory + 'static,
-    Pool: TransactionPool + Clone + 'static,
-    Network: NetworkInfo + 'static,
 {
     type Error = RethMiddlewareError<M>;
     type Provider = M::Provider;
@@ -35,8 +33,9 @@ where
         Ok(self
             .reth_api
             .call(call_request, block_id, None)
-            .await?
+            .await.unwrap()
             .0
             .into())
     }
 }
+
