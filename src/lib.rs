@@ -1,8 +1,8 @@
-pub mod init_api;
+pub mod reth_api;
 pub mod middleware;
 mod utils;
 use ethers::providers::{Middleware, MiddlewareError};
-use init_api::RethEthApi;
+use reth_api::nodeEthApi;
 use jsonrpsee::types::*;
 use thiserror::Error;
 
@@ -11,7 +11,7 @@ use thiserror::Error;
 #[derive(Clone)]
 pub struct RethMiddleware<M> {
     inner: M,
-    reth_api: RethEthApi,
+    reth_api: nodeEthApi,
 }
 
 impl<M: std::fmt::Debug> std::fmt::Debug
@@ -52,11 +52,11 @@ impl<M> RethMiddleware<M>
 where
     M: Middleware,
 {
-    pub fn new(inner: M, reth_api: RethEthApi) -> Self {
+    pub fn new(inner: M, reth_api: nodeEthApi) -> Self {
         Self { inner, reth_api }
     }
 
-    pub fn reth_api(&self) -> &RethEthApi {
+    pub fn reth_api(&self) -> &nodeEthApi {
         &self.reth_api
     }
 }
