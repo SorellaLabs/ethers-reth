@@ -68,3 +68,6 @@ pub fn new_reth_api<P: AsRef<std::path::Path>>(db_path: P) -> RethEthApi {
     let api = EthApi::new(blockchain_db, transaction_pool, NoopNetwork, state_cache);
     api
 }
+
+
+Provider::<IPC>::new("/tmp/geth.ipc", None, None).unwrap();
