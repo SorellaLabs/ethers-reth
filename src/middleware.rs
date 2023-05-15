@@ -27,12 +27,12 @@ use ethers::types::EIP1186ProofResponse as EthersEIP1186ProofResponse;
 // Reth Types
 use reth_network_api::NetworkInfo;
 use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockProviderIdExt, BlockIdProvider, HeaderProvider};
-use reth_rpc::{eth::EthApi, EthApiSpec};
+use reth_rpc::{eth::EthApi};
 use reth_rpc_api::EthApiServer;
 use reth_rpc_types::Filter;
 use reth_primitives::Address;
 use reth_transaction_pool::TransactionPool;
-use reth_primitives::{BlockId, serde_helper::JsonStorageKey, H256};
+use reth_primitives::{BlockId, serde_helper::JsonStorageKey, H256, U256};
 
 
 // Std Lib
@@ -111,42 +111,42 @@ where
         Ok(self.reth_api.get_logs(reth_filter).await?)
     }   
 
-
+    
     async fn get_storage_at<T: Into<NameOrAddress> + Send + Sync>(
         &self,
         from: T,
         location: EthersH256,
         block: Option<EthersBlockId>,
     ) -> Result<EthersH256, Self::Error> {
-        // convert `from` to `Address` and `block` to `Option<BlockId>`
+        // convert `from` to `Address`
         let from: EthersAddress = match from.into() {
             NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
             NameOrAddress::Address(addr) => addr.into(),
         };
-    
-        // convert `location` to `JsonStorageKey`
-        let index: JsonStorageKey = EthersU256::from_big_endian(location.as_bytes()).into();
-    
+
+        let index: JsonStorageKey = convert_location_to_json_key(location);
+        
         // convert `block` to `Option<BlockId>`
         let block: Option<BlockId> = block.map(ethers_block_id_to_reth_block_id);
     
         // call `storage_at`
-        match self.reth_api.storage_at(from, index, block).await {
+        match self.reth_api.storage_at(from.into(), index, block).await {
             Ok(value) => Ok(EthersH256::from_slice(value.as_bytes())),
             Err(e) => Err(RethMiddlewareError::RethEthApiError(e.into())),
         }
     }
-
-
+    
+    
+    
     async fn get_transaction<T: Send + Sync + Into<EthersTxHash>>(
         &self,
         transaction_hash: T,
     ) -> Result<Option<EthersTransaction>, ProviderError> {
-        //let hash = ethers::types::H256::from_slice(transaction_hash.into().as_bytes());
-        match self.reth_api.transaction_by_hash(transaction_hash).await {
+        let hash = ethers::types::H256::from_slice(transaction_hash.into().as_bytes());
+        match self.reth_api.transaction_by_hash(hash.into()).await {
             Ok(Some(tx)) => Ok(Some(reth_rpc_transaction_to_ethers(tx))),
             Ok(None) => Ok(None),
-            Err(e) => Err(RethMiddlewareError::RethEthApiError(e.into())),
+            Err(e) => Err(e),  // convert RethMiddlewareError into ProviderError
         }
     }
 
@@ -233,17 +233,18 @@ where
             NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
             NameOrAddress::Address(addr) => addr.into(),
         };
+
         let locations = locations
             .into_iter()
-            .map(|location| JsonStorageKey::from(location.as_bytes()))
+            .map(|location| JsonStorageKey::from(convert_location_to_json_key(location)))
             .collect();
 
-        let block_id = Some(BlockId::Number(block.into()));
+        let block_id = Some(ethers_block_id_to_reth_block_id(block.unwrap()));
         let proof = self
             .reth_api
             .get_proof(from, locations, block_id)
             .await
-            .map_err(RethMiddlewareError::RethEthApiError)?;
+            .map_err(RethMiddlewareError::RethEthApiError).unwrap();
         Ok(proof.into())
     }
 
@@ -253,7 +254,7 @@ where
         transaction_hash: T,
     ) -> Result<Option<EthersTransactionReceipt>, ProviderError> {
         let hash = ethers::types::H256::from_slice(transaction_hash.into().as_bytes());
-        match self.reth_api.transaction_receipt(hash).await {
+        match self.reth_api.transaction_receipt(hash.into()).await {
             Ok(Some(receipt)) => Ok(Some(reth_transaction_receipt_to_ethers(receipt))),
             Ok(None) => Ok(None),
             Err(e) => Err(RethMiddlewareError::RethEthApiError(e.into())),

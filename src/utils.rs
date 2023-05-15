@@ -5,6 +5,7 @@ use ethers::types::{
 use ethers::types::TransactionReceipt as EthersTransactionReceipt;
 use ethers::types::Transaction as EthersTransaction;
 use ethers::types::OtherFields;
+use ethers::types::H256 as EthersH256;
 
 use reth_primitives::{
     AccessList, AccessListWithGasUsed, AccessListItem, Address, BlockHash, BlockId, BlockNumberOrTag, Bytes, H256, U256,
@@ -12,9 +13,13 @@ use reth_primitives::{
 };
 
 
+
+
 use reth_rpc_types::TransactionReceipt;
 use reth_revm::{precompile::B160, primitives::ruint::{aliases::B256, Uint, Bits}};
 use reth_rpc_types::{CallRequest, Filter, ValueOrArray, FilterBlockOption, Topic};
+use reth_primitives::serde_helper::JsonStorageKey;
+
 
 pub fn ethers_block_id_to_reth_block_id(block_id: EthersBlockId) -> BlockId {
     match block_id {
@@ -65,6 +70,11 @@ pub fn reth_access_list_with_gas_used_to_ethers(
     }
 }
 
+pub fn ethers_U256_to_reth_U256(u256: U256) -> B256 {
+    let mut h = H256::default();
+    u.to_big_endian(&mut h)
+}
+
 
 
 pub fn ethers_typed_transaction_to_reth_call_request(tx: &TypedTransaction) -> CallRequest {
@@ -108,11 +118,11 @@ pub fn reth_rpc_transaction_to_ethers(reth_tx: reth_rpc_types::Transaction) -> E
         block_hash: reth_tx.block_hash.into(),
         block_number: reth_tx.block_number.map(|n| n.low_u64().into()),
         transaction_index: reth_tx.transaction_index.map(|n| n.low_u64().into()),
-        from: reth_tx.from,
+        from: reth_tx.from.into(),
         to: reth_tx.to,
-        value: reth_tx.value,
+        value: reth_tx.value.into(),
         gas_price: reth_tx.gas_price.map(|p| p.into()),
-        gas: reth_tx.gas,
+        gas: reth_tx.gas.into(),
         input: reth_tx.input,
         v: v,
         r: r,
@@ -233,3 +243,12 @@ pub fn reth_transaction_receipt_to_ethers(
         other: OtherFields::default(),
     }
 }
+
+
+
+pub fn convert_location_to_json_key(location: EthersH256) -> JsonStorageKey {
+    let location = location.to_fixed_bytes(); 
+    let location_u256: U256 = U256::from_be_bytes(location);
+    JsonStorageKey::from(location_u256)
+}
+
