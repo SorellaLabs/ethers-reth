@@ -7,7 +7,6 @@ use ethers::{
     types::{transaction::{eip2718::TypedTransaction, eip2930::AccessList}, Bytes},
 };
 use ethers::types::transaction::eip2930::AccessListWithGasUsed;
-
 use ethers::types::BlockId as EthersBlockId;
 use ethers::types::Transaction as EthersTransaction;
 use ethers::types::TransactionReceipt as EthersTransactionReceipt;
@@ -21,8 +20,11 @@ use ethers::types::TxHash as EthersTxHash;
 use ethers::types::FeeHistory as EthersFeeHistory;
 use ethers::types::BlockNumber as EthersBlocKNumber;
 use ethers::types::EIP1186ProofResponse as EthersEIP1186ProofResponse;
-// Reth Types
 
+
+
+
+// Reth Types
 use reth_network_api::NetworkInfo;
 use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockProviderIdExt, BlockIdProvider, HeaderProvider};
 use reth_rpc::{eth::{EthApi, EthTransactions, *}, EthApiSpec};
@@ -115,14 +117,12 @@ where
         from: T,
         location: EthersH256,
         block: Option<EthersBlockId>,
-    ) -> Result<H256, Self::Error> {
+    ) -> Result<EthersH256, Self::Error> {
         // convert `from` to `Address` and `block` to `Option<BlockId>`
         let from: EthersAddress = match from.into() {
             NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
             NameOrAddress::Address(addr) => addr.into(),
         };
-
-        let from = from as Address;
     
         // convert `location` to `JsonStorageKey`
         let index: JsonStorageKey = EthersU256::from_big_endian(location.as_bytes()).into();
@@ -138,7 +138,7 @@ where
     }
 
 
-    async fn get_transaction<T: Send + Sync + Into<TxHash>>(
+    async fn get_transaction<T: Send + Sync + Into<EthersTxHash>>(
         &self,
         transaction_hash: T,
     ) -> Result<Option<EthersTransaction>, ProviderError> {
@@ -156,7 +156,7 @@ where
         blocknumber: u64,
     ) -> Result<EthersU256, ProviderError> {
         let block_id = Some(BlockId::Number(blocknumber.into()));
-        let balance = self.reth_api.balance(address, block_id).await?;
+        let balance = self.reth_api.balance(address.into(), block_id).await?;
         Ok(balance.into())
     }
 
@@ -195,10 +195,10 @@ where
     async fn fee_history<T: Into<EthersU256> + Send + Sync>(
         &self,
         block_count: T,
-        last_block: BlockNumber,
+        last_block: EthersBlocKNumber,
         reward_percentiles: &[f64],
-    ) -> Result<FeeHistory, Self::Error> {
-        let block_count = block_count.into();
+    ) -> Result<EthersFeeHistory, Self::Error> {
+        let block_count: reth_primitives::U64 = block_count as U64;
         let last_block = last_block.into();
         let reward_percentiles = Some(reward_percentiles.to_vec());
         let fee_history = self
