@@ -4,10 +4,19 @@ use async_trait::async_trait;
 // Ether rs Types
 use ethers::{
     providers::{ProviderError, Middleware, MiddlewareError},
-    types::{transaction::{eip2718::TypedTransaction, eip2930::AccessList}, BlockId, Bytes},
+    types::{transaction::{eip2718::TypedTransaction, eip2930::AccessList}, Bytes},
 };
 use ethers::types::transaction::eip2930::AccessListWithGasUsed;
-use ethers::types::*;
+
+use ethers::types::BlockId as EthersBlockId;
+use ethers::types::Transaction as EthersTransaction;
+use ethers::types::Address;
+use ethers::types::NameOrAddress;
+use ethers::types::Filter;
+use ethers::types::U256;
+use ethers::types::H256;
+use ethers::types::Log;
+use ethers::types::TxHash;
 
 // Reth Types
 use reth_network_api::NetworkInfo;
@@ -15,6 +24,7 @@ use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockPr
 use reth_rpc::{eth::{EthApi, EthTransactions, *}, EthApiSpec};
 use reth_rpc_api::EthApiServer;
 use reth_transaction_pool::TransactionPool;
+use reth_primitives::{BlockId, serde_helper::JsonStorageKey};
 
 
 // Std Lib
@@ -92,16 +102,84 @@ where
     }   
 
 
-    /// Get the storage of an address for a particular slot location
     async fn get_storage_at<T: Into<NameOrAddress> + Send + Sync>(
         &self,
         from: T,
         location: H256,
         block: Option<BlockId>,
     ) -> Result<H256, Self::Error> {
-        self.reth_api.storage(from, location, block).await
+        // convert `from` to `Address` and `block` to `Option<BlockId>`
+        let from: Address = match from.into() {
+            NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
+            NameOrAddress::Address(addr) => addr.into(),
+        };
+    
+        // convert `location` to `JsonStorageKey`
+        let index: JsonStorageKey = U256::from_big_endian(location.as_bytes()).into();
+    
+        // convert `block` to `Option<BlockId>`
+        let block: Option<BlockId> = block.map(ethers_block_id_to_reth_block_id);
+    
+        // call `storage_at`
+        match self.reth_api.storage_at(from, index, block).await {
+            Ok(value) => Ok(ethers::types::H256::from_slice(value.as_bytes())),
+            Err(e) => Err(RethMiddlewareError::RethEthApiError(e.into())),
+        }
     }
 
+
+    async fn get_transaction<T: Send + Sync + Into<TxHash>>(
+        &self,
+        transaction_hash: T,
+    ) -> Result<Option<EthersTransaction>, ProviderError> {
+        //let hash = ethers::types::H256::from_slice(transaction_hash.into().as_bytes());
+        match self.reth_api.transaction_by_hash(transaction_hash).await {
+            Ok(Some(tx)) => Ok(Some(reth_transaction_to_ethers(tx))),
+            Ok(None) => Ok(None),
+            Err(e) => Err(RethMiddlewareError::RethEthApiError(e.into())),
+        }
+    }
+
+    async fn get_balance(
+        &self,
+        address: Address,
+        blocknumber: u64,
+    ) -> Result<U256, ProviderError> {
+        let block_id = Some(BlockId::Number(blocknumber.into()));
+        let balance = self.reth_api.balance(address, block_id).await?;
+        Ok(balance.into())
+    }
+
+    async fn get_code(
+        &self,
+        address: Address,
+        blocknumber: u64,
+    ) -> Result<Bytes, ProviderError> {
+        let block_id = Some(BlockId::Number(blocknumber.into()));
+        let code = self.reth_api.get_code(address, block_id).await?;
+        Ok(code.into())
+    }
+
+    async fn get_transaction_count(
+        &self,
+        address: Address,
+        blocknumber: u64,
+    ) -> Result<U256, ProviderError> {
+        let block_id = Some(BlockId::Number(blocknumber.into()));
+        let count = self.reth_api.transaction_count(address, block_id).await?;
+        Ok(count.into())
+    }
+
+
+    async fn get_chainid(&self) -> Result<U256, ProviderError> {
+        let chain_id = self.reth_api.chain_id().await?;
+        Ok(chain_id.into())
+    }
+
+    async fn get_block_number(&self) -> Result<U256, ProviderError> {
+        let block_number = self.reth_api.block_number().await?;
+        Ok(block_number.into())
+    }
 
 }
 

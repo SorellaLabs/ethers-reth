@@ -1,7 +1,11 @@
 use ethers::types::{
-    transaction::{eip2718::TypedTransaction, eip2930::AccessList as EthersAccessList, eip2930::AccessListItem as EthersAccessListItem,s eip2930::AccessListWithGasUsed as EthersAccessListWithGasUsed},
+    transaction::{eip2718::TypedTransaction, eip2930::AccessList as EthersAccessList, eip2930::AccessListItem as EthersAccessListItem, eip2930::AccessListWithGasUsed as EthersAccessListWithGasUsed},
     BlockId as EthersBlockId, NameOrAddress,
 };
+
+use ethers::types::Transaction;
+
+
 use reth_primitives::{
     AccessList, AccessListWithGasUsed, AccessListItem, Address, BlockHash, BlockId, BlockNumberOrTag, Bytes, H256, U256,
     U8,
@@ -59,9 +63,6 @@ pub fn reth_access_list_with_gas_used_to_ethers(
 
 
 
-
-
-
 pub fn ethers_typed_transaction_to_reth_call_request(tx: &TypedTransaction) -> CallRequest {
     CallRequest {
         from: tx.from().map(|addr| Address::from_slice(addr.as_bytes())),
@@ -90,3 +91,30 @@ pub fn ethers_typed_transaction_to_reth_call_request(tx: &TypedTransaction) -> C
     }
 }
 
+
+pub fn reth_transaction_to_ethers(tx: reth_rpc_types::Transaction) -> Transaction {
+    Transaction {
+        hash: H256::from_slice(tx.hash.as_bytes()),
+        nonce: U256::from_limbs(tx.nonce.0),
+        block_hash: tx.block_hash.map(|hash| H256::from_slice(hash.as_bytes())),
+        block_number: tx.block_number.map(|number| U256::from_limbs(number.0)),
+        transaction_index: tx.transaction_index.map(|index| U256::from_limbs(index.0)),
+        from: Address::from_slice(tx.from.as_bytes()),
+        to: tx.to.map(|addr| Address::from_slice(addr.as_bytes())),
+        value: U256::from_limbs(tx.value.0),
+        gas_price: U256::from_limbs(tx.gas_price.0),
+        gas: U256::from_limbs(tx.gas.0),
+        input: Bytes(tx.input.0),
+        v: U8::from(tx.v),
+        r: H256::from_slice(tx.r.as_bytes()),
+        s: H256::from_slice(tx.s.as_bytes()),
+        access_list: tx
+            .access_list
+            .map(|list| ethers_access_list_to_reth_access_list(list.clone())),
+        transaction_type: match tx.transaction_type {
+            Some(0x1) => Some(TxType::Eip2930),
+            Some(0x2) => Some(TxType::Eip1559),
+            _ => None,
+        },
+    }
+}
