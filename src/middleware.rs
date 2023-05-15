@@ -14,8 +14,8 @@ use ethers::types::TransactionReceipt as EthersTransactionReceipt;
 use ethers::types::Address;
 use ethers::types::NameOrAddress;
 use ethers::types::Filter;
-use ethers::types::U256;
-use ethers::types::H256;
+use ethers::types::U256 as EthersU256;
+use ethers::types::H256 as EthersH256;
 use ethers::types::Log;
 use ethers::types::TxHash;
 use ethers::types::FeeHistory;
@@ -27,7 +27,7 @@ use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockPr
 use reth_rpc::{eth::{EthApi, EthTransactions, *}, EthApiSpec};
 use reth_rpc_api::EthApiServer;
 use reth_transaction_pool::TransactionPool;
-use reth_primitives::{BlockId, serde_helper::JsonStorageKey};
+use reth_primitives::{BlockId, serde_helper::JsonStorageKey, H256};
 
 
 // Std Lib
@@ -69,7 +69,7 @@ where
         &self,
         tx: &TypedTransaction,
         block: Option<BlockId>,
-    ) -> Result<U256, Self::Error> {
+    ) -> Result<EthersU256, Self::Error> {
         let call_request = ethers_typed_transaction_to_reth_call_request(tx);
         let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
         let res = self
@@ -108,8 +108,8 @@ where
     async fn get_storage_at<T: Into<NameOrAddress> + Send + Sync>(
         &self,
         from: T,
-        location: H256,
-        block: Option<BlockId>,
+        location: EthersH256,
+        block: Option<EthersBlockId>,
     ) -> Result<H256, Self::Error> {
         // convert `from` to `Address` and `block` to `Option<BlockId>`
         let from: Address = match from.into() {
@@ -118,14 +118,14 @@ where
         };
     
         // convert `location` to `JsonStorageKey`
-        let index: JsonStorageKey = U256::from_big_endian(location.as_bytes()).into();
+        let index: JsonStorageKey = EthersU256::from_big_endian(location.as_bytes()).into();
     
         // convert `block` to `Option<BlockId>`
         let block: Option<BlockId> = block.map(ethers_block_id_to_reth_block_id);
     
         // call `storage_at`
         match self.reth_api.storage_at(from, index, block).await {
-            Ok(value) => Ok(ethers::types::H256::from_slice(value.as_bytes())),
+            Ok(value) => Ok(EthersH256::from_slice(value.as_bytes())),
             Err(e) => Err(RethMiddlewareError::RethEthApiError(e.into())),
         }
     }
@@ -219,18 +219,22 @@ where
     async fn get_proof<T: Into<NameOrAddress> + Send + Sync>(
         &self,
         from: T,
-        locations: Vec<H256>,
+        locations: Vec<EthersH256>,
         block: Option<EthersBlockId>,
     ) -> Result<EthersEIP1186ProofResponse, ProviderError> {
         let from: Address = match from.into() {
             NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
             NameOrAddress::Address(addr) => addr.into(),
         };
+        let locations = locations
+            .into_iter()
+            .map(|location| JsonStorageKey::from(location.as_bytes()))
+            .collect();
 
         let block_id = Some(BlockId::Number(block.into()));
         let proof = self
             .reth_api
-            .proof(from, locations, block_id)
+            .get_proof(from, locations, block_id)
             .await
             .map_err(RethMiddlewareError::RethEthApiError)?;
         Ok(proof.into())
@@ -248,14 +252,6 @@ where
             Err(e) => Err(RethMiddlewareError::RethEthApiError(e.into())),
         }
     }
-
-
-    
-
-    
-
-
-
 
 }
 
