@@ -6,6 +6,8 @@ use ethers::types::TransactionReceipt as EthersTransactionReceipt;
 use ethers::types::Transaction as EthersTransaction;
 use ethers::types::OtherFields;
 use ethers::types::H256 as EthersH256;
+use ethers::types::Address as EthersAddress;
+
 
 use reth_primitives::{
     AccessList, AccessListWithGasUsed, AccessListItem, Address, BlockHash, BlockId, BlockNumberOrTag, Bytes, H256, U256,
@@ -30,6 +32,9 @@ pub fn ethers_block_id_to_reth_block_id(block_id: EthersBlockId) -> BlockId {
     }
 }
 
+
+
+//Access List Conversion
 pub fn ethers_access_list_to_reth_access_list(access_list: EthersAccessList) -> AccessList {
     AccessList(
         access_list
@@ -46,6 +51,45 @@ pub fn ethers_access_list_to_reth_access_list(access_list: EthersAccessList) -> 
             .collect(),
     )
 }
+
+
+pub fn reth_access_list_to_ethers_access_list(access_list: AccessList) -> EthersAccessList {
+    EthersAccessList(
+        access_list
+            .0
+            .into_iter()
+            .map(|item| EthersAccessListItem {
+                address: EthersAddress::from_slice(item.address.as_bytes()),
+                storage_keys: item
+                    .storage_keys
+                    .into_iter()
+                    .map(|key| EthersH256::from_slice(key.as_bytes()))
+                    .collect(),
+            })
+            .collect(),
+    )
+}
+
+
+pub fn opt_reth_access_list_to_ethers_access_list(
+    opt_access_list: Option<Vec<reth_primitives::AccessListItem>>,
+) -> EthersAccessList {
+    let access_list = opt_access_list.unwrap_or_else(Vec::new);
+    EthersAccessList(
+        access_list
+            .into_iter()
+            .map(|item| EthersAccessListItem {
+                address: EthersAddress::from_slice(item.address.as_bytes()),
+                storage_keys: item
+                    .storage_keys
+                    .into_iter()
+                    .map(|key| EthersH256::from_slice(key.as_bytes()))
+                    .collect(),
+            })
+            .collect(),
+    )
+}
+
 
 pub fn reth_access_list_with_gas_used_to_ethers(
     access_list_with_gas_used: AccessListWithGasUsed,
@@ -70,10 +114,6 @@ pub fn reth_access_list_with_gas_used_to_ethers(
     }
 }
 
-pub fn ethers_U256_to_reth_U256(u256: U256) -> B256 {
-    let mut h = H256::default();
-    u.to_big_endian(&mut h)
-}
 
 
 
@@ -128,7 +168,7 @@ pub fn reth_rpc_transaction_to_ethers(reth_tx: reth_rpc_types::Transaction) -> E
         r: r,
         s: s,
         transaction_type: reth_tx.transaction_type,
-        access_list: reth_tx.access_list,
+        access_list: Some(opt_reth_access_list_to_ethers_access_list(reth_tx.access_list)),
         max_priority_fee_per_gas: reth_tx.max_priority_fee_per_gas.map(|p| p.into()),
         max_fee_per_gas: reth_tx.max_fee_per_gas.map(|p| p.into()),
         chain_id: reth_tx.chain_id.map(|id| id.into()),
