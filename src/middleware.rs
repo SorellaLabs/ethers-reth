@@ -244,14 +244,7 @@ where
         self.inner().sign(data, from).await.map_err(MiddlewareError::from_err)
     }
 
-    /// Sign a transaction via RPC call
-    async fn sign_transaction(
-        &self,
-        tx: &TypedTransaction,
-        from: Address,
-    ) -> Result<Signature, Self::Error> {
-        self.inner().sign_transaction(tx, from).await.map_err(MiddlewareError::from_err)
-    }
+    
 
     ////// Contract state
 
@@ -266,86 +259,9 @@ where
         filter: &Filter,
         page_size: u64,
     ) -> LogQuery<'a, Self::Provider> {
-        self.inner().get_logs_paginated(filter, page_size)
-    }
+        self.inner().get_logs_paginated(filter, pa
+    
 
-    /// Install a new filter on the node.
-    ///
-    /// This method is hidden because filter lifecycle  should be managed by
-    /// the [`FilterWatcher`]
-    #[doc(hidden)]
-    async fn new_filter(&self, filter: FilterKind<'_>) -> Result<U256, Self::Error> {
-        self.inner().new_filter(filter).await.map_err(MiddlewareError::from_err)
-    }
-
-    /// Uninstalls a filter.
-    ///
-    /// This method is hidden because filter lifecycle  should be managed by
-    /// the [`FilterWatcher`]
-    #[doc(hidden)]
-    async fn uninstall_filter<T: Into<U256> + Send + Sync>(
-        &self,
-        id: T,
-    ) -> Result<bool, Self::Error> {
-        self.inner().uninstall_filter(id).await.map_err(MiddlewareError::from_err)
-    }
-
-    /// Streams event logs matching the filter.
-    ///
-    /// This function streams via a polling system, by repeatedly dispatching
-    /// RPC requests. If possible, prefer using a WS or IPC connection and the
-    /// `stream` interface
-    async fn watch<'a>(
-        &'a self,
-        filter: &Filter,
-    ) -> Result<FilterWatcher<'a, Self::Provider, Log>, Self::Error> {
-        self.inner().watch(filter).await.map_err(MiddlewareError::from_err)
-    }
-
-    /// Streams pending transactions.
-    ///
-    /// This function streams via a polling system, by repeatedly dispatching
-    /// RPC requests. If possible, prefer using a WS or IPC connection and the
-    /// `stream` interface
-    async fn watch_pending_transactions(
-        &self,
-    ) -> Result<FilterWatcher<'_, Self::Provider, H256>, Self::Error> {
-        self.inner().watch_pending_transactions().await.map_err(MiddlewareError::from_err)
-    }
-
-    /// Polling method for a filter, which returns an array of logs which occurred since last poll.
-    ///
-    /// This method must be called with one of the following return types, depending on the filter
-    /// type:
-    /// - `eth_newBlockFilter`: [`H256`], returns block hashes
-    /// - `eth_newPendingTransactionFilter`: [`H256`], returns transaction hashes
-    /// - `eth_newFilter`: [`Log`], returns raw logs
-    ///
-    /// If one of these types is not used, decoding will fail and the method will
-    /// return an error.
-    ///
-    /// [`H256`]: ethers_core::types::H256
-    /// [`Log`]: ethers_core::types::Log
-    ///
-    /// This method is hidden because filter lifecycle  should be managed by
-    /// the [`FilterWatcher`]
-    #[doc(hidden)]
-    async fn get_filter_changes<T, R>(&self, id: T) -> Result<Vec<R>, Self::Error>
-    where
-        T: Into<U256> + Send + Sync,
-        R: Serialize + DeserializeOwned + Send + Sync + Debug,
-    {
-        self.inner().get_filter_changes(id).await.map_err(MiddlewareError::from_err)
-    }
-
-    /// Streams new block hashes
-    ///
-    /// This function streams via a polling system, by repeatedly dispatching
-    /// RPC requests. If possible, prefer using a WS or IPC connection and the
-    /// `stream` interface
-    async fn watch_blocks(&self) -> Result<FilterWatcher<'_, Self::Provider, H256>, Self::Error> {
-        self.inner().watch_blocks().await.map_err(MiddlewareError::from_err)
-    }
 
     /// Returns the deployed code at a given address
     async fn get_code<T: Into<NameOrAddress> + Send + Sync>(
@@ -368,127 +284,6 @@ where
         self.inner().get_proof(from, locations, block).await.map_err(MiddlewareError::from_err)
     }
 
-    /// Returns an indication if this node is currently mining.
-    async fn mining(&self) -> Result<bool, Self::Error> {
-        self.inner().mining().await.map_err(MiddlewareError::from_err)
-    }
-
-    // Personal namespace
-    // NOTE: This will eventually need to be enabled by users explicitly because the personal
-    // namespace is being deprecated:
-    // Issue: https://github.com/ethereum/go-ethereum/issues/25948
-    // PR: https://github.com/ethereum/go-ethereum/pull/26390
-
-    /// Sends the given key to the node to be encrypted with the provided
-    /// passphrase and stored.
-    ///
-    /// The key represents a secp256k1 private key and should be 32 bytes.
-    async fn import_raw_key(
-        &self,
-        private_key: Bytes,
-        passphrase: String,
-    ) -> Result<Address, Self::Error> {
-        self.inner()
-            .import_raw_key(private_key, passphrase)
-            .await
-            .map_err(MiddlewareError::from_err)
-    }
-
-    /// Prompts the node to decrypt the given account from its keystore.
-    ///
-    /// If the duration provided is `None`, then the account will be unlocked
-    /// indefinitely. Otherwise, the account will be unlocked for the provided
-    /// number of seconds.
-    async fn unlock_account<T: Into<Address> + Send + Sync>(
-        &self,
-        account: T,
-        passphrase: String,
-        duration: Option<u64>,
-    ) -> Result<bool, Self::Error> {
-        self.inner()
-            .unlock_account(account, passphrase, duration)
-            .await
-            .map_err(MiddlewareError::from_err)
-    }
-
-    // Admin namespace
-
-    /// Requests adding the given peer, returning a boolean representing
-    /// whether or not the peer was accepted for tracking.
-    async fn add_peer(&self, enode_url: String) -> Result<bool, Self::Error> {
-        self.inner().add_peer(enode_url).await.map_err(MiddlewareError::from_err)
-    }
-
-    /// Requests adding the given peer as a trusted peer, which the node will
-    /// always connect to even when its peer slots are full.
-    async fn add_trusted_peer(&self, enode_url: String) -> Result<bool, Self::Error> {
-        self.inner().add_trusted_peer(enode_url).await.map_err(MiddlewareError::from_err)
-    }
-
-    /// Returns general information about the node as well as information about the running p2p
-    /// protocols (e.g. `eth`, `snap`).
-    async fn node_info(&self) -> Result<NodeInfo, Self::Error> {
-        self.inner().node_info().await.map_err(MiddlewareError::from_err)
-    }
-
-    /// Returns the list of peers currently connected to the node.
-    async fn peers(&self) -> Result<Vec<PeerInfo>, Self::Error> {
-        self.inner().peers().await.map_err(MiddlewareError::from_err)
-    }
-
-    /// Requests to remove the given peer, returning true if the enode was successfully parsed and
-    /// the peer was removed.
-    async fn remove_peer(&self, enode_url: String) -> Result<bool, Self::Error> {
-        self.inner().remove_peer(enode_url).await.map_err(MiddlewareError::from_err)
-    }
-
-    /// Requests to remove the given peer, returning a boolean representing whether or not the
-    /// enode url passed was validated. A return value of `true` does not necessarily mean that the
-    /// peer was disconnected.
-    async fn remove_trusted_peer(&self, enode_url: String) -> Result<bool, Self::Error> {
-        self.inner().remove_trusted_peer(enode_url).await.map_err(MiddlewareError::from_err)
-    }
-
-    // Miner namespace
-
-    /// Starts the miner with the given number of threads. If threads is nil, the number of workers
-    /// started is equal to the number of logical CPUs that are usable by this process. If mining
-    /// is already running, this method adjust the number of threads allowed to use and updates the
-    /// minimum price required by the transaction pool.
-    async fn start_mining(&self, threads: Option<usize>) -> Result<(), Self::Error> {
-        self.inner().start_mining(threads).await.map_err(MiddlewareError::from_err)
-    }
-
-    /// Stop terminates the miner, both at the consensus engine level as well as at
-    /// the block creation level.
-    async fn stop_mining(&self) -> Result<(), Self::Error> {
-        self.inner().stop_mining().await.map_err(MiddlewareError::from_err)
-    }
-
-    // Mempool inspection for Geth's API
-
-    /// Returns the details of all transactions currently pending for inclusion in the next
-    /// block(s), as well as the ones that are being scheduled for future execution only.
-    /// Ref: [Here](https://geth.ethereum.org/docs/rpc/ns-txpool#txpool_content)
-    async fn txpool_content(&self) -> Result<TxpoolContent, Self::Error> {
-        self.inner().txpool_content().await.map_err(MiddlewareError::from_err)
-    }
-
-    /// Returns a summary of all the transactions currently pending for inclusion in the next
-    /// block(s), as well as the ones that are being scheduled for future execution only.
-    /// Ref: [Here](https://geth.ethereum.org/docs/rpc/ns-txpool#txpool_inspect)
-    async fn txpool_inspect(&self) -> Result<TxpoolInspect, Self::Error> {
-        self.inner().txpool_inspect().await.map_err(MiddlewareError::from_err)
-    }
-
-    /// Returns the number of transactions currently pending for inclusion in the next block(s), as
-    /// well as the ones that are being scheduled for future execution only.
-    /// Ref: [Here](https://geth.ethereum.org/docs/rpc/ns-txpool#txpool_status)
-    async fn txpool_status(&self) -> Result<TxpoolStatus, Self::Error> {
-        self.inner().txpool_status().await.map_err(MiddlewareError::from_err)
-    }
-
-    // Geth `trace` support
 
     /// After replaying any previous transactions in the same block,
     /// Replays a transaction, returning the traces configured with passed options
@@ -739,8 +534,11 @@ where
         block: Option<BlockId>,
     ) -> Result<AccessListWithGasUsed, Self::Error> {
         self.inner().create_access_list(tx, block).await.map_err(MiddlewareError::from_err)
-    }
+        }
+
 }
+
+
 
     
 
@@ -780,3 +578,8 @@ impl<M, Client, Pool, Network> RethMiddleware<M, Client, Pool, Network>
         }
     }
 }
+
+
+
+
+
