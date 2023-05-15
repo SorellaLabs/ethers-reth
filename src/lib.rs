@@ -1,30 +1,39 @@
 pub mod reth_api;
 pub mod middleware;
 mod utils;
-use std::{sync::Arc, path::Path};
-pub mod defaults;
-pub mod reth_filter;
+use std::sync::Arc;
 
-
-use defaults::default_client;
 use ethers::providers::{Middleware, MiddlewareError};
-use reth_api::{NodeEthApi, default_eth_api};
+use reth_api::NodeEthApi;
 use jsonrpsee::types::*;
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::ShareableBlockchainTree;
 use reth_db::mdbx::{NoWriteMap, Env};
-use reth_filter::{NodeEthFilter, default_eth_filter};
 use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
 use reth_transaction_pool::{PooledTransaction, EthTransactionValidator, Pool, CostOrdering};
 use thiserror::Error;
 
 
+pub type NodeClient = BlockchainProvider<
+    Arc<Env<NoWriteMap>>,
+    ShareableBlockchainTree<Arc<Env<NoWriteMap>>, Arc<BeaconConsensus>, Factory>,
+>;
+
+pub type NodeTxPool = Pool<
+    EthTransactionValidator<
+    NodeClient,
+        PooledTransaction,
+    >,
+    CostOrdering<PooledTransaction>,
+>;
+
+
+
 #[derive(Clone)]
 pub struct RethMiddleware<M> {
     inner: M,
     reth_api: NodeEthApi,
-    reth_filter: NodeEthFilter
 }
 
 impl<M: std::fmt::Debug> std::fmt::Debug
@@ -65,26 +74,11 @@ impl<M> RethMiddleware<M>
 where
     M: Middleware,
 {
-    pub fn new(inner: M, reth_api: NodeEthApi, reth_filter: NodeEthFilter) -> Self {
-        Self { inner, reth_api, reth_filter }
-    }
-
-    pub fn default(inner: M, db_path: &Path) -> Self {
-
-        let client = default_client(db_path);
-
-        Self { 
-            inner, 
-            reth_api: default_eth_api(client.clone()), 
-            reth_filter: default_eth_filter(client.clone(), 1000) 
-        }
+    pub fn new(inner: M, reth_api: NodeEthApi) -> Self {
+        Self { inner, reth_api }
     }
 
     pub fn reth_api(&self) -> &NodeEthApi {
         &self.reth_api
-    }
-
-    pub fn reth_filter(&self) -> &NodeEthFilter {
-        &self.reth_filter
     }
 }
