@@ -2,14 +2,16 @@ use ethers::types::{
     transaction::{eip2718::TypedTransaction, eip2930::AccessList as EthersAccessList, eip2930::AccessListItem as EthersAccessListItem, eip2930::AccessListWithGasUsed as EthersAccessListWithGasUsed},
     BlockId as EthersBlockId, NameOrAddress,
 };
-
+use ethers::types::TransactionReceipt as EthersTransactionReceipt;
 use ethers::types::Transaction;
-
+use ethers::types::OtherFields;
 
 use reth_primitives::{
     AccessList, AccessListWithGasUsed, AccessListItem, Address, BlockHash, BlockId, BlockNumberOrTag, Bytes, H256, U256,
     U8,
 };
+use reth_rpc_types::TransactionReceipt;
+
 use reth_rpc_types::CallRequest;
 
 pub fn ethers_block_id_to_reth_block_id(block_id: EthersBlockId) -> BlockId {
@@ -116,5 +118,31 @@ pub fn reth_transaction_to_ethers(tx: reth_rpc_types::Transaction) -> Transactio
             Some(0x2) => Some(TxType::Eip1559),
             _ => None,
         },
+    }
+}
+
+
+pub fn reth_transaction_receipt_to_ethers(
+    receipt: TransactionReceipt,
+) -> EthersTransactionReceipt {
+    EthersTransactionReceipt {
+        transaction_hash: receipt.transaction_hash.unwrap(),
+        transaction_index: receipt.transaction_index.unwrap().as_u64().into(),
+        block_hash: receipt.block_hash,
+        block_number: receipt.block_number.map(|num| num.as_u64().into()),
+        from: receipt.from,
+        to: receipt.to,
+        cumulative_gas_used: receipt.cumulative_gas_used,
+        gas_used: receipt.gas_used,
+        contract_address: receipt.contract_address,
+        logs: receipt.logs,
+        status: receipt.status_code.map(|num| num.as_u64().into()),
+        root: receipt.state_root,
+        logs_bloom: receipt.logs_bloom,
+        transaction_type: Some(receipt.transaction_type.into()),
+        effective_gas_price: Some(
+            U256::from(receipt.effective_gas_price),
+        ),
+        other: OtherFields::default(),
     }
 }

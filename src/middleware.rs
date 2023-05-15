@@ -10,6 +10,7 @@ use ethers::types::transaction::eip2930::AccessListWithGasUsed;
 
 use ethers::types::BlockId as EthersBlockId;
 use ethers::types::Transaction as EthersTransaction;
+use ethers::types::TransactionReceipt as EthersTransactionReceipt;
 use ethers::types::Address;
 use ethers::types::NameOrAddress;
 use ethers::types::Filter;
@@ -200,6 +201,35 @@ where
         Ok(fee_history)
     }
 
+    /*async fn get_block_receipts<T: Into<BlockNumber> + Send + Sync>(
+        &self,
+        block: T,
+    ) -> Result<Vec<EthersTransactionReceipt>, Self::Error> {
+        let block = block.into();
+        let receipts = self
+            .reth_api
+            .block_receipts(block)
+            .await
+            .map_err(RethMiddlewareError::RethEthApiError)?;
+        Ok(receipts)
+    }
+    */
+
+
+    async fn get_transaction_receipt<T: Send + Sync + Into<TxHash>>(
+        &self,
+        transaction_hash: T,
+    ) -> Result<Option<EthersTransactionReceipt>, ProviderError> {
+        let hash = ethers::types::H256::from_slice(transaction_hash.into().as_bytes());
+        match self.reth_api.transaction_receipt(hash).await {
+            Ok(Some(receipt)) => Ok(Some(reth_transaction_receipt_to_ethers(receipt))),
+            Ok(None) => Ok(None),
+            Err(e) => Err(RethMiddlewareError::RethEthApiError(e.into())),
+        }
+    }
+    
+
+    
 
 
 
