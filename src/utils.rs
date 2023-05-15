@@ -1,9 +1,9 @@
 use ethers::types::{
-    transaction::{eip2718::TypedTransaction, eip2930::AccessList as EthersAccessList},
+    transaction::{eip2718::TypedTransaction, eip2930::AccessList as EthersAccessList, eip2930::AccessListItem as EthersAccessListItem,s eip2930::AccessListWithGasUsed as EthersAccessListWithGasUsed},
     BlockId as EthersBlockId, NameOrAddress,
 };
 use reth_primitives::{
-    AccessList, AccessListItem, Address, BlockHash, BlockId, BlockNumberOrTag, Bytes, H256, U256,
+    AccessList, AccessListWithGasUsed, AccessListItem, Address, BlockHash, BlockId, BlockNumberOrTag, Bytes, H256, U256,
     U8,
 };
 use reth_rpc_types::CallRequest;
@@ -34,6 +34,34 @@ pub fn ethers_access_list_to_reth_access_list(access_list: EthersAccessList) -> 
     )
 }
 
+pub fn reth_access_list_with_gas_used_to_ethers(
+    access_list_with_gas_used: AccessListWithGasUsed,
+) -> EthersAccessListWithGasUsed {
+    EthersAccessListWithGasUsed {
+        access_list: EthersAccessList(
+            access_list_with_gas_used
+                .access_list
+                .0
+                .into_iter()
+                .map(|item| EthersAccessListItem {
+                    address: ethers::types::Address::from_slice(item.address.as_bytes()),
+                    storage_keys: item
+                        .storage_keys
+                        .into_iter()
+                        .map(|key| ethers::types::H256::from_slice(key.as_bytes()))
+                        .collect(),
+                })
+                .collect(),
+        ),
+        gas_used: access_list_with_gas_used.gas_used.into(),
+    }
+}
+
+
+
+
+
+
 pub fn ethers_typed_transaction_to_reth_call_request(tx: &TypedTransaction) -> CallRequest {
     CallRequest {
         from: tx.from().map(|addr| Address::from_slice(addr.as_bytes())),
@@ -61,3 +89,4 @@ pub fn ethers_typed_transaction_to_reth_call_request(tx: &TypedTransaction) -> C
         },
     }
 }
+
