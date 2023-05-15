@@ -1,14 +1,28 @@
-pub mod init_api;
+pub mod reth_api;
 pub mod middleware;
 mod utils;
-
 use ethers::providers::{Middleware, MiddlewareError};
-use jsonrpsee::core::error::Error as RpcError;
-use reth_network_api::NetworkInfo;
-use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory};
-use reth_rpc::EthApi;
-use reth_transaction_pool::TransactionPool;
+use reth_api::nodeEthApi;
+use jsonrpsee::types::*;
 use thiserror::Error;
+
+
+
+#[derive(Clone)]
+pub struct RethMiddleware<M> {
+    inner: M,
+    reth_api: nodeEthApi,
+}
+
+impl<M: std::fmt::Debug> std::fmt::Debug
+    for RethMiddleware<M>
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("RethMiddleware")
+            .field("inner", &self.inner)
+            .finish_non_exhaustive()
+    }
+}
 
 #[derive(Error, Debug)]
 pub enum RethMiddlewareError<M: Middleware> {
@@ -16,7 +30,7 @@ pub enum RethMiddlewareError<M: Middleware> {
     #[error("{0}")]
     MiddlewareError(M::Error),
     #[error(transparent)]
-    RethEthApiError(#[from] RpcError),
+    RethEthApiError(#[from] ErrorObjectOwned),
 }
 
 impl<M: Middleware> MiddlewareError for RethMiddlewareError<M> {
@@ -34,33 +48,15 @@ impl<M: Middleware> MiddlewareError for RethMiddlewareError<M> {
     }
 }
 
-pub struct RethMiddleware<M, Client, Pool, Network> {
-    inner: M,
-    reth_api: EthApi<Client, Pool, Network>,
-}
-
-impl<M: std::fmt::Debug, Client, Pool, Network> std::fmt::Debug
-    for RethMiddleware<M, Client, Pool, Network>
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("RethMiddleware")
-            .field("inner", &self.inner)
-            .finish_non_exhaustive()
-    }
-}
-
-impl<M, Client, Pool, Network> RethMiddleware<M, Client, Pool, Network>
+impl<M> RethMiddleware<M>
 where
     M: Middleware,
-    Client: BlockProvider + EvmEnvProvider + StateProviderFactory + 'static,
-    Pool: TransactionPool + Clone + 'static,
-    Network: NetworkInfo + 'static,
 {
-    pub fn new(inner: M, reth_api: EthApi<Client, Pool, Network>) -> Self {
+    pub fn new(inner: M, reth_api: nodeEthApi) -> Self {
         Self { inner, reth_api }
     }
 
-    pub fn reth_api(&self) -> &EthApi<Client, Pool, Network> {
+    pub fn reth_api(&self) -> &nodeEthApi {
         &self.reth_api
     }
 }
