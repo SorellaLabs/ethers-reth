@@ -13,7 +13,6 @@ use reth_primitives::{
 
 
 use reth_rpc_types::TransactionReceipt;
-use reth_rpc_types::CallRequest;
 use reth_revm::{precompile::B160, primitives::ruint::{aliases::B256, Uint, Bits}};
 use reth_rpc_types::{CallRequest, Filter, ValueOrArray, FilterBlockOption, Topic};
 
@@ -104,9 +103,9 @@ pub fn reth_rpc_transaction_to_ethers(reth_tx: reth_rpc_types::Transaction) -> E
     let s = reth_tx.signature.map_or(0.into(), |sig| sig.s.into());
 
     EthersTransaction {
-        hash: reth_tx.hash,
-        nonce: reth_tx.nonce,
-        block_hash: reth_tx.block_hash,
+        hash: reth_tx.hash.into(),
+        nonce: reth_tx.nonce.into(),
+        block_hash: reth_tx.block_hash.into(),
         block_number: reth_tx.block_number.map(|n| n.low_u64().into()),
         transaction_index: reth_tx.transaction_index.map(|n| n.low_u64().into()),
         from: reth_tx.from,
@@ -214,7 +213,7 @@ pub fn reth_transaction_receipt_to_ethers(
     receipt: TransactionReceipt,
 ) -> EthersTransactionReceipt {
     EthersTransactionReceipt {
-        transaction_hash: receipt.transaction_hash.unwrap(),
+        transaction_hash: receipt.transaction_hash.into().unwrap(),
         transaction_index: receipt.transaction_index.unwrap().as_u64().into(),
         block_hash: receipt.block_hash,
         block_number: receipt.block_number.map(|num| num.as_u64().into()),
