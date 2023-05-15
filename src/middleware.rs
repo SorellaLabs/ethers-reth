@@ -22,12 +22,10 @@ use ethers::types::BlockNumber as EthersBlocKNumber;
 use ethers::types::EIP1186ProofResponse as EthersEIP1186ProofResponse;
 
 
-
-
 // Reth Types
 use reth_network_api::NetworkInfo;
 use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockProviderIdExt, BlockIdProvider, HeaderProvider};
-use reth_rpc::{eth::{EthApi, EthTransactions, *}, EthApiSpec};
+use reth_rpc::{eth::{EthApi}, EthApiSpec};
 use reth_rpc_api::EthApiServer;
 use reth_rpc_types::Filter;
 use reth_primitives::Address;
@@ -43,6 +41,7 @@ use serde::{de::DeserializeOwned, Serialize};
 #[async_trait]
 impl<M> Middleware for RethMiddleware<M>
 where
+    Self: EthApiServer + EthApiSpec + 'static,
     M: Middleware,
 {
     type Error = RethMiddlewareError<M>;

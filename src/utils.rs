@@ -15,7 +15,47 @@ use reth_primitives::{
 use reth_rpc_types::TransactionReceipt;
 use reth_rpc_types::CallRequest;
 use reth_revm::{precompile::B160, primitives::ruint::{aliases::B256, Uint, Bits}};
-use reth_rpc_types::{CallRequest, Filter, ValueOrArray, FilterBlockOption, Topic};
+use reth_rpc_types::{Filter, ValueOrArray, FilterBlockOption, Topic};
+use crate::{utils::*, RethMiddleware, RethMiddlewareError};
+use async_trait::async_trait;
+
+// Ether rs Types
+use ethers::{
+    providers::{ProviderError, Middleware, MiddlewareError},
+    types::{transaction::{eip2718::TypedTransaction, eip2930::AccessList}, Bytes},
+};
+use ethers::types::transaction::eip2930::AccessListWithGasUsed;
+
+use ethers::types::BlockId as EthersBlockId;
+use ethers::types::Transaction as EthersTransaction;
+use ethers::types::TransactionReceipt as EthersTransactionReceipt;
+use ethers::types::Address as EthersAddress;    
+use ethers::types::NameOrAddress;
+use ethers::types::Filter as EthersFilter;
+use ethers::types::U256 as EthersU256;
+use ethers::types::H256 as EthersH256;
+use ethers::types::Log as EthersLog;
+use ethers::types::TxHash as EthersTxHash;
+use ethers::types::FeeHistory as EthersFeeHistory;
+use ethers::types::BlockNumber as EthersBlocKNumber;
+use ethers::types::EIP1186ProofResponse as EthersEIP1186ProofResponse;
+// Reth Types
+
+use reth_network_api::NetworkInfo;
+use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockProviderIdExt, BlockIdProvider, HeaderProvider};
+use reth_rpc::{eth::{EthApi, EthTransactions, *}, EthApiSpec};
+use reth_rpc_api::EthApiServer;
+use reth_rpc_types::Filter;
+use reth_primitives::Address;
+use reth_transaction_pool::TransactionPool;
+use reth_primitives::{BlockId, serde_helper::JsonStorageKey, H256};
+
+
+// Std Lib
+use std::fmt::Debug;
+use serde::{de::DeserializeOwned, Serialize};
+
+
 
 pub fn ethers_block_id_to_reth_block_id(block_id: EthersBlockId) -> BlockId {
     match block_id {
