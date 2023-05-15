@@ -2,11 +2,17 @@ use ethers::types::{
     transaction::{eip2718::TypedTransaction, eip2930::AccessList as EthersAccessList, eip2930::AccessListItem as EthersAccessListItem, eip2930::AccessListWithGasUsed as EthersAccessListWithGasUsed},
     BlockId as EthersBlockId, NameOrAddress,
 };
+use ethers::types::TransactionReceipt as EthersTransactionReceipt;
+use ethers::types::Transaction;
+use ethers::types::OtherFields;
+
 use reth_primitives::{
     AccessList, AccessListWithGasUsed, AccessListItem, Address, BlockHash, BlockId, BlockNumberOrTag, Bytes, U256,
     U8, H160,
 };
 use reth_revm::{precompile::B160, primitives::ruint::{aliases::B256, Uint, Bits}};
+use reth_rpc_types::TransactionReceipt;
+
 use reth_rpc_types::{CallRequest, Filter, ValueOrArray, FilterBlockOption, Topic};
 
 pub fn ethers_block_id_to_reth_block_id(block_id: EthersBlockId) -> BlockId {
@@ -57,9 +63,6 @@ pub fn reth_access_list_with_gas_used_to_ethers(
         gas_used: access_list_with_gas_used.gas_used.into(),
     }
 }
-
-
-
 
 
 
@@ -172,3 +175,56 @@ pub fn ethers_filter_to_reth_filter(filter: &ethers::types::Filter) -> Filter {
 }
 
 
+
+pub fn reth_transaction_to_ethers(tx: reth_rpc_types::Transaction) -> Transaction {
+    Transaction {
+        hash: H256::from_slice(tx.hash.as_bytes()),
+        nonce: U256::from_limbs(tx.nonce.0),
+        block_hash: tx.block_hash.map(|hash| H256::from_slice(hash.as_bytes())),
+        block_number: tx.block_number.map(|number| U256::from_limbs(number.0)),
+        transaction_index: tx.transaction_index.map(|index| U256::from_limbs(index.0)),
+        from: Address::from_slice(tx.from.as_bytes()),
+        to: tx.to.map(|addr| Address::from_slice(addr.as_bytes())),
+        value: U256::from_limbs(tx.value.0),
+        gas_price: U256::from_limbs(tx.gas_price.0),
+        gas: U256::from_limbs(tx.gas.0),
+        input: Bytes(tx.input.0),
+        v: U8::from(tx.v),
+        r: H256::from_slice(tx.r.as_bytes()),
+        s: H256::from_slice(tx.s.as_bytes()),
+        access_list: tx
+            .access_list
+            .map(|list| ethers_access_list_to_reth_access_list(list.clone())),
+        transaction_type: match tx.transaction_type {
+            Some(0x1) => Some(TxType::Eip2930),
+            Some(0x2) => Some(TxType::Eip1559),
+            _ => None,
+        },
+    }
+}
+
+
+pub fn reth_transaction_receipt_to_ethers(
+    receipt: TransactionReceipt,
+) -> EthersTransactionReceipt {
+    EthersTransactionReceipt {
+        transaction_hash: receipt.transaction_hash.unwrap(),
+        transaction_index: receipt.transaction_index.unwrap().as_u64().into(),
+        block_hash: receipt.block_hash,
+        block_number: receipt.block_number.map(|num| num.as_u64().into()),
+        from: receipt.from,
+        to: receipt.to,
+        cumulative_gas_used: receipt.cumulative_gas_used,
+        gas_used: receipt.gas_used,
+        contract_address: receipt.contract_address,
+        logs: receipt.logs,
+        status: receipt.status_code.map(|num| num.as_u64().into()),
+        root: receipt.state_root,
+        logs_bloom: receipt.logs_bloom,
+        transaction_type: Some(receipt.transaction_type.into()),
+        effective_gas_price: Some(
+            U256::from(receipt.effective_gas_price),
+        ),
+        other: OtherFields::default(),
+    }
+}
