@@ -14,7 +14,7 @@ use ethers::types::FilterBlockOption as EthersFilterBlockOption;
 use ethers::types::BlockNumber as EthersBlockNumber;
 use ethers::types::H256 as EthersH256;
 use eyre::Result;
-use ethers::types::H256 as EthersH256;
+
 use ethers::types::Address as EthersAddress;
 
 
@@ -32,8 +32,7 @@ use reth_revm::{precompile::B160, primitives::ruint::{Uint, Bits, self}};
 use reth_rpc_types::{Filter, ValueOrArray, FilterBlockOption, Topic};
 
 
-use reth_revm::{precompile::B160, primitives::ruint::{aliases::B256, Uint, Bits}};
-use reth_rpc_types::{CallRequest, Filter, ValueOrArray, FilterBlockOption, Topic};
+use reth_revm::{primitives::ruint::{aliases::B256}};
 use reth_primitives::serde_helper::JsonStorageKey;
 
 

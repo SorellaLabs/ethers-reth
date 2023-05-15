@@ -20,23 +20,18 @@ use ethers::types::TxHash as EthersTxHash;
 use ethers::types::FeeHistory as EthersFeeHistory;
 use ethers::types::BlockNumber as EthersBlocKNumber;
 use ethers::types::EIP1186ProofResponse as EthersEIP1186ProofResponse;
-
+use ethers::types::U64;
 
 
 // Reth Types
 use reth_network_api::NetworkInfo;
 use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockProviderIdExt, BlockIdProvider, HeaderProvider};
-<<<<<<< HEAD
-use reth_rpc::{eth::{EthApi}, EthApiSpec};
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
-//use reth_rpc_types::Filter;
-=======
-use reth_rpc::{eth::EthApi};
-use reth_rpc_api::EthApiServer;
+use reth_rpc::{eth::EthApi, EthApiSpec};
 use reth_rpc_types::Filter;
->>>>>>> d6a8280046e570db9e9d34b0a8d77c0dcd335a48
+
+
 use reth_primitives::Address;
-use reth_rpc_types::Filter;
 use reth_transaction_pool::TransactionPool;
 use reth_primitives::{BlockId, serde_helper::JsonStorageKey, H256, U256};
 
@@ -190,12 +185,12 @@ where
     }
 
 
-    async fn get_chainid(&self) -> Result<EthersU256, ProviderError> {
+    async fn get_chainid(&self) -> Result<EthersU256, RethMiddlewareError<M>> {
         let chain_id = self.reth_api.chain_id().await?;
         Ok(chain_id.into())
     }
 
-    async fn get_block_number(&self) -> Result<EthersU256, ProviderError> {
+    async fn get_block_number(&self) -> Result<U64, RethMiddleware<M>> {
         let block_number = self.reth_api.block_number().await?;
         Ok(block_number.into())
     }
@@ -237,7 +232,7 @@ where
         from: T,
         locations: Vec<EthersH256>,
         block: Option<EthersBlockId>,
-    ) -> Result<EthersEIP1186ProofResponse, ProviderError> {
+    ) -> Result<EthersEIP1186ProofResponse, RethMiddlewareError<M>> {
         let from: Address = match from.into() {
             NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
             NameOrAddress::Address(addr) => addr.into(),
@@ -261,7 +256,7 @@ where
     async fn get_transaction_receipt<T: Send + Sync + Into<EthersTxHash>>(
         &self,
         transaction_hash: T,
-    ) -> Result<Option<EthersTransactionReceipt>, ProviderError> {
+    ) -> Result<Option<EthersTransactionReceipt>, RethMiddlewareError<M>> {
         let hash = ethers::types::H256::from_slice(transaction_hash.into().as_bytes());
         match self.reth_api.transaction_receipt(hash.into()).await {
             Ok(Some(receipt)) => Ok(Some(reth_transaction_receipt_to_ethers(receipt))),
