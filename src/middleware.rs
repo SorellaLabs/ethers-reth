@@ -4,8 +4,8 @@ use async_trait::async_trait;
 
 // Ether rs Types
 use ethers::{
-    providers::{ProviderError, Middleware},
-    types::{transaction::eip2718::TypedTransaction, BlockId, Bytes},
+    providers::{ProviderError, Middleware, MiddlewareError},
+    types::{transaction::{eip2718::TypedTransaction, eip2930::AccessList}, BlockId, Bytes},
 };
 use ethers::types::transaction::eip2930::AccessListWithGasUsed;
 use ethers::types::*;
@@ -46,7 +46,7 @@ where
         Ok(self
             .reth_api
             .call(call_request, block_id, None)
-            .await.unwrap()
+            .await?
             .0
             .into())
     }
@@ -62,6 +62,7 @@ where
             .reth_api
             .estimate_gas(call_request, block_id)
             .await?
+            .0
             .into())
     }
 
@@ -69,16 +70,20 @@ where
         &self,
         tx: &TypedTransaction,
         block: Option<BlockId>,
-    ) -> Result<AccessListWithGasUsed, ProviderError> {
+    ) -> Result<AccessListWithGasUsed, RethMiddlewareError<M>> {
         let call_request = ethers_typed_transaction_to_reth_call_request(tx);
         let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
-        Ok(self
+        let result = self
             .reth_api
             .create_access_list(call_request, block_id)
-            .await?
-            .0)
+            .await
+            .map_err(RethMiddlewareError::RethEthApiError)?;
+
+        let converted_result = reth_access_list_with_gas_used_to_ethers(result);
+        Ok(converted_result)
     }
 
+    
 
     //TODO: implement filter type conversion into reth & log query & type reconversion 
     async fn get_logs(&self, filter: &Filter) -> Result<Vec<Log>, Self::Error> {
