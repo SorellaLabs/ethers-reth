@@ -15,27 +15,21 @@ use reth_rpc::{
 };
 use reth_transaction_pool::{EthTransactionValidator, Pool, PooledTransaction, CostOrdering};
 use std::{sync::Arc, path::Path};
-use crate::{NodeTxPool, NodeClient};
 
 
-pub type NodeEthApi = EthApi<NodeClient, NodeTxPool, NoopNetwork>;
-
-pub struct RethEthApi {
-    reth_api: NodeEthApi,
-    reth_filter: NodeEthFilter
-}
+pub type NodeEthFilter = EthFilter<NodeClient, NodeTxPool>;
 
 
 // trait for reth EthApi
-//#[async_trait]
-//pub trait RethEthApi {
+#[async_trait]
+pub trait RethEthFilter {
 
- //   fn default(db_path: &Path) -> Self;
+    fn default(db_path: &Path) -> Self;
 
-//}
+}
 
 
-impl RethEthApi for EthApi<NodeClient, NodeTxPool, NoopNetwork> {
+impl RethEthApi for EthFilter<NodeClient, NodeTxPool> {
 
     /// default implementation
     fn default(db_path: &Path) -> Self {

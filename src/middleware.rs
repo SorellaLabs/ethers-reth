@@ -1,7 +1,6 @@
 use crate::{utils::*, RethMiddleware, RethMiddlewareError};
 use async_trait::async_trait;
 
-
 // Ether rs Types
 use ethers::{
     providers::{ProviderError, Middleware},
@@ -43,26 +42,29 @@ where
     ) -> Result<Bytes, Self::Error> {
         let call_request = ethers_typed_transaction_to_reth_call_request(tx);
         let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
-        Ok(self
+        let res = self
             .reth_api
             .call(call_request, block_id, None)
-            .await.unwrap()
-            .0
-            .into())
+            .await?
+            .to_vec()
+            .into();
+        
+        Ok(res)
     }
 
     async fn estimate_gas(
         &self,
         tx: &TypedTransaction,
         block: Option<BlockId>,
-    ) -> Result<Bytes, Self::Error> {
+    ) -> Result<U256, Self::Error> {
         let call_request = ethers_typed_transaction_to_reth_call_request(tx);
         let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
-        Ok(self
+        let res = self
             .reth_api
             .estimate_gas(call_request, block_id)
-            .await?
-            .into())
+            .await?;
+
+        Ok(res.into())
     }
 
     async fn create_access_list(

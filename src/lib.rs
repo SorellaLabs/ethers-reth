@@ -1,17 +1,39 @@
 pub mod reth_api;
 pub mod middleware;
 mod utils;
+use std::sync::Arc;
+
 use ethers::providers::{Middleware, MiddlewareError};
-use reth_api::nodeEthApi;
+use reth_api::NodeEthApi;
 use jsonrpsee::types::*;
+use reth_beacon_consensus::BeaconConsensus;
+use reth_blockchain_tree::ShareableBlockchainTree;
+use reth_db::mdbx::{NoWriteMap, Env};
+use reth_provider::providers::BlockchainProvider;
+use reth_revm::Factory;
+use reth_transaction_pool::{PooledTransaction, EthTransactionValidator, Pool, CostOrdering};
 use thiserror::Error;
+
+
+pub type NodeClient = BlockchainProvider<
+    Arc<Env<NoWriteMap>>,
+    ShareableBlockchainTree<Arc<Env<NoWriteMap>>, Arc<BeaconConsensus>, Factory>,
+>;
+
+pub type NodeTxPool = Pool<
+    EthTransactionValidator<
+    NodeClient,
+        PooledTransaction,
+    >,
+    CostOrdering<PooledTransaction>,
+>;
 
 
 
 #[derive(Clone)]
 pub struct RethMiddleware<M> {
     inner: M,
-    reth_api: nodeEthApi,
+    reth_api: NodeEthApi,
 }
 
 impl<M: std::fmt::Debug> std::fmt::Debug
@@ -52,11 +74,11 @@ impl<M> RethMiddleware<M>
 where
     M: Middleware,
 {
-    pub fn new(inner: M, reth_api: nodeEthApi) -> Self {
+    pub fn new(inner: M, reth_api: NodeEthApi) -> Self {
         Self { inner, reth_api }
     }
 
-    pub fn reth_api(&self) -> &nodeEthApi {
+    pub fn reth_api(&self) -> &NodeEthApi {
         &self.reth_api
     }
 }
