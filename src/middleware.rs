@@ -17,7 +17,8 @@ use ethers::types::U256;
 use ethers::types::H256;
 use ethers::types::Log;
 use ethers::types::TxHash;
-
+use ethers::types::FeeHistory;
+use ethers::types::BlockNumber;
 // Reth Types
 use reth_network_api::NetworkInfo;
 use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockProviderIdExt, BlockIdProvider, HeaderProvider};
@@ -180,6 +181,28 @@ where
         let block_number = self.reth_api.block_number().await?;
         Ok(block_number.into())
     }
+
+
+    async fn fee_history<T: Into<U256> + Send + Sync>(
+        &self,
+        block_count: T,
+        last_block: BlockNumber,
+        reward_percentiles: &[f64],
+    ) -> Result<FeeHistory, Self::Error> {
+        let block_count = block_count.into();
+        let last_block = last_block.into();
+        let reward_percentiles = Some(reward_percentiles.to_vec());
+        let fee_history = self
+            .reth_api
+            .fee_history(block_count, last_block, reward_percentiles)
+            .await
+            .map_err(RethMiddlewareError::RethEthApiError)?;
+        Ok(fee_history)
+    }
+
+
+
+
 
 }
 
