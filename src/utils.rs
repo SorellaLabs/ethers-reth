@@ -1,3 +1,5 @@
+use std::{ops::Deref, error::Error};
+
 use ethers::types::{
     transaction::{eip2718::TypedTransaction, eip2930::AccessList as EthersAccessList, eip2930::AccessListItem as EthersAccessListItem, eip2930::AccessListWithGasUsed as EthersAccessListWithGasUsed},
     BlockId as EthersBlockId, NameOrAddress,
@@ -5,55 +7,25 @@ use ethers::types::{
 use ethers::types::TransactionReceipt as EthersTransactionReceipt;
 use ethers::types::Transaction as EthersTransaction;
 use ethers::types::OtherFields;
+use ethers::types::Filter as EthersFilter;
+use ethers::types::ValueOrArray as EthersValueOrArray;
+use ethers::types::Topic as EthersTopic;
+use ethers::types::FilterBlockOption as EthersFilterBlockOption;
+use ethers::types::BlockNumber as EthersBlockNumber;
+use ethers::types::H256 as EthersH256;
+use eyre::Result;
 
 use reth_primitives::{
-    AccessList, AccessListWithGasUsed, AccessListItem, Address, BlockHash, BlockId, BlockNumberOrTag, Bytes, H256, U256,
-    U8, Transaction
+    AccessList, AccessListWithGasUsed, AccessListItem, Address, BlockId, BlockNumberOrTag, Bytes, U256,
+    U8, H256, hex::ToHex
 };
 
 
 use reth_rpc_types::TransactionReceipt;
 use reth_rpc_types::CallRequest;
-use reth_revm::{precompile::B160, primitives::ruint::{aliases::B256, Uint, Bits}};
+use reth_revm::{precompile::B160, primitives::ruint::{Uint, Bits, self}};
 use reth_rpc_types::{Filter, ValueOrArray, FilterBlockOption, Topic};
-use crate::{utils::*, RethMiddleware, RethMiddlewareError};
-use async_trait::async_trait;
 
-// Ether rs Types
-use ethers::{
-    providers::{ProviderError, Middleware, MiddlewareError},
-    types::{transaction::{eip2718::TypedTransaction, eip2930::AccessList}, Bytes},
-};
-use ethers::types::transaction::eip2930::AccessListWithGasUsed;
-
-use ethers::types::BlockId as EthersBlockId;
-use ethers::types::Transaction as EthersTransaction;
-use ethers::types::TransactionReceipt as EthersTransactionReceipt;
-use ethers::types::Address as EthersAddress;    
-use ethers::types::NameOrAddress;
-use ethers::types::Filter as EthersFilter;
-use ethers::types::U256 as EthersU256;
-use ethers::types::H256 as EthersH256;
-use ethers::types::Log as EthersLog;
-use ethers::types::TxHash as EthersTxHash;
-use ethers::types::FeeHistory as EthersFeeHistory;
-use ethers::types::BlockNumber as EthersBlocKNumber;
-use ethers::types::EIP1186ProofResponse as EthersEIP1186ProofResponse;
-// Reth Types
-
-use reth_network_api::NetworkInfo;
-use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockProviderIdExt, BlockIdProvider, HeaderProvider};
-use reth_rpc::{eth::{EthApi, EthTransactions, *}, EthApiSpec};
-use reth_rpc_api::EthApiServer;
-use reth_rpc_types::Filter;
-use reth_primitives::Address;
-use reth_transaction_pool::TransactionPool;
-use reth_primitives::{BlockId, serde_helper::JsonStorageKey, H256};
-
-
-// Std Lib
-use std::fmt::Debug;
-use serde::{de::DeserializeOwned, Serialize};
 
 
 
@@ -168,80 +140,80 @@ pub fn reth_rpc_transaction_to_ethers(reth_tx: reth_rpc_types::Transaction) -> E
 }
 
 
-fn convert_block_number_to_block_number_or_tag(block: ethers::types::BlockNumber) -> BlockNumberOrTag {
+fn convert_block_number_to_block_number_or_tag(block: EthersBlockNumber) -> Result<BlockNumberOrTag> {
     match block {
-        ethers::types::BlockNumber::Latest => BlockNumberOrTag::Latest,
-        ethers::types::BlockNumber::Finalized => BlockNumberOrTag::Finalized,
-        ethers::types::BlockNumber::Safe => BlockNumberOrTag::Safe,
-        ethers::types::BlockNumber::Earliest => BlockNumberOrTag::Earliest,
-        ethers::types::BlockNumber::Pending => BlockNumberOrTag::Pending,
-        ethers::types::BlockNumber::Number(n) => BlockNumberOrTag::Number(n.as_u64()),
+        ethers::types::BlockNumber::Latest => Ok(BlockNumberOrTag::Latest),
+        ethers::types::BlockNumber::Finalized => Ok(BlockNumberOrTag::Finalized),
+        ethers::types::BlockNumber::Safe => Ok(BlockNumberOrTag::Safe),
+        ethers::types::BlockNumber::Earliest => Ok(BlockNumberOrTag::Earliest),
+        ethers::types::BlockNumber::Pending => Ok(BlockNumberOrTag::Pending),
+        ethers::types::BlockNumber::Number(n) => Ok(BlockNumberOrTag::Number(n.as_u64())),
     }
 }
 
 
-fn convert_topics(topics: [Option<ethers::types::Topic>; 4]) -> [Option<Topic>; 4] {
-    let mut new_topics: [Option<Topic>; 4];
-    
+fn convert_topics(topics: [Option<EthersTopic>; 4]) -> [Option<Topic>; 4] {
+    let mut new_topics: Vec<Option<Topic>> = Vec::new();
+
     for (i, topic) in topics.into_iter().enumerate() {
-        new_topics[i] = match topic {
-            Some(t) => Some(convert_valueORarray(t)),
-            None => None
-        };
+        new_topics[i] = topic.as_ref().map(&option_convert_valueORarray).clone();
     }
 
-    new_topics
+    new_topics.try_into().unwrap()
 }
 
 
-fn convert_valueORarray<T, U>(val: ethers::types::ValueOrArray<Option<T>>) -> ValueOrArray<Option<U>>
-where 
-    U: From<T>,
-    Vec<U>: FromIterator<T>
-{
+/// ---------------------------
+
+// need to generalize the following 2 functions
+
+
+fn option_convert_valueORarray<T, U>(val: &EthersValueOrArray<Option<T>>) -> ValueOrArray<Option<U>>
+where
+    T: Clone,
+    U: From<T>
+ {
     match val {
-        ethers::types::ValueOrArray::Value(addr) => ValueOrArray::Value( match addr {
-            Some(a) => Some(Into::<U>::into(a)),
-            None => None
-        }),
-
-        ethers::types::ValueOrArray::Array(addrs) => ValueOrArray::Array(addrs.into_iter().map(|addr| { match addr { 
-            Some(a) => Some(Into::<U>::into(a)),
-            None => None
-        }}).collect::<Vec<Option<U>>>())
+        EthersValueOrArray::Value(Some(addr)) => ValueOrArray::Value(Some(addr.clone().into())),
+        EthersValueOrArray::Value(None) => ValueOrArray::Value(None),
+        EthersValueOrArray::Array(addrs) => ValueOrArray::Array(addrs.into_iter().map(|a| a.map(U::from)).collect())
     }
 }
 
 
-pub fn ethers_filter_to_reth_filter(filter: &ethers::types::Filter) -> Filter {
-    Filter {
+
+fn convert_valueORarray<T, U>(val: &EthersValueOrArray<T>) -> ValueOrArray<U>
+where
+    T: Clone,
+    U: From<T>
+ {
+    match val {
+        EthersValueOrArray::Value(addr) => ValueOrArray::Value(addr.clone().into()),
+        EthersValueOrArray::Array(addrs) => ValueOrArray::Array(addrs.into_iter().map(|a| Into::<U>::into(a.clone())).collect())
+    }
+}
+
+/// ---------------------------
+
+
+
+pub fn ethers_filter_to_reth_filter(filter: &EthersFilter) -> Filter {
+
+    return Filter {
         block_option: match filter.block_option {
-            ethers::types::FilterBlockOption::AtBlockHash(x) => FilterBlockOption::AtBlockHash(x),
-            ethers::types::FilterBlockOption::Range { 
-                from_block, 
-                to_block 
-            } => FilterBlockOption::Range { 
-                    from_block: match from_block {
-                        Some(b) => Some(convert_block_number_to_block_number_or_tag(b)),
-                        None => None
-                    }, 
-                    to_block: match to_block {
-                        Some(b) => Some(convert_block_number_to_block_number_or_tag(b)),
-                        None => None
-                    }, 
-                }
+            EthersFilterBlockOption::AtBlockHash(x) => FilterBlockOption::AtBlockHash(x.into()),
+            EthersFilterBlockOption::Range{from_block, to_block} => FilterBlockOption::Range { 
+                    from_block: convert_block_number_to_block_number_or_tag(from_block.unwrap()).ok(), 
+                    to_block: convert_block_number_to_block_number_or_tag(to_block.unwrap()).ok(), 
+            },
         },
 
-        address: match filter.address {
-            None => None,
-            Some(inner) => match inner {
-                ethers::types::ValueOrArray::Value(addr) => Some(ValueOrArray::Value(addr.into())),
-                ethers::types::ValueOrArray::Array(addrs) => Some(ValueOrArray::Array(addrs.into_iter().map(|a| a.into()).collect::<Vec<B160>>()))
-            }
-        },
+        address: match &filter.address { 
+            Some(addr) => Some(convert_valueORarray(addr)),
+            None => None
+            },
 
-        topics: match filter.topics {
-        }
+        topics: convert_topics(filter.topics)
 
 
     }

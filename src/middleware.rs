@@ -22,13 +22,15 @@ use ethers::types::BlockNumber as EthersBlocKNumber;
 use ethers::types::EIP1186ProofResponse as EthersEIP1186ProofResponse;
 
 
+
 // Reth Types
 use reth_network_api::NetworkInfo;
 use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockProviderIdExt, BlockIdProvider, HeaderProvider};
 use reth_rpc::{eth::{EthApi}, EthApiSpec};
-use reth_rpc_api::EthApiServer;
-use reth_rpc_types::Filter;
+use reth_rpc_api::{EthApiServer, EthFilterApiServer};
+//use reth_rpc_types::Filter;
 use reth_primitives::Address;
+use reth_rpc_types::Filter;
 use reth_transaction_pool::TransactionPool;
 use reth_primitives::{BlockId, serde_helper::JsonStorageKey, H256};
 
@@ -104,10 +106,12 @@ where
     
 
     //TODO: implement filter type conversion into reth & log query & type reconversion 
-    async fn get_logs(&self, filter: &ethers::types::Filter) -> Result<Vec<Log>, Self::Error> {
+    async fn get_logs(&self, filter: &EthersFilter) -> Result<Vec<EthersLog>, Self::Error> {
 
-        let reth_filter: Filter = Into::<Filter>::into(filter.clone());
-        Ok(self.reth_api.get_logs(reth_filter).await?)
+        let to_reth_filter: Filter = ethers_filter_to_reth_filter(filter);
+        let res = self.reth_filter.logs(to_reth_filter).await?;
+
+        Ok(res)
     }   
 
 

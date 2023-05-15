@@ -5,7 +5,7 @@ edition = "2021"
 
 
 [dependencies]
-ethers = { git = "https://github.com/gakonst/ethers-rs", default-features = false }
+ethers = { version = "2.0", git = "https://github.com/gakonst/ethers-rs", default-features = false }
 tokio = "1.28.0"
 
 reth-rpc = { path = "../crates/rpc/rpc" }
@@ -20,6 +20,7 @@ reth-blockchain-tree = { path = "../crates/blockchain-tree" }
 reth-beacon-consensus = { path = "../crates/consensus/beacon"}
 reth-revm = { path = "../crates/revm"}
 reth-interfaces = { path = "../crates/interfaces"}
+eyre = "0.6.8"
 
 jsonrpsee = { version = "0.18", features = ["server", "macros"] }
 serde = { version = "1.0", features = ["derive"] }
