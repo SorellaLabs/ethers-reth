@@ -20,6 +20,7 @@ use ethers::types::Log;
 use ethers::types::TxHash;
 use ethers::types::FeeHistory;
 use ethers::types::BlockNumber;
+use ethers::types::EIP1186ProofResponse as EthersEIP1186ProofResponse;
 // Reth Types
 use reth_network_api::NetworkInfo;
 use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockProviderIdExt, BlockIdProvider, HeaderProvider};
@@ -215,6 +216,26 @@ where
     }
     */
 
+    async fn get_proof<T: Into<NameOrAddress> + Send + Sync>(
+        &self,
+        from: T,
+        locations: Vec<H256>,
+        block: Option<EthersBlockId>,
+    ) -> Result<EthersEIP1186ProofResponse, ProviderError> {
+        let from: Address = match from.into() {
+            NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
+            NameOrAddress::Address(addr) => addr.into(),
+        };
+
+        let block_id = Some(BlockId::Number(block.into()));
+        let proof = self
+            .reth_api
+            .proof(from, locations, block_id)
+            .await
+            .map_err(RethMiddlewareError::RethEthApiError)?;
+        Ok(proof.into())
+    }
+
 
     async fn get_transaction_receipt<T: Send + Sync + Into<TxHash>>(
         &self,
@@ -227,6 +248,8 @@ where
             Err(e) => Err(RethMiddlewareError::RethEthApiError(e.into())),
         }
     }
+
+
     
 
     
