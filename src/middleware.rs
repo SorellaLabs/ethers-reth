@@ -11,22 +11,24 @@ use ethers::types::transaction::eip2930::AccessListWithGasUsed;
 use ethers::types::BlockId as EthersBlockId;
 use ethers::types::Transaction as EthersTransaction;
 use ethers::types::TransactionReceipt as EthersTransactionReceipt;
-use ethers::types::Address;
+use ethers::types::Address as EthersAddress;    
 use ethers::types::NameOrAddress;
-use ethers::types::Filter;
+use ethers::types::Filter as EthersFilter;
 use ethers::types::U256 as EthersU256;
 use ethers::types::H256 as EthersH256;
-use ethers::types::Log;
-use ethers::types::TxHash;
-use ethers::types::FeeHistory;
-use ethers::types::BlockNumber;
+use ethers::types::Log as EthersLog;
+use ethers::types::TxHash as EthersTxHash;
+use ethers::types::FeeHistory as EthersFeeHistory;
+use ethers::types::BlockNumber as EthersBlocKNumber;
 use ethers::types::EIP1186ProofResponse as EthersEIP1186ProofResponse;
 // Reth Types
+
 use reth_network_api::NetworkInfo;
 use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockProviderIdExt, BlockIdProvider, HeaderProvider};
 use reth_rpc::{eth::{EthApi, EthTransactions, *}, EthApiSpec};
 use reth_rpc_api::EthApiServer;
 use reth_rpc_types::Filter;
+use reth_primitives::Address;
 use reth_transaction_pool::TransactionPool;
 use reth_primitives::{BlockId, serde_helper::JsonStorageKey, H256};
 
@@ -52,7 +54,7 @@ where
     async fn call(
         &self,
         tx: &TypedTransaction,
-        block: Option<BlockId>,
+        block: Option<EthersBlockId>,
     ) -> Result<Bytes, Self::Error> {
         let call_request = ethers_typed_transaction_to_reth_call_request(tx);
         let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
@@ -69,7 +71,7 @@ where
     async fn estimate_gas(
         &self,
         tx: &TypedTransaction,
-        block: Option<BlockId>,
+        block: Option<EthersBlockId>,
     ) -> Result<EthersU256, Self::Error> {
         let call_request = ethers_typed_transaction_to_reth_call_request(tx);
         let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
@@ -84,7 +86,7 @@ where
     async fn create_access_list(
         &self,
         tx: &TypedTransaction,
-        block: Option<BlockId>,
+        block: Option<EthersBlockId>,
     ) -> Result<AccessListWithGasUsed, RethMiddlewareError<M>> {
         let call_request = ethers_typed_transaction_to_reth_call_request(tx);
         let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
@@ -115,10 +117,12 @@ where
         block: Option<EthersBlockId>,
     ) -> Result<H256, Self::Error> {
         // convert `from` to `Address` and `block` to `Option<BlockId>`
-        let from: Address = match from.into() {
+        let from: EthersAddress = match from.into() {
             NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
             NameOrAddress::Address(addr) => addr.into(),
         };
+
+        let from = from as Address;
     
         // convert `location` to `JsonStorageKey`
         let index: JsonStorageKey = EthersU256::from_big_endian(location.as_bytes()).into();
@@ -148,7 +152,7 @@ where
 
     async fn get_balance(
         &self,
-        address: Address,
+        address: EthersAddress,
         blocknumber: u64,
     ) -> Result<EthersU256, ProviderError> {
         let block_id = Some(BlockId::Number(blocknumber.into()));
@@ -244,7 +248,7 @@ where
     }
 
 
-    async fn get_transaction_receipt<T: Send + Sync + Into<TxHash>>(
+    async fn get_transaction_receipt<T: Send + Sync + Into<EthersTxHash>>(
         &self,
         transaction_hash: T,
     ) -> Result<Option<EthersTransactionReceipt>, ProviderError> {
