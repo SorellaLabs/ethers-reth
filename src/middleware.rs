@@ -137,7 +137,7 @@ where
     ) -> Result<Option<EthersTransaction>, ProviderError> {
         //let hash = ethers::types::H256::from_slice(transaction_hash.into().as_bytes());
         match self.reth_api.transaction_by_hash(transaction_hash).await {
-            Ok(Some(tx)) => Ok(Some(reth_transaction_to_ethers(tx))),
+            Ok(Some(tx)) => Ok(Some(reth_rpc_transaction_to_ethers(tx))),
             Ok(None) => Ok(None),
             Err(e) => Err(RethMiddlewareError::RethEthApiError(e.into())),
         }
@@ -147,7 +147,7 @@ where
         &self,
         address: Address,
         blocknumber: u64,
-    ) -> Result<U256, ProviderError> {
+    ) -> Result<EthersU256, ProviderError> {
         let block_id = Some(BlockId::Number(blocknumber.into()));
         let balance = self.reth_api.balance(address, block_id).await?;
         Ok(balance.into())
@@ -167,25 +167,25 @@ where
         &self,
         address: Address,
         blocknumber: u64,
-    ) -> Result<U256, ProviderError> {
+    ) -> Result<EthersU256, ProviderError> {
         let block_id = Some(BlockId::Number(blocknumber.into()));
         let count = self.reth_api.transaction_count(address, block_id).await?;
         Ok(count.into())
     }
 
 
-    async fn get_chainid(&self) -> Result<U256, ProviderError> {
+    async fn get_chainid(&self) -> Result<EthersU256, ProviderError> {
         let chain_id = self.reth_api.chain_id().await?;
         Ok(chain_id.into())
     }
 
-    async fn get_block_number(&self) -> Result<U256, ProviderError> {
+    async fn get_block_number(&self) -> Result<EthersU256, ProviderError> {
         let block_number = self.reth_api.block_number().await?;
         Ok(block_number.into())
     }
 
 
-    async fn fee_history<T: Into<U256> + Send + Sync>(
+    async fn fee_history<T: Into<EthersU256> + Send + Sync>(
         &self,
         block_count: T,
         last_block: BlockNumber,

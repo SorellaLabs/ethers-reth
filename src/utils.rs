@@ -3,15 +3,17 @@ use ethers::types::{
     BlockId as EthersBlockId, NameOrAddress,
 };
 use ethers::types::TransactionReceipt as EthersTransactionReceipt;
-use ethers::types::Transaction;
+use ethers::types::Transaction as EthersTransaction;
 use ethers::types::OtherFields;
 
 use reth_primitives::{
     AccessList, AccessListWithGasUsed, AccessListItem, Address, BlockHash, BlockId, BlockNumberOrTag, Bytes, H256, U256,
-    U8,
+    U8, Transaction
 };
-use reth_rpc_types::TransactionReceipt;
 
+
+
+use reth_rpc_types::TransactionReceipt;
 use reth_rpc_types::CallRequest;
 
 pub fn ethers_block_id_to_reth_block_id(block_id: EthersBlockId) -> BlockId {
@@ -94,33 +96,34 @@ pub fn ethers_typed_transaction_to_reth_call_request(tx: &TypedTransaction) -> C
 }
 
 
-pub fn reth_transaction_to_ethers(tx: reth_rpc_types::Transaction) -> Transaction {
-    Transaction {
-        hash: H256::from_slice(tx.hash.as_bytes()),
-        nonce: U256::from_limbs(tx.nonce.0),
-        block_hash: tx.block_hash.map(|hash| H256::from_slice(hash.as_bytes())),
-        block_number: tx.block_number.map(|number| U256::from_limbs(number.0)),
-        transaction_index: tx.transaction_index.map(|index| U256::from_limbs(index.0)),
-        from: Address::from_slice(tx.from.as_bytes()),
-        to: tx.to.map(|addr| Address::from_slice(addr.as_bytes())),
-        value: U256::from_limbs(tx.value.0),
-        gas_price: U256::from_limbs(tx.gas_price.0),
-        gas: U256::from_limbs(tx.gas.0),
-        input: Bytes(tx.input.0),
-        v: U8::from(tx.v),
-        r: H256::from_slice(tx.r.as_bytes()),
-        s: H256::from_slice(tx.s.as_bytes()),
-        access_list: tx
-            .access_list
-            .map(|list| ethers_access_list_to_reth_access_list(list.clone())),
-        transaction_type: match tx.transaction_type {
-            Some(0x1) => Some(TxType::Eip2930),
-            Some(0x2) => Some(TxType::Eip1559),
-            _ => None,
-        },
+pub fn reth_rpc_transaction_to_ethers(reth_tx: reth_rpc_types::Transaction) -> EthersTransaction {
+    let v = reth_tx.signature.map_or(0.into(), |sig| sig.v.into());
+    let r = reth_tx.signature.map_or(0.into(), |sig| sig.r.into());
+    let s = reth_tx.signature.map_or(0.into(), |sig| sig.s.into());
+
+    EthersTransaction {
+        hash: reth_tx.hash,
+        nonce: reth_tx.nonce,
+        block_hash: reth_tx.block_hash,
+        block_number: reth_tx.block_number.map(|n| n.low_u64().into()),
+        transaction_index: reth_tx.transaction_index.map(|n| n.low_u64().into()),
+        from: reth_tx.from,
+        to: reth_tx.to,
+        value: reth_tx.value,
+        gas_price: reth_tx.gas_price.map(|p| p.into()),
+        gas: reth_tx.gas,
+        input: reth_tx.input,
+        v: v,
+        r: r,
+        s: s,
+        transaction_type: reth_tx.transaction_type,
+        access_list: reth_tx.access_list,
+        max_priority_fee_per_gas: reth_tx.max_priority_fee_per_gas.map(|p| p.into()),
+        max_fee_per_gas: reth_tx.max_fee_per_gas.map(|p| p.into()),
+        chain_id: reth_tx.chain_id.map(|id| id.into()),
+        ..Default::default()
     }
 }
-
 
 pub fn reth_transaction_receipt_to_ethers(
     receipt: TransactionReceipt,
