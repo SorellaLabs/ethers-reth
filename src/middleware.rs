@@ -14,6 +14,7 @@ use reth_network_api::NetworkInfo;
 use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockProviderIdExt, BlockIdProvider, HeaderProvider};
 use reth_rpc::{eth::{EthApi, EthTransactions, *}, EthApiSpec};
 use reth_rpc_api::EthApiServer;
+use reth_rpc_types::Filter;
 use reth_transaction_pool::TransactionPool;
 
 
@@ -87,8 +88,10 @@ where
     
 
     //TODO: implement filter type conversion into reth & log query & type reconversion 
-    async fn get_logs(&self, filter: &Filter) -> Result<Vec<Log>, Self::Error> {
-        Ok(self.reth_api.get_logs(filter).await?)
+    async fn get_logs(&self, filter: &ethers::types::Filter) -> Result<Vec<Log>, Self::Error> {
+
+        let reth_filter: Filter = Into::<Filter>::into(filter.clone());
+        Ok(self.reth_api.get_logs(reth_filter).await?)
     }   
 
 

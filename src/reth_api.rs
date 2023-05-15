@@ -1,5 +1,6 @@
 
 use async_trait::async_trait;
+use ethers::prelude::Client;
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::{
     externals::TreeExternals, BlockchainTree, BlockchainTreeConfig, ShareableBlockchainTree,
@@ -15,74 +16,28 @@ use reth_rpc::{
 };
 use reth_transaction_pool::{EthTransactionValidator, Pool, PooledTransaction, CostOrdering};
 use std::{sync::Arc, path::Path};
-use crate::{NodeTxPool, NodeClient};
+use crate::{defaults::{default_pool, default_client, NodeClient, NodeTxPool}};
 
 
 pub type NodeEthApi = EthApi<NodeClient, NodeTxPool, NoopNetwork>;
 
-pub struct RethEthApi {
-    reth_api: NodeEthApi,
-    reth_filter: NodeEthFilter
-}
 
+/// default EthApi implementation
+pub fn default_eth_api(client: NodeClient) -> NodeEthApi {
 
-// trait for reth EthApi
-//#[async_trait]
-//pub trait RethEthApi {
+    let tx_pool = default_pool(client.clone());
 
- //   fn default(db_path: &Path) -> Self;
+    let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
 
-//}
-
-
-impl RethEthApi for EthApi<NodeClient, NodeTxPool, NoopNetwork> {
-
-    /// default implementation
-    fn default(db_path: &Path) -> Self {
-        let chain = Arc::new(MAINNET.clone());
-        let db = Arc::new(Env::<NoWriteMap>::open(db_path.as_ref(), EnvKind::RO).unwrap());
-
-        let tree_externals = TreeExternals::new(
-            Arc::clone(&db),
-            Arc::new(BeaconConsensus::new(Arc::clone(&chain))),
-            Factory::new(Arc::clone(&chain)),
-            Arc::clone(&chain),
-        );
-
-        let tree_config = BlockchainTreeConfig::default();
-        let (canon_state_notification_sender, _receiver) =
-            tokio::sync::broadcast::channel(tree_config.max_reorg_depth() as usize * 2);
+    let api = EthApi::new(
+        client.clone(), 
+        tx_pool, 
+        NoopNetwork, 
+        state_cache, 
+        GasPriceOracle::new(client.clone(), GasPriceOracleConfig::default(), state_cache.clone())
+    );
     
-        let blockchain_tree = ShareableBlockchainTree::new(
-            BlockchainTree::new(
-                tree_externals,
-                canon_state_notification_sender.clone(),
-                tree_config,
-            )
-            .unwrap(),
-        );
-
-        let blockchain_db = BlockchainProvider::new(
-            ShareableDatabase::new(Arc::clone(&db), Arc::clone(&chain)),
-            blockchain_tree
-        ).unwrap();
-
-        let tx_pool = reth_transaction_pool::Pool::eth_pool(
-            EthTransactionValidator::new(blockchain_db.clone(), chain),
-            Default::default(),
-        );
-
-        let state_cache = EthStateCache::spawn(blockchain_db.clone(), EthStateCacheConfig::default());
-
-        let api = EthApi::new(
-            blockchain_db, 
-            tx_pool, 
-            NoopNetwork, 
-            state_cache, 
-            GasPriceOracle::new(blockchain_db.clone(), GasPriceOracleConfig::default(), state_cache.clone())
-        );
-        
-        api
-    }
-
+    api
 }
+
+
