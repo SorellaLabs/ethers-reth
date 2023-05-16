@@ -25,7 +25,6 @@ use ethers::types::Bytes as EthersBytes;
 
 
 
-
 // Reth Types
 use reth_network_api::NetworkInfo;
 use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockProviderIdExt, BlockIdProvider, HeaderProvider};
@@ -178,7 +177,7 @@ where
         &self,
         at: T,
         block: Option<EthersBlockId>,
-    ) -> Result<Bytes, Self::Error> {
+    ) -> Result<EthersBytes, Self::Error> {
         let at: Address = match at.into() {
             NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
             NameOrAddress::Address(addr) => addr.into(),
@@ -194,21 +193,29 @@ where
         from: T,
         block: Option<EthersBlockId>,
     ) -> Result<EthersU256, Self::Error> {
-        let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
-        let count = self.reth_api.transaction_count(address, block_id).await;
-        Ok(count.into())
+        let from = match from.into() {
+            NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
+            NameOrAddress::Address(addr) => addr.into(),
+        };
+    
+        let block_id = block.map(ethers_block_id_to_reth_block_id);
+        match self.reth_api.transaction_count(from, block_id).await {
+            Ok(count) => Ok(count.into()),
+            Err(e) => Err(e.into()),
+        }
     }
-
+    
 
     async fn get_chainid(&self) -> Result<EthersU256, RethMiddlewareError<M>> {
         let chain_id = self.reth_api.chain_id().await?;
         Ok(chain_id.into())
     }
 
+
     async fn get_block_number(&self) -> Result<EthersU64, RethMiddlewareError<M>> {
-        let block_number = self.reth_api.block_number();
-        let block_number: EthersU256 = block_number.unwrap().try_into().unwrap();
-        Ok(block_number.as_u64().into())    
+        let block_number = self.reth_api.block_number()?;
+        let block_number: EthersU64 = block_number.try_into()?;
+        Ok(block_number.as_u64().into())
     }
 
 
@@ -282,7 +289,6 @@ where
     }
 
 }
-
 
 
 /* 

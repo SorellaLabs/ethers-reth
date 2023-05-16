@@ -23,6 +23,8 @@ use reth_primitives::{
     U8, H256, hex::ToHex
 };
 
+use reth_primitives::BlockHash;
+
 
 
 
@@ -207,7 +209,7 @@ fn convert_topics(topics: [Option<EthersTopic>; 4]) -> [Option<Topic>; 4] {
 
     for (i, topic) in topics.into_iter().enumerate() {
         new_topics[i] = topic.as_ref().map(&option_convert_valueORarray).clone();
-    }
+    }sss
 
     new_topics.try_into().unwrap()
 }
@@ -276,9 +278,9 @@ pub fn reth_transaction_receipt_to_ethers(
     receipt: TransactionReceipt,
 ) -> EthersTransactionReceipt {
     EthersTransactionReceipt {
-        transaction_hash: receipt.transaction_hash.into().unwrap(),
-        transaction_index: receipt.transaction_index.unwrap().as_u64().into(),
-        block_hash: receipt.block_hash,
+        transaction_hash: receipt.transaction_hash.unwrap().into(),
+        transaction_index: receipt.transaction_index.unwrap().into(),
+        block_hash: receipt.block_hash.unwrap().into(),
         block_number: receipt.block_number.map(|num| num.as_u64().into()),
         from: receipt.from,
         to: receipt.to,
@@ -288,10 +290,10 @@ pub fn reth_transaction_receipt_to_ethers(
         logs: receipt.logs,
         status: receipt.status_code.map(|num| num.as_u64().into()),
         root: receipt.state_root,
-        logs_bloom: receipt.logs_bloom,
+        logs_bloom: receipt.logs_bloom.into(),
         transaction_type: Some(receipt.transaction_type.into()),
         effective_gas_price: Some(
-            U256::from(receipt.effective_gas_price),
+            U256::from(receipt.effective_gas_price).into(),
         ),
         other: OtherFields::default(),
     }
