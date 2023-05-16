@@ -29,6 +29,7 @@ use ethers::types::Bytes as EthersBytes;
 // Reth Types
 use reth_network_api::NetworkInfo;
 use reth_provider::{BlockProvider, EvmEnvProvider, StateProviderFactory, BlockProviderIdExt, BlockIdProvider, HeaderProvider};
+use reth_revm::primitives::SpecId::LATEST;
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
 use reth_rpc::{eth::EthApi, EthApiSpec};
 use reth_rpc_types::Filter;
@@ -134,7 +135,7 @@ where
         let index: JsonStorageKey = convert_location_to_json_key(location);
         
         // convert `block` to `Option<BlockId>`
-        let block: Option<BlockId> = block.map(ethers_block_id_to_reth_block_id);
+        let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
     
         // call `storage_at`
         match self.reth_api.storage_at(from.into(), index, block).await {
@@ -148,22 +149,28 @@ where
     async fn get_transaction<T: Send + Sync + Into<EthersTxHash>>(
         &self,
         transaction_hash: T,
-    ) -> Result<Option<EthersTransaction>, ProviderError> {
+    ) -> Result<Option<EthersTransaction>, Self::Error> {
         let hash = ethers::types::H256::from_slice(transaction_hash.into().as_bytes());
         match self.reth_api.transaction_by_hash(hash.into()).await {
             Ok(Some(tx)) => Ok(Some(reth_rpc_transaction_to_ethers(tx))),
             Ok(None) => Ok(None),
-            Err(e) => Err(e),  // convert RethMiddlewareError into ProviderError
+            Err(e) => Err(e.into()),  
         }
     }
 
-    async fn get_balance(
+    async fn get_balance<T: Into<NameOrAddress> + Send + Sync>(
         &self,
-        address: EthersAddress,
-        blocknumber: u64,
-    ) -> Result<EthersU256, ProviderError> {
-        let block_id = Some(BlockId::Number(blocknumber.into()));
-        let balance = self.reth_api.balance(address.into(), block_id).await?;
+        from: T,
+        block: Option<EthersBlockId>,
+    ) -> Result<EthersU256, Self::Error> {
+        let from: Address = match from.into() {
+            NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
+            NameOrAddress::Address(addr) => addr.into(),
+        };
+
+        let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
+        let balance = self.reth_api.balance(from.into(), block_id).await?;
+
         Ok(balance.into())
     }
 
@@ -177,17 +184,17 @@ where
             NameOrAddress::Address(addr) => addr.into(),
         };
         
-        let block_id = Some(ethers_block_id_to_reth_block_id(block.unwrap()));
+        let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
         let code = self.reth_api.get_code(at, block_id).await?;
         Ok(code.to_vec().into())
     }
 
-    async fn get_transaction_count(
+    async fn get_transaction_count<T: Into<NameOrAddress> + Send + Sync>(
         &self,
-        address: Address,
-        blocknumber: u64,
-    ) -> Result<EthersU256, ProviderError> {
-        let block_id = Some(BlockId::Number(blocknumber.into()));
+        from: T,
+        block: Option<EthersBlockId>,
+    ) -> Result<EthersU256, Self::Error> {
+        let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
         let count = self.reth_api.transaction_count(address, block_id).await;
         Ok(count.into())
     }
@@ -212,7 +219,7 @@ where
         reward_percentiles: &[f64],
     ) -> Result<EthersFeeHistory, Self::Error> {
         let block_count: reth_primitives::U64 = block_count as U64;
-        let last_block = last_block.into();
+        let last_block = ethers_block_id_to_reth_block_id(last_block);
         let reward_percentiles = Some(reward_percentiles.to_vec());
         let fee_history = self
             .reth_api
