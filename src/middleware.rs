@@ -188,7 +188,7 @@ where
         blocknumber: u64,
     ) -> Result<EthersU256, ProviderError> {
         let block_id = Some(BlockId::Number(blocknumber.into()));
-        let count = self.reth_api.transaction_count(address, block_id).await?;
+        let count = self.reth_api.transaction_count(address, block_id).await;
         Ok(count.into())
     }
 
