@@ -1,5 +1,6 @@
 pub mod reth_api;
 pub mod middleware;
+pub mod defaults;
 mod utils;
 use std::sync::Arc;
 

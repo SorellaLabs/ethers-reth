@@ -20,7 +20,10 @@ use ethers::types::TxHash as EthersTxHash;
 use ethers::types::FeeHistory as EthersFeeHistory;
 use ethers::types::BlockNumber as EthersBlocKNumber;
 use ethers::types::EIP1186ProofResponse as EthersEIP1186ProofResponse;
-use ethers::types::U64;
+use ethers::types::U64 as EthersU64;
+use ethers::types::Bytes as EthersBytes;
+
+
 
 
 // Reth Types
@@ -164,14 +167,19 @@ where
         Ok(balance.into())
     }
 
-    async fn get_code(
+    async fn get_code<T: Into<NameOrAddress> + Send + Sync>(
         &self,
-        address: Address,
-        blocknumber: u64,
-    ) -> Result<Bytes, ProviderError> {
-        let block_id = Some(BlockId::Number(blocknumber.into()));
-        let code = self.reth_api.get_code(address, block_id).await?;
-        Ok(code.into())
+        at: T,
+        block: Option<EthersBlockId>,
+    ) -> Result<Bytes, Self::Error> {
+        let at: Address = match at.into() {
+            NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
+            NameOrAddress::Address(addr) => addr.into(),
+        };
+        
+        let block_id = Some(ethers_block_id_to_reth_block_id(block.unwrap()));
+        let code = self.reth_api.get_code(at, block_id).await?;
+        Ok(code.to_vec().into())
     }
 
     async fn get_transaction_count(
@@ -190,9 +198,10 @@ where
         Ok(chain_id.into())
     }
 
-    async fn get_block_number(&self) -> Result<U64, RethMiddleware<M>> {
-        let block_number = self.reth_api.block_number().await?;
-        Ok(block_number.into())
+    async fn get_block_number(&self) -> Result<EthersU64, RethMiddlewareError<M>> {
+        let block_number = self.reth_api.block_number();
+        let block_number: EthersU256 = block_number.unwrap().try_into().unwrap();
+        Ok(block_number.as_u64().into())    
     }
 
 
