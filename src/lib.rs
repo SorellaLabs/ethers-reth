@@ -93,7 +93,9 @@ where
     pub fn new(inner: M, db_path: &Path) -> Self {
 
         let client = Self::init_client(db_path);
+        // EthApi -> EthApi<Client, Pool, Network>
         let api = Self::init_eth_api(client.clone());
+        // EthApi -> EthFilter<Client, Pool>
         let filter = Self::init_eth_filter(client.clone(), 1000);
 
         Self { inner, reth_api: api, reth_filter: filter}
