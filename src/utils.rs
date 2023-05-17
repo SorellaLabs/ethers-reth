@@ -18,7 +18,7 @@ use ethers::types::{
     ValueOrArray as EthersValueOrArray, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
     EIP1186ProofResponse as EthersEIP1186ProofResponse,
     FeeHistory as EthersFeeHistory, Bytes as EthersBytes, StorageProof as EthersStorageProof,
-    Block as EthersBlock, Withdrawal as EthersWithdrawal
+    Block as EthersBlock, Withdrawal as EthersWithdrawal, Trace
 };
 
 use reth_primitives::{
@@ -32,6 +32,7 @@ use reth_rpc_types::{
 
 use reth_revm::primitives::ruint::Uint;
 use reth_rpc_types::EIP1186AccountProofResponse;
+reth::
 
 pub trait ToEthers<T> {
     /// Reth -> Ethers
@@ -559,4 +560,8 @@ pub fn convert_Reth_U256_to_Ethers_U64(u256: U256) -> EthersU64 {
 pub fn convert_Reth_U64_to_Ethers_U256(u64: U64) -> EthersU256 {
     let u64t = u64.as_u64();
     u64t.into()
+}
+
+pub fn reth_trace_to_ethers(RethTrace: Trace) -> EthersTrace {
+    todo!()
 }

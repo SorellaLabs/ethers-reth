@@ -307,8 +307,8 @@ where
         Ok(ethers_logs)
     }
 
-    // Tracing
-
+    // Tracing 
+    // TODO: implement tracing type conversion 
     async fn trace_transaction(
         &self,
         tx_hash: EthersTxHash,
@@ -330,7 +330,7 @@ where
 
         let trace = trace_opt.ok_or(RethMiddlewareError::MissingTrace)?;
 
-        let ethers_trace: Vec<EthersTrace> = trace.into_iter().map(reth_trace_to_ethers).collect();
+        let ethers_trace: Vec<EthersTrace> = traces.into_iter().map(|trace| reth_trace_to_ethers(trace)).collect();
 
         Ok(ethers_trace)
     }
@@ -371,8 +371,7 @@ where
                 let res = self.create_access_list(tx, block).await?;
                 Ok(res)
             }
-            _ => ProviderError::from(ProviderError::UnsupportedRPC(method.to_string())),
-        }
+            _ => ProviderError::from(ProviderError::UnsupportedRPC(method.to_string
     }
 }
 
