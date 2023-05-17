@@ -36,7 +36,7 @@ use reth_rpc_types::{
     trace::parity::{
         Action, CallType, LocalizedTransactionTrace, RewardType, TraceOutput, TraceResult,
     },
-    Block, BlockTransactions, CallRequest, EIP1186AccountProofResponse, FeeHistory, Filter,
+    BlockTransactions, CallRequest, EIP1186AccountProofResponse, FeeHistory, Filter,
     FilterBlockOption, Log, Rich, RichBlock, StorageProof, Topic, Transaction, TransactionReceipt,
     ValueOrArray,
 };
