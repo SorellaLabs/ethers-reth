@@ -15,9 +15,11 @@ use ethers::{
         FeeHistory as EthersFeeHistory, Filter as EthersFilter, Log as EthersLog, NameOrAddress,
         Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
         TxHash as EthersTxHash, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
-        BlockNumber as EthersBlockNumber, Block as EthersBlock,
+        BlockNumber as EthersBlockNumber, Block as EthersBlock, Trace as EthersTrace,
     },
 };
+
+
 
 // Reth Types
 use reth_network_api::NetworkInfo;
@@ -67,6 +69,8 @@ where
         &self.inner
     }
 
+
+    // Call related methods
     async fn call(
         &self,
         tx: &TypedTransaction,
@@ -102,6 +106,11 @@ where
         Ok(reth_access_list_with_gas_used_to_ethers(result))
     }
 
+
+
+
+    // State related methods
+
     async fn get_storage_at<T: Into<NameOrAddress> + Send + Sync>(
         &self,
         from: T,
@@ -119,37 +128,6 @@ where
         Ok(self.reth_api.storage_at(from.into(), index, block_id).await?.into())
     }
 
-    async fn get_transaction<T: Send + Sync + Into<EthersTxHash>>(
-        &self,
-        transaction_hash: T,
-    ) -> Result<Option<EthersTransaction>, Self::Error> {
-        let maybe_transaction = self.reth_api.transaction_by_hash(transaction_hash.into().into()).await?;
-
-        match maybe_transaction {
-            Some(reth_tx) => Ok(Some(reth_rpc_transaction_to_ethers(reth_tx))),
-            None => Ok(None),
-        }
-    }
-
-    async fn get_logs(&self, filter: &EthersFilter) -> Result<Vec<EthersLog>, Self::Error> {
-        let to_reth_filter: Filter = ethers_filter_to_reth_filter(filter);
-        let reth_logs = self.reth_filter.logs(to_reth_filter).await?;
-        let ethers_logs = reth_logs.into_iter().map(|log| log.into_ethers()).collect();
-
-        Ok(ethers_logs)
-    }
-
-    async fn get_balance<T: Into<NameOrAddress> + Send + Sync>(
-        &self,
-        from: T,
-        block: Option<EthersBlockId>,
-    ) -> Result<EthersU256, Self::Error> {
-        let from = self.get_address(from).await?;
-
-        let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
-        Ok(self.reth_api.balance(from.into(), block_id).await?.into())
-    }
-
     async fn get_code<T: Into<NameOrAddress> + Send + Sync>(
         &self,
         at: T,
@@ -163,30 +141,38 @@ where
         Ok(code.to_vec().into())
     }
 
-    async fn get_transaction_count<T: Into<NameOrAddress> + Send + Sync>(
+    async fn get_balance<T: Into<NameOrAddress> + Send + Sync>(
         &self,
         from: T,
         block: Option<EthersBlockId>,
     ) -> Result<EthersU256, Self::Error> {
         let from = self.get_address(from).await?;
 
-        let block_id = block.map(ethers_block_id_to_reth_block_id);
-        Ok(self.reth_api.transaction_count(from.into(), block_id).await?.into())
+        let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
+        Ok(self.reth_api.balance(from.into(), block_id).await?.into())
     }
-
-
-    async fn get_chainid(&self) -> Result<EthersU256, RethMiddlewareError<M>> {
-        let chain_id = EthApiServer::chain_id(&self.reth_api).await?;
-        Ok(convert_Reth_U64_to_Ethers_U256(chain_id.unwrap()))
-        }
     
-    async fn get_block_number(&self) -> Result<EthersU64, RethMiddlewareError<M>> {
-        let block_number = self.reth_api.block_number()?;
-        Ok(convert_Reth_U256_to_Ethers_U64(block_number))
+    async fn get_proof<T: Into<NameOrAddress> + Send + Sync>(
+        &self,
+        from: T,
+        locations: Vec<EthersH256>,
+        block: Option<EthersBlockId>,
+    ) -> Result<EthersEIP1186ProofResponse, RethMiddlewareError<M>> {
+        let from = self.get_address(from).await?;
+
+        let locations = locations
+            .into_iter()
+            .map(|location| JsonStorageKey::from(convert_location_to_json_key(location)))
+            .collect();
+
+        let block_id = Some(ethers_block_id_to_reth_block_id(block.unwrap()));
+        let proof = self
+            .reth_api
+            .get_proof(from.into(), locations, block_id)
+            .await?;
+
+        Ok(reth_proof_to_ethers(proof))
     }
-
-
-
 
     async fn fee_history<T: Into<EthersU256> + Send + Sync>(
         &self,
@@ -203,6 +189,24 @@ where
         Ok(reth_fee_history_to_ethers(reth_fee_history))
     }
 
+
+    
+    // Chain Info
+
+    async fn get_chainid(&self) -> Result<EthersU256, RethMiddlewareError<M>> {
+        let chain_id = EthApiServer::chain_id(&self.reth_api).await?;
+        Ok(convert_Reth_U64_to_Ethers_U256(chain_id.unwrap()))
+        }
+    
+    async fn get_block_number(&self) -> Result<EthersU64, RethMiddlewareError<M>> {
+        let block_number = self.reth_api.block_number()?;
+        Ok(convert_Reth_U256_to_Ethers_U64(block_number))
+    }
+
+
+
+
+    
     /*async fn get_block_receipts<T: Into<EthersBlockNumber> + Send + Sync>(
         &self,
         block: T,
@@ -216,6 +220,48 @@ where
         Ok(receipts)
     }
     */
+
+
+    // Transaction 
+
+
+    async fn get_transaction<T: Send + Sync + Into<EthersTxHash>>(
+        &self,
+        transaction_hash: T,
+    ) -> Result<Option<EthersTransaction>, Self::Error> {
+        let maybe_transaction = self.reth_api.transaction_by_hash(transaction_hash.into().into()).await?;
+
+        match maybe_transaction {
+            Some(reth_tx) => Ok(Some(reth_rpc_transaction_to_ethers(reth_tx))),
+            None => Ok(None),
+        }
+    }
+
+    async fn get_transaction_receipt<T: Send + Sync + Into<EthersTxHash>>(
+        &self,
+        transaction_hash: T,
+    ) -> Result<Option<EthersTransactionReceipt>, RethMiddlewareError<M>> {
+        let hash = ethers::types::H256::from_slice(transaction_hash.into().as_bytes());
+        match self.reth_api.transaction_receipt(hash.into()).await? {
+            Some(receipt) => Ok(Some(reth_transaction_receipt_to_ethers(receipt))),
+            None => Ok(None),
+        }
+    }
+
+    async fn get_transaction_count<T: Into<NameOrAddress> + Send + Sync>(
+        &self,
+        from: T,
+        block: Option<EthersBlockId>,
+    ) -> Result<EthersU256, Self::Error> {
+        let from = self.get_address(from).await?;
+
+        let block_id = block.map(ethers_block_id_to_reth_block_id);
+        Ok(self.reth_api.transaction_count(from.into(), block_id).await?.into())
+    }
+
+
+
+    // Blocks
 
     async fn get_block<T: Into<EthersBlockId> + Send + Sync>(
         &self,
@@ -246,44 +292,48 @@ where
         Ok(block.map(|block| rich_block_to_ethers(block)))
     }
 
-    async fn get_proof<T: Into<NameOrAddress> + Send + Sync>(
+
+    async fn get_block_with_txs<T: Into<EthersBlockId> + Send + Sync>(
         &self,
-        from: T,
-        locations: Vec<EthersH256>,
-        block: Option<EthersBlockId>,
-    ) -> Result<EthersEIP1186ProofResponse, RethMiddlewareError<M>> {
-        let from = self.get_address(from).await?;
+        block_hash_or_number: T,
+    ) -> Result<Option<EthersBlock<EthersTransaction>>, Self::Error> {
+        let block_id = block_hash_or_number.into();
 
-        let locations = locations
-            .into_iter()
-            .map(|location| JsonStorageKey::from(convert_location_to_json_key(location)))
-            .collect();
+        let block = match block_id {
+            EthersBlockId::Hash(hash) => self.reth_api.block_by_hash(hash.into(), true).await?,
+            EthersBlockId::Number(num) => self.reth_api.block_by_number(num.into(), true).await?,
+        };
 
-        let block_id = Some(ethers_block_id_to_reth_block_id(block.unwrap()));
-        let proof = self
-            .reth_api
-            .get_proof(from.into(), locations, block_id)
-            .await?;
-
-        Ok(reth_proof_to_ethers(proof))
-    }
-
-    async fn get_transaction_receipt<T: Send + Sync + Into<EthersTxHash>>(
-        &self,
-        transaction_hash: T,
-    ) -> Result<Option<EthersTransactionReceipt>, RethMiddlewareError<M>> {
-        let hash = ethers::types::H256::from_slice(transaction_hash.into().as_bytes());
-        match self.reth_api.transaction_receipt(hash.into()).await? {
-            Some(receipt) => Ok(Some(reth_transaction_receipt_to_ethers(receipt))),
-            None => Ok(None),
-        }
+        Ok(block.map(|block| rich_block_to_ethers_rich(block)))
     }
 
     
 
+    // Logs
+
+    async fn get_logs(&self, filter: &EthersFilter) -> Result<Vec<EthersLog>, Self::Error> {
+        let to_reth_filter: Filter = ethers_filter_to_reth_filter(filter);
+        let reth_logs = self.reth_filter.logs(to_reth_filter).await?;
+        let ethers_logs = reth_logs.into_iter().map(|log| log.into_ethers()).collect();
+        Ok(ethers_logs)
+    }
+
     // Tracing
 
 
+    async fn trace_transaction(&self, tx_hash: EthersTxHash) -> Result<Vec<EthersTrace>, Self::Error> {
+        !todo!();
+        let trace = self.reth_trace.trace_transaction(tx_hash.into()).await?;
+        Ok(trace)
+    }
+
+    async fn debug_trace_transaction(){!todo!()}
+
+    async fn trace_block(&self, block: EthersBlockNumber) -> Result<Vec<EthersTrace>, Self::Error> {
+        !todo!();
+        let trace = self.reth_trace.trace_block(block.into()).await?;
+        Ok(trace)
+    }
 
 
 }
