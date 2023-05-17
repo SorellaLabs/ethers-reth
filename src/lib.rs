@@ -1,25 +1,23 @@
 pub mod middleware;
 mod utils;
-use std::sync::Arc;
-use init::{init_eth_api, init_eth_filter, init_client};
+use init::{init_client, init_eth_api, init_eth_filter};
 use jsonrpsee::types::ErrorObjectOwned;
 use reth_rpc::{EthFilter, TraceApi};
+use std::sync::Arc;
 use thiserror::Error;
 pub mod init;
-
 
 use ethers::providers::{Middleware, MiddlewareError};
 
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::ShareableBlockchainTree;
 use reth_db::mdbx::{Env, NoWriteMap};
+use reth_network_api::test_utils::NoopNetwork;
 use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
-use reth_transaction_pool::{CostOrdering, EthTransactionValidator, Pool, PooledTransaction};
-use reth_network_api::test_utils::NoopNetwork;
 use reth_rpc::EthApi;
+use reth_transaction_pool::{CostOrdering, EthTransactionValidator, Pool, PooledTransaction};
 use std::path::Path;
-
 
 pub type RethClient = BlockchainProvider<
     Arc<Env<NoWriteMap>>,
@@ -39,7 +37,6 @@ pub struct RethMiddleware<M> {
     reth_api: RethApi,
     reth_filter: RethFilter,
     reth_trace: RethTrace,
-
 }
 
 impl<M: std::fmt::Debug> std::fmt::Debug for RethMiddleware<M> {
@@ -79,7 +76,6 @@ where
     M: Middleware,
 {
     pub fn new(inner: M, db_path: &Path) -> Self {
-
         let client = init_client(db_path);
         // EthApi -> EthApi<Client, Pool, Network>
         let api = init_eth_api(client.clone());
@@ -89,7 +85,7 @@ where
 
         let trace = TraceApi::new(client.clone(), api.clone(), todo!());
 
-        Self { inner, reth_api: api, reth_filter: filter}
+        Self { inner, reth_api: api, reth_filter: filter }
     }
 
     pub fn reth_api(&self) -> &NodeEthApi {
