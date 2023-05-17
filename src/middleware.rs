@@ -178,10 +178,9 @@ where
         let chain_id = EthApiServer::chain_id(&self.reth_api).await?;
     }
     
-
+    // TODO type conversion between Option U64 & EthersU256
     async fn get_block_number(&self) -> Result<EthersU64, RethMiddlewareError<M>> {
         let block_number = self.reth_api.block_number()?;
-        let block_number = block_number as u64;
         Ok(block_number.as_u64().into())
     }
 
@@ -195,13 +194,9 @@ where
         let last_block = ethers_block_id_to_reth_block_id(last_block);
         let reward_percentiles = Some(reward_percentiles.to_vec());
 
+        reth_fee_history = self.reth_api.fee_history(block_count, last_block, reward_percentiles).await?;
 
-        Ok(self
-            .reth_api
-            .fee_history(block_count, last_block, reward_percentiles)
-            .await?);
-
-        Ok(fee_history)
+    
     }
 
     /*async fn get_block_receipts<T: Into<BlockNumber> + Send + Sync>(
@@ -234,10 +229,9 @@ where
         let block_id = Some(ethers_block_id_to_reth_block_id(block.unwrap()));
         let proof = self
             .reth_api
-            .get_proof(from, locations, block_id)
-            .await
-            .map_err(RethMiddlewareError::RethEthApiError)
-            .unwrap();
+            .get_proof(from.into(), locations, block_id)
+            .await?;
+
         Ok(proof.into())
     }
 
@@ -246,10 +240,9 @@ where
         transaction_hash: T,
     ) -> Result<Option<EthersTransactionReceipt>, RethMiddlewareError<M>> {
         let hash = ethers::types::H256::from_slice(transaction_hash.into().as_bytes());
-        match self.reth_api.transaction_receipt(hash.into()).await {
-            Ok(Some(receipt)) => Ok(Some(reth_transaction_receipt_to_ethers(receipt))),
-            Ok(None) => Ok(None),
-            Err(e) => Err(RethMiddlewareError::RethEthApiError(e.into())),
+        match self.reth_api.transaction_receipt(hash.into()).await? {
+            Some(receipt) => Ok(Some(reth_transaction_receipt_to_ethers(receipt))),
+            None => Ok(None),
         }
     }
 }
