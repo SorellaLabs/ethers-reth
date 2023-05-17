@@ -7,7 +7,7 @@ edition = "2021"
 [dependencies]
 ethers = { version = "2.0", git = "https://github.com/gakonst/ethers-rs", default-features = false }
 tokio = "1.28.0"
-
+reth-tasks = { path = "../reth/crates/tasks" }
 reth-rpc = { path = "../reth/crates/rpc/rpc" }
 reth-rpc-api = { path = "../reth/crates/rpc/rpc-api" }
 reth-rpc-types = { path = "../reth/crates/rpc/rpc-types" }

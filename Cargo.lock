@@ -3160,6 +3160,7 @@ dependencies = [
  "reth-rpc",
  "reth-rpc-api",
  "reth-rpc-types",
+ "reth-tasks",
  "reth-transaction-pool",
  "serde",
  "serde_json",
