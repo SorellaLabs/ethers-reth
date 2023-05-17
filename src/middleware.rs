@@ -173,7 +173,7 @@ where
         let reward_percentiles = Some(reward_percentiles.to_vec());
 
         let reth_fee_history =
-            self.reth_api.fee_history(U64::to_reth(block_count), last_block, reward_percentiles).await?;
+            self.reth_api.fee_history(ToReth::into_reth(block_count), last_block, reward_percentiles).await?;
 
 
         Ok(reth_fee_history_to_ethers(reth_fee_history))

@@ -499,7 +499,7 @@ pub fn full_rich_block_to_ethers(rich_block: RichBlock) -> EthersBlock<EthersTra
     let block = rich_block.inner;
     let header = block.header;
 
-    let txs: Vec<Transaction>;
+    let mut txs: Vec<Transaction> = Vec::new();
     if let BlockTransactions::Full(transactions) = block.transactions {
         txs = transactions
     };
@@ -636,7 +636,7 @@ pub fn reth_trace_to_ethers(trace: LocalizedTransactionTrace) -> EthersTrace {
         }
     };
 
-    let mut err: Option<String>;
+    let mut err: Option<String> = Default::default();
     let result = tx_trace.result.map(|res| match res {
         TraceResult::Success { result } => match result {
             TraceOutput::Call(c) => EthersRes::Call(EthersCallResult {
