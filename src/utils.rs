@@ -1,6 +1,7 @@
 use core::option;
 use eyre::Result;
-use std::str::FromStr;
+use reth_db::transaction;
+use std::{str::FromStr, error::Error};
 
 use ethers::types::{
     transaction::{
@@ -11,23 +12,22 @@ use ethers::types::{
         },
     },
     Address as EthersAddress, BlockId as EthersBlockId, BlockNumber as EthersBlockNumber,
-    Bloom as EthersBloom, Bytes as EthersBytes, EIP1186ProofResponse as EthersEIP1186ProofResponse,
-    FeeHistory as EthersFeeHistory, Filter as EthersFilter,
-    FilterBlockOption as EthersFilterBlockOption, Log as EthersLog,
-    NameOrAddress as EthersNameOrAddress, OtherFields, StorageProof as EthersStorageProof,
-    Topic as EthersTopic, Transaction as EthersTransaction,
-    TransactionReceipt as EthersTransactionReceipt, ValueOrArray as EthersValueOrArray,
-    H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
+    Bloom as EthersBloom, Filter as EthersFilter, FilterBlockOption as EthersFilterBlockOption,
+    Log as EthersLog, NameOrAddress as EthersNameOrAddress, OtherFields, Topic as EthersTopic,
+    Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
+    ValueOrArray as EthersValueOrArray, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
+    EIP1186ProofResponse as EthersEIP1186ProofResponse,
+    FeeHistory as EthersFeeHistory, Bytes as EthersBytes, StorageProof as EthersStorageProof,
+    Block as EthersBlock, Withdrawal as EthersWithdrawal
 };
 
 use reth_primitives::{
     serde_helper::JsonStorageKey, AccessList, AccessListItem, AccessListWithGasUsed, Address,
-    BlockHash, BlockId, BlockNumberOrTag, Bloom, Bytes, H160, H256, U128, U256, U64, U8,
+    BlockHash, BlockId, BlockNumberOrTag, Bloom, Bytes, H160, H256, U128, U256, U64, U8, Withdrawal,
 };
 
 use reth_rpc_types::{
-    CallRequest, FeeHistory, Filter, FilterBlockOption, Log, StorageProof, Topic, Transaction,
-    TransactionReceipt, ValueOrArray,
+    CallRequest, Filter, FilterBlockOption, Log, Topic, TransactionReceipt, ValueOrArray, Transaction, FeeHistory, StorageProof, Rich, Block, RichBlock, BlockTransactions::{Full, self}
 };
 
 use reth_revm::primitives::ruint::Uint;
@@ -58,6 +58,12 @@ impl ToEthers<EthersU64> for U8 {
 impl ToEthers<EthersU256> for U128 {
     fn into_ethers(self) -> EthersU256 {
         self.to_le_bytes().into()
+    }
+}
+
+impl ToEthers<EthersH256> for H256 {
+    fn into_ethers(self) -> EthersH256 {
+        self.into()
     }
 }
 
@@ -96,6 +102,35 @@ impl ToEthers<EthersLog> for Log {
         }
     }
 }
+
+impl ToEthers<EthersTransaction> for Transaction {
+    fn into_ethers(self) -> EthersTransaction {
+        EthersTransaction {
+            hash: self.hash.into(),
+            nonce: self.nonce.into(),
+            block_hash: self.block_hash.map(|hash| hash.into()),
+            block_number: self.block_number.map(|n| n.into_ethers()),
+            transaction_index: self.transaction_index.map(|n| n.into_ethers()),
+            from: self.from.into(),
+            to: self.to.map(|t| t.into()),
+            value: self.value.into(),
+            gas_price: self.gas_price.map(|p| p.into_ethers()),
+            gas: self.gas.into(),
+            input: self.input.to_vec().into(),
+            v: self.signature.clone().map_or(0.into(), |sig| sig.v.into_ethers()),
+            r: self.signature.clone().map_or(0.into(), |sig| sig.r.into()),
+            s: self.signature.clone().map_or(0.into(), |sig| sig.s.into()),
+            transaction_type: self.transaction_type,
+            access_list: self.access_list.map(|list| list.into()),
+            max_priority_fee_per_gas: self.max_priority_fee_per_gas.map(|p| p.into_ethers()),
+            max_fee_per_gas: self.max_fee_per_gas.map(|p| p.into_ethers()),
+            chain_id: self.chain_id.map(|id| id.into_ethers()),
+            ..Default::default()
+        }
+    }
+}
+
+
 
 pub fn ethers_block_id_to_reth_block_id(block_id: EthersBlockId) -> BlockId {
     match block_id {
@@ -405,7 +440,104 @@ pub fn reth_fee_history_to_ethers(fee_history: FeeHistory) -> EthersFeeHistory {
     }
 }
 
-pub fn rich_block_to_ethers(rich_block: RichBlock) -> EthersBlock<EthersTxHash> {}
+
+pub fn reth_richblock_txs_into_ethers<R, E>(txs: Vec<R>) -> Vec<E> 
+where
+    R: ToEthers<E>
+{
+    txs.into_iter().map(|t: R| t.into_ethers()).collect::<Vec<E>>()
+}
+
+pub fn reth_withraw_to_ethers(withdraw: Withdrawal) -> EthersWithdrawal {
+    
+    EthersWithdrawal {
+        index: withdraw.index.into(),
+        validator_index: withdraw.index.into(),
+        address: withdraw.address.into(),
+        amount: withdraw.amount.into(),
+    }
+}
+
+
+
+pub fn full_rich_block_to_ethers(rich_block: RichBlock) -> EthersBlock<EthersTransaction> {
+
+    let block = rich_block.inner;
+    let header = block.header;
+
+    let txs: Vec<Transaction>;
+    if let BlockTransactions::Full(transactions) = block.transactions {
+        txs = transactions
+    };
+
+    EthersBlock {
+        hash: header.hash.map(|h| h.into()),
+        parent_hash: header.parent_hash.into(),
+        uncles_hash: header.uncles_hash.into(),
+        author: Some(header.miner.into()),
+        state_root: header.state_root.into(),
+        transactions_root: header.transactions_root.into(),
+        receipts_root: header.receipts_root.into(),
+        number: header.number.map(|num| num.into_ethers()),
+        gas_used: header.gas_used.into(),
+        gas_limit: header.gas_limit.into(),
+        extra_data: header.extra_data.to_vec().into(),
+        logs_bloom: Some(header.logs_bloom.into_ethers()),
+        timestamp: header.timestamp.into(),
+        difficulty: header.difficulty.into(),
+        total_difficulty: block.total_difficulty.map(|d| d.into()),
+        seal_fields: vec![], // TODO
+        uncles: block.uncles.into_iter().map(|unc| unc.into()).collect(),
+        transactions: reth_richblock_txs_into_ethers::<Transaction, EthersTransaction>(txs), 
+        size: block.size.map(|s| s.into()),
+        mix_hash: Some(header.mix_hash.into()),
+        nonce: header.nonce.into(),
+        base_fee_per_gas: header.base_fee_per_gas.map(|fee| fee.into()),
+        withdrawals_root: header.withdrawals_root.map(|root| root.into()),
+        withdrawals: block.withdrawals.map(|list| list.into_iter().map(|w| reth_withraw_to_ethers(w)).collect()),
+        other: OtherFields::default(),
+    }
+}
+
+
+pub fn hash_rich_block_to_ethers(rich_block: RichBlock) -> EthersBlock<EthersH256> {
+
+    let block = rich_block.inner;
+    let header = block.header;
+
+    let tx_hashes: Vec<H256>;
+    if let BlockTransactions::Hashes(hashes) = block.transactions {
+        tx_hashes = hashes
+    };
+
+    EthersBlock {
+        hash: header.hash.map(|h| h.into()),
+        parent_hash: header.parent_hash.into(),
+        uncles_hash: header.uncles_hash.into(),
+        author: Some(header.miner.into()),
+        state_root: header.state_root.into(),
+        transactions_root: header.transactions_root.into(),
+        receipts_root: header.receipts_root.into(),
+        number: header.number.map(|num| num.into_ethers()),
+        gas_used: header.gas_used.into(),
+        gas_limit: header.gas_limit.into(),
+        extra_data: header.extra_data.to_vec().into(),
+        logs_bloom: Some(header.logs_bloom.into_ethers()),
+        timestamp: header.timestamp.into(),
+        difficulty: header.difficulty.into(),
+        total_difficulty: block.total_difficulty.map(|d| d.into()),
+        seal_fields:  vec![], // TODO
+        uncles: block.uncles.into_iter().map(|unc| unc.into()).collect(),
+        transactions: reth_richblock_txs_into_ethers::<H256, EthersH256>(tx_hashes), 
+        size: block.size.map(|s| s.into()),
+        mix_hash: Some(header.mix_hash.into()),
+        nonce: header.nonce.into(),
+        base_fee_per_gas: header.base_fee_per_gas.map(|fee| fee.into()),
+        withdrawals_root: header.withdrawals_root.map(|root| root.into()),
+        withdrawals: block.withdrawals.map(|list| list.into_iter().map(|w| reth_withraw_to_ethers(w)).collect()),
+        other: OtherFields::default(),
+    }
+}
 
 pub fn convert_location_to_json_key(location: EthersH256) -> JsonStorageKey {
     let location = location.to_fixed_bytes();
