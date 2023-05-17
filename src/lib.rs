@@ -1,6 +1,5 @@
 // std
-use std::path::Path;
-use std::sync::Arc;
+use std::{path::Path, sync::Arc};
 
 // ethers
 use ethers::providers::{Middleware, MiddlewareError};
@@ -12,20 +11,17 @@ use reth_db::mdbx::{Env, NoWriteMap};
 use reth_network_api::test_utils::NoopNetwork;
 use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
-use reth_rpc::eth::error::EthApiError;
-use reth_rpc::{EthApi, EthFilter, TraceApi};
+use reth_rpc::{eth::error::EthApiError, EthApi, EthFilter, TraceApi};
 use reth_transaction_pool::{CostOrdering, EthTransactionValidator, Pool, PooledTransaction};
 
 //Error
-use thiserror::Error;
 use jsonrpsee::types::ErrorObjectOwned;
+use thiserror::Error;
 // own modules
 pub mod init;
 pub mod middleware;
 pub mod utils;
 use init::{init_client, init_eth_api, init_eth_filter, init_trace};
-
-
 
 pub type RethClient = BlockchainProvider<
     Arc<Env<NoWriteMap>>,

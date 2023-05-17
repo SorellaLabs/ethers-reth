@@ -22,7 +22,7 @@ use ethers::{
 };
 
 // Reth Types
-use reth_rpc::{EthApiSpec};
+use reth_rpc::EthApiSpec;
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
 use reth_rpc_types::Filter;
 
@@ -172,9 +172,10 @@ where
             ethers_block_id_to_reth_block_id(reth_primitives::rpc::BlockId::Number(last_block));
         let reward_percentiles = Some(reward_percentiles.to_vec());
 
-        let reth_fee_history =
-            self.reth_api.fee_history(ToReth::into_reth(block_count), last_block, reward_percentiles).await?;
-
+        let reth_fee_history = self
+            .reth_api
+            .fee_history(ToReth::into_reth(block_count), last_block, reward_percentiles)
+            .await?;
 
         Ok(reth_fee_history_to_ethers(reth_fee_history))
     }
