@@ -187,6 +187,7 @@ where
 
 
 
+
     async fn fee_history<T: Into<EthersU256> + Send + Sync>(
         &self,
         block_count: T,
@@ -227,11 +228,23 @@ where
             EthersBlockId::Number(num) => self.reth_api.block_by_number(num.into(), false).await?,
         };
 
-        Ok(block.map(|block| reth_block_to_ethers(block)))
+        Ok(block.map(|block| rich_block_to_ethers(block)))
     }
 
+    async fn get_uncle<T: Into<EthersBlockId> + Send + Sync>(
+        &self,
+        block_hash_or_number: T,
+        idx: EthersU64,
+    ) -> Result<Option<EthersBlock<EthersTxHash>>, Self::Error> {
+        let block_id = block_hash_or_number.into();
 
+        let block = match block_id {
+            EthersBlockId::Hash(hash) => self.reth_api.uncle_by_block_hash_and_index(hash.into(), idx.as_usize().into()).await?,
+            EthersBlockId::Number(num) => self.reth_api.uncle_by_block_number_and_index(num.into(), idx.as_usize().into()).await?,
+        };
 
+        Ok(block.map(|block| rich_block_to_ethers(block)))
+    }
 
     async fn get_proof<T: Into<NameOrAddress> + Send + Sync>(
         &self,
@@ -265,6 +278,14 @@ where
             None => Ok(None),
         }
     }
+
+
+
+    // Tracing
+
+
+
+
 }
 
 
