@@ -1,16 +1,12 @@
 use reth_beacon_consensus::BeaconConsensus;
-use reth_blockchain_tree::ShareableBlockchainTree;
-use reth_db::mdbx::{Env, NoWriteMap};
-use reth_provider::providers::BlockchainProvider;
-use reth_revm::Factory;
-use reth_transaction_pool::EthTransactionValidator;
 use reth_blockchain_tree::{
-    externals::TreeExternals, BlockchainTree, BlockchainTreeConfig,
+    externals::TreeExternals, BlockchainTree, BlockchainTreeConfig, ShareableBlockchainTree,
 };
-use reth_db::mdbx::EnvKind;
+use reth_db::mdbx::{Env, EnvKind, NoWriteMap};
 use reth_network_api::test_utils::NoopNetwork;
 use reth_primitives::MAINNET;
-use reth_provider::ShareableDatabase;
+use reth_provider::{providers::BlockchainProvider, ShareableDatabase};
+use reth_revm::Factory;
 use reth_rpc::{
     eth::{
         cache::{EthStateCache, EthStateCacheConfig},
@@ -18,10 +14,11 @@ use reth_rpc::{
     },
     EthApi, EthFilter,
 };
+use reth_transaction_pool::EthTransactionValidator;
 use std::{path::Path, sync::Arc};
 
-use crate::{RethClient, RethApi, RethFilter, RethTxPool, RethTrace};
-   
+use crate::{RethApi, RethClient, RethFilter, RethTrace, RethTxPool};
+
 // EthApi/Filter Client
 pub fn init_client(db_path: &Path) -> RethClient {
     let chain = Arc::new(MAINNET.clone());
@@ -52,7 +49,6 @@ pub fn init_client(db_path: &Path) -> RethClient {
     blockchain_db
 }
 
-
 /// EthApi
 pub fn init_eth_api(client: RethClient) -> RethApi {
     let tx_pool = init_pool(client.clone());
@@ -72,18 +68,12 @@ pub fn init_eth_api(client: RethClient) -> RethApi {
 
 /// EthFilter
 pub fn init_eth_filter(client: RethClient, max_logs_per_response: usize) -> RethFilter {
-
     let tx_pool = init_pool(client.clone());
 
     let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
 
-    let filter = EthFilter::new(
-        client, 
-        tx_pool, 
-        state_cache, 
-        max_logs_per_response
-    );
-    
+    let filter = EthFilter::new(client, tx_pool, state_cache, max_logs_per_response);
+
     filter
 }
 
@@ -103,4 +93,3 @@ pub fn init_pool(client: RethClient) -> RethTxPool {
 pub fn init_Trace() -> RethTrace {
     todo!()
 }
-
