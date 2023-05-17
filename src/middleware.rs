@@ -15,6 +15,7 @@ use ethers::{
         FeeHistory as EthersFeeHistory, Filter as EthersFilter, Log as EthersLog, NameOrAddress,
         Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
         TxHash as EthersTxHash, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
+        BlockNumber as EthersBlockNumber,
     },
 };
 
@@ -201,7 +202,7 @@ where
         Ok(reth_fee_history_to_ethers(reth_fee_history))
     }
 
-    /*async fn get_block_receipts<T: Into<BlockNumber> + Send + Sync>(
+    /*async fn get_block_receipts<T: Into<EthersBlockNumber> + Send + Sync>(
         &self,
         block: T,
     ) -> Result<Vec<EthersTransactionReceipt>, Self::Error> {
@@ -209,11 +210,12 @@ where
         let receipts = self
             .reth_api
             .block_receipts(block)
-            .await
-            .map_err(RethMiddlewareError::RethEthApiError)?;
+            .await?;
+
         Ok(receipts)
     }
     */
+    
 
     async fn get_proof<T: Into<NameOrAddress> + Send + Sync>(
         &self,
@@ -249,13 +251,15 @@ where
     }
 }
 
-/*
 
+/* 
 impl<M> RethMiddleware<M>
-    where
-        M: Middleware,
+where
+    Self: EthApiServer + EthApiSpec + 'static,
+    M: Middleware,
+        
 {
-    pub async fn request<T, R>(&self, method: &str, params: T) -> Result<R, ProviderError>
+    pub async fn request<T, R>(&self, method: &str, params: T) -> Result<R, RethMiddlewareError<M>>
     where
         T: Debug + Serialize + Send + Sync,
         R: Serialize + DeserializeOwned + Debug + Send,
@@ -263,9 +267,9 @@ impl<M> RethMiddleware<M>
     {
         match method {
             "eth_call" => {
-                let tx = serde_json::from_value::<&TypedTransaction>(params)?;
-                let block = serde_json::from_value::<Option<BlockId>>(params)?;
-                let res = self.call(tx, block).await?;
+                let tx = serde_json::from_value::<&TypedTransaction>(params);
+                let block = serde_json::from_value::<Option<EthersBlockId>>(params);
+                let res = <&RethMiddleware<M> as Middleware>::call(&self, tx, block).await?;
                 Ok(res)
             }
             "eth_estimateGas" => {
@@ -284,5 +288,6 @@ impl<M> RethMiddleware<M>
         }
     }
 }
+
 
 */

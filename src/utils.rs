@@ -13,7 +13,8 @@ use ethers::types::{
     Bloom as EthersBloom, Filter as EthersFilter, FilterBlockOption as EthersFilterBlockOption,
     Log as EthersLog, NameOrAddress as EthersNameOrAddress, OtherFields, Topic as EthersTopic,
     Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
-    ValueOrArray as EthersValueOrArray, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
+    ValueOrArray as EthersValueOrArray, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,EIP1186ProofResponse as EthersEIP1186ProofResponse,
+    FeeHistory as EthersFeeHistory
 };
 
 use reth_primitives::{
@@ -29,6 +30,8 @@ use reth_revm::{
     precompile::B160,
     primitives::ruint::{self, Bits, Uint},
 };
+use reth_rpc_types::EIP1186AccountProofResponse;
+use reth_rpc_types::eth::fee::FeeHistory;
 
 pub trait ToEthers<T> {
     /// Reth -> Ethers
@@ -319,11 +322,6 @@ pub fn reth_rpc_log_to_ethers(log: Log) -> EthersLog {
 }
 
 
-
-
-
-
-
 pub fn reth_transaction_receipt_to_ethers(receipt: TransactionReceipt) -> EthersTransactionReceipt {
     EthersTransactionReceipt {
         transaction_hash: receipt.transaction_hash.unwrap().into(),
@@ -344,6 +342,13 @@ pub fn reth_transaction_receipt_to_ethers(receipt: TransactionReceipt) -> Ethers
         other: OtherFields::default(),
     }
 }
+
+
+pub fn reth_proof_to_ethers(proof: EIP1186AccountProofResponse) -> EthersEIP1186ProofResponse {}
+
+
+pub fn reth_fee_history_to_ethers(fee_history: FeeHistory) -> EthersFeeHistory {}
+
 
 pub fn convert_location_to_json_key(location: EthersH256) -> JsonStorageKey {
     let location = location.to_fixed_bytes();
