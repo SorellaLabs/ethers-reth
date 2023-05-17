@@ -1,3 +1,4 @@
+use crate::{RethApi, RethClient, RethFilter, RethTrace, RethTxPool};
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::{
     externals::TreeExternals, BlockchainTree, BlockchainTreeConfig, ShareableBlockchainTree,
@@ -12,14 +13,11 @@ use reth_rpc::{
         cache::{EthStateCache, EthStateCacheConfig},
         gas_oracle::{GasPriceOracle, GasPriceOracleConfig},
     },
-    EthApi, EthFilter,
+    EthApi, EthFilter, TraceApi, TracingCallGuard,
 };
 use reth_tasks::{TaskManager, TaskSpawner};
 use reth_transaction_pool::EthTransactionValidator;
 use std::{path::Path, sync::Arc};
-use reth_rpc::TraceApi;
-use crate::{RethApi, RethClient, RethFilter, RethTrace, RethTxPool};
-use reth_rpc::TracingCallGuard;
 
 // EthApi/Filter Client
 pub fn init_client(db_path: &Path) -> RethClient {
@@ -68,7 +66,6 @@ pub fn init_eth_api(client: RethClient) -> RethApi {
     api
 }
 
-
 // EthApi/Filter txPool
 pub fn init_pool(client: RethClient) -> RethTxPool {
     let chain = Arc::new(MAINNET.clone());
@@ -82,7 +79,12 @@ pub fn init_pool(client: RethClient) -> RethTxPool {
 }
 
 // RethTrace
-pub fn init_trace(client: RethClient, eth_api: RethApi, rt: Arc<tokio::runtime::Runtime>, max_tracing_requests: usize) -> RethTrace {
+pub fn init_trace(
+    client: RethClient,
+    eth_api: RethApi,
+    rt: Arc<tokio::runtime::Runtime>,
+    max_tracing_requests: usize,
+) -> RethTrace {
     let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
 
     let task_manager = TaskManager::new(rt.handle().clone());
@@ -95,10 +97,12 @@ pub fn init_trace(client: RethClient, eth_api: RethApi, rt: Arc<tokio::runtime::
     trace
 }
 
-
-
 // EthFilter
-pub fn init_eth_filter(client: RethClient, max_logs_per_response: usize, rt: Arc<tokio::runtime::Runtime>) -> RethFilter {
+pub fn init_eth_filter(
+    client: RethClient,
+    max_logs_per_response: usize,
+    rt: Arc<tokio::runtime::Runtime>,
+) -> RethFilter {
     let tx_pool = init_pool(client.clone());
 
     let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
@@ -106,7 +110,8 @@ pub fn init_eth_filter(client: RethClient, max_logs_per_response: usize, rt: Arc
     let task_manager = TaskManager::new(rt.handle().clone());
     let task_spawn_handle: Box<dyn TaskSpawner> = Box::new(task_manager.executor());
 
-    let filter = EthFilter::new(client, tx_pool, state_cache, max_logs_per_response, task_spawn_handle);
+    let filter =
+        EthFilter::new(client, tx_pool, state_cache, max_logs_per_response, task_spawn_handle);
 
     filter
 }
