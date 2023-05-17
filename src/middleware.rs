@@ -126,7 +126,7 @@ where
         let maybe_transaction = self.reth_api.transaction_by_hash(transaction_hash.into().into()).await?;
 
         match maybe_transaction {
-            Some(reth_tx) => Ok(Some(reth_transaction_to_ethers_transaction(reth_tx))),
+            Some(reth_tx) => Ok(Some(reth_rpc_transaction_to_ethers(reth_tx))),
             None => Ok(None),
         }
     }
@@ -135,7 +135,7 @@ where
     async fn get_logs(&self, filter: &EthersFilter) -> Result<Vec<EthersLog>, Self::Error> {
         let to_reth_filter: Filter = ethers_filter_to_reth_filter(filter);
         let reth_logs = self.reth_filter.logs(to_reth_filter).await?;
-        let ethers_logs = reth_logs.to_ethers();
+        let ethers_logs = reth_logs.into_iter().map(|log| log.into_ethers()).collect();
 
         Ok(ethers_logs)
     }

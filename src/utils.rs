@@ -31,7 +31,6 @@ use reth_revm::{
     primitives::ruint::{self, Bits, Uint},
 };
 use reth_rpc_types::EIP1186AccountProofResponse;
-use reth_rpc_types::eth::fee::FeeHistory;
 
 pub trait ToEthers<T> {
     /// Reth -> Ethers
@@ -180,7 +179,7 @@ pub fn reth_access_list_with_gas_used_to_ethers(
     }
 }
 
-pub fn ethers_typed_transaction_to_reth_call_request(tx: &EthersTransaction) -> CallRequest {
+pub fn ethers_typed_transaction_to_reth_call_request(tx: &EthersTypedTransaction) -> CallRequest {
     CallRequest {
         from: Some(tx.from.into()),
         to: tx.to.map(|addr| addr.into()),
