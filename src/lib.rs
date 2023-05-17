@@ -94,7 +94,6 @@ where
         Self { inner, reth_api: api, reth_filter: filter, reth_trace: trace }
     }
 
-
     pub fn reth_api(&self) -> &RethApi {
         &self.reth_api
     }
