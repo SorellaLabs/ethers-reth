@@ -569,7 +569,7 @@ pub fn hash_rich_block_to_ethers(rich_block: RichBlock) -> EthersBlock<EthersH25
         timestamp: header.timestamp.into(),
         difficulty: header.difficulty.into(),
         total_difficulty: block.total_difficulty.map(|d| d.into()),
-        seal_fields:  vec![], // TODO
+        seal_fields:  todo!(),
         uncles: block.uncles.into_iter().map(|unc| unc.into()).collect(),
         transactions: reth_richblock_txs_into_ethers::<H256, EthersH256>(tx_hashes), 
         size: block.size.map(|s| s.into()),
