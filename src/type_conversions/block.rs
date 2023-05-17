@@ -72,8 +72,8 @@ impl ToReth<BlockId> for EthersBlockNumber {
 impl ToEthers<EthersBlockNumber> for BlockId {
     fn into_ethers(self) -> EthersBlockNumber {
         match self {
-        BlockId::Number(x) => x.into_ethers(),
-        _ => EthersBlockNumber::Latest // default
+            BlockId::Number(x) => x.into_ethers(),
+            _ => EthersBlockNumber::Latest, // default
         }
     }
 }

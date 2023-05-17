@@ -13,8 +13,6 @@ use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
 use reth_rpc::{eth::error::EthApiError, EthApi, EthFilter, TraceApi};
 use reth_transaction_pool::{CostOrdering, EthTransactionValidator, Pool, PooledTransaction};
-use reth_rpc_api::EthApiServer;
-use reth_rpc::EthApiSpec;
 //Error
 use jsonrpsee::types::ErrorObjectOwned;
 use thiserror::Error;
@@ -89,7 +87,6 @@ impl<M: Middleware> MiddlewareError for RethMiddlewareError<M> {
 
 impl<M> RethMiddleware<M>
 where
-    Self: EthApiServer + EthApiSpec + 'static,
     M: Middleware,
 {
     pub fn new(inner: M, db_path: &Path) -> Self {

@@ -6,7 +6,7 @@ use async_trait::async_trait;
 
 // Ether rs Types
 use ethers::{
-    providers::Middleware,
+    providers::{Middleware, MiddlewareError},
     types::{
         transaction::{
             eip2718::TypedTransaction,
@@ -25,22 +25,22 @@ use ethers::{
 
 // Reth Types
 use reth_primitives::BlockId;
-use reth_rpc::EthApiSpec;
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
-use reth_rpc_types::{Filter};
+use reth_rpc_types::Filter;
 
 impl<M> RethMiddleware<M>
 where
-    Self: EthApiServer + EthApiSpec + 'static,
     M: Middleware,
 {
     async fn get_address<T: Into<NameOrAddress>>(
         &self,
         who: T,
-    ) -> Result<EthersAddress, <Self as Middleware>::Error> {
+    ) -> Result<EthersAddress, RethMiddlewareError<M>> {
         match who.into() {
-            NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await,
-            NameOrAddress::Address(addr) => Ok(addr.into()),
+            NameOrAddress::Name(ens_name) => {
+                self.inner.resolve_name(&ens_name).await.map_err(RethMiddlewareError::from_err)
+            }
+            NameOrAddress::Address(addr) => Ok(addr),
         }
     }
 }
@@ -48,7 +48,6 @@ where
 #[async_trait]
 impl<M> Middleware for RethMiddleware<M>
 where
-    Self: EthApiServer + EthApiSpec + 'static,
     M: Middleware,
 {
     type Error = RethMiddlewareError<M>;
@@ -294,8 +293,6 @@ where
         Ok(reth_logs.into_ethers())
     }
 
-    
-
     //TODO: Implement get_logs_paginated
     //TODO: Implement stream event logs (watch)
     //TODO: Watch pending tx
@@ -320,7 +317,8 @@ where
         req: Vec<(T, Vec<EthersTraceType>)>,
         block: Option<EthersBlockNumber>,
     ) -> Result<Vec<EthersBlockTrace>, Self::Error> {
-        let tx: Vec<(TypedTransaction, Vec<EthersTraceType>)> = req.into_iter().map(|r| (r.0.into(), r.1)).collect();
+        let tx: Vec<(TypedTransaction, Vec<EthersTraceType>)> =
+            req.into_iter().map(|r| (r.0.into(), r.1)).collect();
         Ok(self.reth_trace.trace_call_many(tx.into_reth(), block.into_reth()).await?.into_ethers())
     }
 
@@ -354,9 +352,9 @@ where
         trace_type: Vec<EthersTraceType>,
     ) -> Result<Vec<EthersBlockTrace>, Self::Error> {
         let res = self
-        .reth_trace
-        .replay_block_transactions(BlockId::Number(block.into()), trace_type.into_reth())
-        .await?;
+            .reth_trace
+            .replay_block_transactions(BlockId::Number(block.into()), trace_type.into_reth())
+            .await?;
         Ok(res.unwrap().into_ethers())
     }
 
@@ -388,20 +386,21 @@ where
 
 #[cfg(test)]
 mod tests {
-    use std::path::Path;
     use super::*;
     use crate::*;
-    use ethers::providers::{Provider, Ipc};
-    use ethers::prelude::*;
+    use ethers::{
+        prelude::*,
+        providers::{Ipc, Provider},
+    };
     use reth_rpc_builder::constants::DEFAULT_IPC_ENDPOINT;
+    use std::path::Path;
 
     const TEST_DB_PATH: &str = "./test_db";
-    
+
     async fn spawn_middleware() -> RethMiddleware<Provider<Ipc>> {
         let provider = Provider::connect_ipc(DEFAULT_IPC_ENDPOINT).await.unwrap();
         RethMiddleware::new(provider, Path::new(TEST_DB_PATH))
     }
-
 
     #[tokio::test]
     async fn test_get_address() {
@@ -415,6 +414,32 @@ mod tests {
     async fn test_get_storage_at() {
         let middleware = spawn_middleware().await;
         let from: NameOrAddress = "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852".parse().unwrap();
-        // let location = H256::from("8");
+        let location = EthersH256::from_low_u64_be(5);
+        let storage = middleware.get_storage_at(from, location, None).await.unwrap();
+
+        // ----------------------------------------------------------- //
+        //             Storage slots of UniV2Pair contract             //
+        // =========================================================== //
+        // storage[5] = factory: address                               //
+        // storage[6] = token0: address                                //
+        // storage[7] = token1: address                                //
+        // storage[8] = (res0, res1, ts): (uint112, uint112, uint32)   //
+        // storage[9] = price0CumulativeLast: uint256                  //
+        // storage[10] = price1CumulativeLast: uint256                 //
+        // storage[11] = kLast: uint256                                //
+        // =========================================================== //
+
+        // convert the H256 value to bytes, then take the last 20 bytes and create an address from
+        // it
+        let decoded_addr = EthersAddress::from_slice(&storage.as_bytes()[12..]);
+
+        let factory_address: NameOrAddress =
+            "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f".parse().unwrap();
+
+        if let NameOrAddress::Address(expected_addr) = factory_address {
+            assert_eq!(decoded_addr, expected_addr);
+        } else {
+            panic!("Failed to parse expected factory address");
+        }
     }
 }

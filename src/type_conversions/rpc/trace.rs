@@ -1,21 +1,23 @@
 use crate::type_conversions::{ToEthers, ToReth};
 
 use ethers::types::{
-    Action as EthersAction, ActionType as EthersActionType, Call as EthersCall,
-    CallResult as EthersCallResult, CallType as EthersCallType, Create as EthersCreate,
-    CreateResult as EthersCreateResult, Res as EthersRes, Reward as EthersReward,
-    RewardType as EthersRewardType, Suicide as EthersSuicide, Trace as EthersTrace,
-    TraceType as EthersTraceType, BlockTrace as EthersBlockTrace, TransactionTrace as EthersTransactionTrace, 
-    VMTrace as EthersVMTrace, VMOperation as EthersVMOperation, VMExecutedOperation as EthersVMExecutedOperation,
-    MemoryDiff as EthersMemoryDiff, StorageDiff as EthersStorageDiff, AccountDiff as EthersAccountDiff, Diff as EthersDiff,
-    ChangedType as EthersChangedType, StateDiff as EthersStateDiff
+    AccountDiff as EthersAccountDiff, Action as EthersAction, ActionType as EthersActionType,
+    BlockTrace as EthersBlockTrace, Call as EthersCall, CallResult as EthersCallResult,
+    CallType as EthersCallType, ChangedType as EthersChangedType, Create as EthersCreate,
+    CreateResult as EthersCreateResult, Diff as EthersDiff, MemoryDiff as EthersMemoryDiff,
+    Res as EthersRes, Reward as EthersReward, RewardType as EthersRewardType,
+    StateDiff as EthersStateDiff, StorageDiff as EthersStorageDiff, Suicide as EthersSuicide,
+    Trace as EthersTrace, TraceType as EthersTraceType, TransactionTrace as EthersTransactionTrace,
+    VMExecutedOperation as EthersVMExecutedOperation, VMOperation as EthersVMOperation,
+    VMTrace as EthersVMTrace,
 };
 use reth_revm::primitives::bitvec::macros::internal::funty::Fundamental;
 use reth_rpc_types::trace::parity::{
-    Action, CallAction, CallOutput, CallType, CreateAction, CreateOutput,
-    LocalizedTransactionTrace, RewardAction, RewardType, SelfdestructAction, TraceOutput,
-    TraceResult, TransactionTrace, TraceType, TraceResults, VmTrace, VmInstruction, VmExecutedOperation, 
-    MemoryDelta, StorageDelta, AccountDiff, Delta, ChangedType, StateDiff, TraceResultsWithTransactionHash
+    AccountDiff, Action, CallAction, CallOutput, CallType, ChangedType, CreateAction, CreateOutput,
+    Delta, LocalizedTransactionTrace, MemoryDelta, RewardAction, RewardType, SelfdestructAction,
+    StateDiff, StorageDelta, TraceOutput, TraceResult, TraceResults,
+    TraceResultsWithTransactionHash, TraceType, TransactionTrace, VmExecutedOperation,
+    VmInstruction, VmTrace,
 };
 
 /// Action (ethers) -> (reth)
@@ -247,11 +249,11 @@ impl ToEthers<EthersTraceType> for TraceType {
 /// EthersBlockTrace (ethers) -> TraceResults (reth)
 impl ToReth<TraceResults> for EthersBlockTrace {
     fn into_reth(self) -> TraceResults {
-        TraceResults { 
-            output: self.output.into_reth(), 
-            trace: self.trace.into_reth(), 
-            vm_trace: self.vm_trace.into_reth(), 
-            state_diff: self.state_diff.into_reth(), 
+        TraceResults {
+            output: self.output.into_reth(),
+            trace: self.trace.into_reth(),
+            vm_trace: self.vm_trace.into_reth(),
+            state_diff: self.state_diff.into_reth(),
         }
     }
 }
@@ -308,10 +310,7 @@ impl ToEthers<EthersTransactionTrace> for TransactionTrace {
 /// VMTrace (ethers) -> (reth)
 impl ToReth<VmTrace> for EthersVMTrace {
     fn into_reth(self) -> VmTrace {
-        VmTrace {
-            code: self.code.into_reth(),
-            ops: self.ops.into_reth(),
-        }
+        VmTrace { code: self.code.into_reth(), ops: self.ops.into_reth() }
     }
 }
 
@@ -369,10 +368,7 @@ impl ToEthers<EthersVMExecutedOperation> for VmExecutedOperation {
 /// EthersMemoryDiff (ethers) -> MemoryDelta (reth)
 impl ToReth<MemoryDelta> for EthersMemoryDiff {
     fn into_reth(self) -> MemoryDelta {
-        MemoryDelta {
-            off: self.off,
-            data: self.data.into_reth(),
-        }
+        MemoryDelta { off: self.off, data: self.data.into_reth() }
     }
 }
 
@@ -388,10 +384,7 @@ impl ToEthers<EthersMemoryDiff> for MemoryDelta {
 /// EthersStorageDiff (ethers) -> StorageDelta '(reth)
 impl ToReth<StorageDelta> for EthersStorageDiff {
     fn into_reth(self) -> StorageDelta {
-        StorageDelta {
-            key: self.key.into_reth(),
-            val: self.val.into_reth(),
-        }
+        StorageDelta { key: self.key.into_reth(), val: self.val.into_reth() }
     }
 }
 
@@ -444,8 +437,8 @@ impl ToEthers<EthersStateDiff> for StateDiff {
 impl<T, F> ToReth<Delta<T>> for EthersDiff<F>
 where
     F: ToReth<T>,
-    T: Clone
- {
+    T: Clone,
+{
     fn into_reth(self) -> Delta<T> {
         match self {
             EthersDiff::Same => Delta::Unchanged,
@@ -469,13 +462,10 @@ impl<F, T> ToEthers<EthersDiff<F>> for Delta<T> {
 impl<T, F> ToReth<ChangedType<T>> for EthersChangedType<F>
 where
     F: ToReth<T>,
-    T: Clone
- {
+    T: Clone,
+{
     fn into_reth(self) -> ChangedType<T> {
-        ChangedType {
-            from: self.from.into_reth(),
-            to: self.to.into_reth(),
-        }
+        ChangedType { from: self.from.into_reth(), to: self.to.into_reth() }
     }
 }
 
