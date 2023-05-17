@@ -8,18 +8,18 @@ edition = "2021"
 ethers = { version = "2.0", git = "https://github.com/gakonst/ethers-rs", default-features = false }
 tokio = "1.28.0"
 
-reth-rpc = { path = "../crates/rpc/rpc" }
-reth-rpc-api = { path = "../crates/rpc/rpc-api" }
-reth-rpc-types = { path = "../crates/rpc/rpc-types" }
-reth-provider = { path = "../crates/storage/provider" }
-reth-transaction-pool = { path = "../crates/transaction-pool", features = ["test-utils"] }
-reth-network-api = { path = "../crates/net/network-api", features = ["test-utils"] }
-reth-primitives = { path = "../crates/primitives" }
-reth-db = { path = "../crates/storage/db" }
-reth-blockchain-tree = { path = "../crates/blockchain-tree" }
-reth-beacon-consensus = { path = "../crates/consensus/beacon"}
-reth-revm = { path = "../crates/revm"}
-reth-interfaces = { path = "../crates/interfaces"}
+reth-rpc = { path = "../reth/crates/rpc/rpc" }
+reth-rpc-api = { path = "../reth/crates/rpc/rpc-api" }
+reth-rpc-types = { path = "../reth/crates/rpc/rpc-types" }
+reth-provider = { path = "../reth/crates/storage/provider" }
+reth-transaction-pool = { path = "../reth/crates/transaction-pool", features = ["test-utils"] }
+reth-network-api = { path = "../reth/crates/net/network-api", features = ["test-utils"] }
+reth-primitives = { path = "../reth/crates/primitives" }
+reth-db = { path = "../reth/crates/storage/db" }
+reth-blockchain-tree = { path = "../reth/crates/blockchain-tree" }
+reth-beacon-consensus = { path = "../reth/crates/consensus/beacon"}
+reth-revm = { path = "../reth/crates/revm"}
+reth-interfaces = { path = "../reth/crates/interfaces"}
 eyre = "0.6.8"
 
 jsonrpsee = { version = "0.18", features = ["server", "macros"] }
