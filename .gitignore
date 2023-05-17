@@ -27,3 +27,4 @@ data/
 
 proptest-regressions/
 Cargo.lock
+Cargo.lock
