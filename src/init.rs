@@ -59,7 +59,7 @@ pub fn init_eth_api(client: RethClient) -> RethApi {
         client.clone(),
         tx_pool,
         NoopNetwork,
-        state_cache,
+        state_cache.clone(),
         GasPriceOracle::new(client.clone(), GasPriceOracleConfig::default(), state_cache.clone()),
     );
 
