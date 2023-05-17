@@ -34,7 +34,7 @@ use reth_transaction_pool::TransactionPool;
 
 // Std Lib
 use serde::{de::DeserializeOwned, Serialize};
-use std::fmt::Debug;
+use std::{fmt::Debug, convert};
 
 impl<M> RethMiddleware<M>
 where
@@ -173,16 +173,18 @@ where
         Ok(self.reth_api.transaction_count(from.into(), block_id).await?.into())
     }
 
-    // TODO type conversion between Option U64 & EthersU256
+
     async fn get_chainid(&self) -> Result<EthersU256, RethMiddlewareError<M>> {
         let chain_id = EthApiServer::chain_id(&self.reth_api).await?;
-    }
+        Ok(convert_Reth_U64_to_Ethers_U256(chain_id.unwrap()))
+        }
     
-    // TODO type conversion between Option U64 & EthersU256
     async fn get_block_number(&self) -> Result<EthersU64, RethMiddlewareError<M>> {
         let block_number = self.reth_api.block_number()?;
-        Ok(block_number.as_u64().into())
+        Ok(convert_Reth_U256_to_Ethers_U64(block_number))
     }
+
+
 
     async fn fee_history<T: Into<EthersU256> + Send + Sync>(
         &self,
@@ -190,13 +192,13 @@ where
         last_block: EthersBlocKNumber,
         reward_percentiles: &[f64],
     ) -> Result<EthersFeeHistory, Self::Error> {
-        let block_count: reth_primitives::U64 = block_count as U64;
-        let last_block = ethers_block_id_to_reth_block_id(last_block);
+        let block_count: EthersU64 = convert_Ethers_U256_to_Reth_U64(block_count.into());
+        let last_block = ethers_block_id_to_reth_block_id(reth_primitives::rpc::BlockId::Number(last_block));
         let reward_percentiles = Some(reward_percentiles.to_vec());
 
-        reth_fee_history = self.reth_api.fee_history(block_count, last_block, reward_percentiles).await?;
+        let reth_fee_history = self.reth_api.fee_history(block_count, last_block, reward_percentiles).await?;
 
-    
+        Ok(reth_fee_history_to_ethers(reth_fee_history))
     }
 
     /*async fn get_block_receipts<T: Into<BlockNumber> + Send + Sync>(
@@ -232,7 +234,7 @@ where
             .get_proof(from.into(), locations, block_id)
             .await?;
 
-        Ok(proof.into())
+        Ok(reth_proof_to_ethers(proof))
     }
 
     async fn get_transaction_receipt<T: Send + Sync + Into<EthersTxHash>>(
