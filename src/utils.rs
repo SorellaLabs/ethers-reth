@@ -1,3 +1,5 @@
+// Numerous acts of type terrorism having been commited during the making of this program. Please forgive us.
+
 use core::option;
 use eyre::Result;
 use reth_db::transaction;
