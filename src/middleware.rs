@@ -134,9 +134,10 @@ where
     //TODO: implement filter type conversion into reth & log query & type reconversion
     async fn get_logs(&self, filter: &EthersFilter) -> Result<Vec<EthersLog>, Self::Error> {
         let to_reth_filter: Filter = ethers_filter_to_reth_filter(filter);
-        let res = self.reth_filter.logs(to_reth_filter).await?;
+        let reth_logs = self.reth_filter.logs(to_reth_filter).await?;
+        let ethers_logs = reth_logs.to_ethers();
 
-        Ok(res)
+        Ok(ethers_logs)
     }
 
     async fn get_balance<T: Into<NameOrAddress> + Send + Sync>(
