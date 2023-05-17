@@ -5,16 +5,19 @@ mod utils;
 use std::sync::Arc;
 
 use ethers::providers::{Middleware, MiddlewareError};
+
 use reth_api::NodeEthApi;
-use jsonrpsee::types::*;
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::ShareableBlockchainTree;
 use reth_db::mdbx::{NoWriteMap, Env};
 use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
 use reth_transaction_pool::{PooledTransaction, EthTransactionValidator, Pool, CostOrdering};
-use thiserror::Error;
+use reth_rpc::eth::error::EthApiError;
 
+
+use thiserror::Error;
+use jsonrpsee::types::*;
 
 pub type NodeClient = BlockchainProvider<
     Arc<Env<NoWriteMap>>,
@@ -52,8 +55,10 @@ pub enum RethMiddlewareError<M: Middleware> {
     /// An error occured in one of the middlewares.
     #[error("{0}")]
     MiddlewareError(M::Error),
+
+    /// An error occurred in the Reth API.
     #[error(transparent)]
-    RethEthApiError(#[from] ErrorObjectOwned),
+    RethApiError(#[from] EthApiError),
 }
 
 impl<M: Middleware> MiddlewareError for RethMiddlewareError<M> {

@@ -44,6 +44,28 @@ use std::fmt::Debug;
 use serde::{de::DeserializeOwned, Serialize};
 
 
+
+
+impl<M> RethMiddleware<M>
+    where
+        Self: EthApiServer + EthApiSpec + 'static,
+        M: Middleware,
+{ 
+    async fn get_address<T: Into<NameOrAddress>>(
+        &self, 
+        who: T,
+    ) -> Result<EthersAddress, <Self as Middleware>::Error> {
+        match who.into() {
+            NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await,
+            NameOrAddress::Address(addr) => Ok(addr.into()),
+        }
+    }
+
+}
+
+
+
+
 #[async_trait]
 impl<M> Middleware for RethMiddleware<M>
 where
@@ -101,7 +123,7 @@ where
             .reth_api
             .create_access_list(call_request, block_id)
             .await
-            .map_err(RethMiddlewareError::RethEthApiError)?;
+            .map_err(RethMiddlewareError::RethApiError)?;
 
         let converted_result = reth_access_list_with_gas_used_to_ethers(result);
         Ok(converted_result)
@@ -126,10 +148,7 @@ where
         block: Option<EthersBlockId>,
     ) -> Result<EthersH256, Self::Error> {
         // convert `from` to `Address`
-        let from: EthersAddress = match from.into() {
-            NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
-            NameOrAddress::Address(addr) => addr.into(),
-        };
+        let from = self.get_address(from).await?;
 
         let index: JsonStorageKey = convert_location_to_json_key(location);
         
@@ -137,7 +156,7 @@ where
         let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
     
         // call `storage_at`
-        match self.reth_api.storage_at(from.into(), index, block).await {
+        match self.reth_api.storage_at(from.into(), index, block_id).await {
             Ok(value) => Ok(EthersH256::from_slice(value.as_bytes())),
             Err(e) => Err(RethMiddlewareError::RethEthApiError(e.into())),
         }
@@ -162,11 +181,9 @@ where
         from: T,
         block: Option<EthersBlockId>,
     ) -> Result<EthersU256, Self::Error> {
-        let from: Address = match from.into() {
-            NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
-            NameOrAddress::Address(addr) => addr.into(),
-        };
+        let from = self.get_address(from).await?;
 
+        let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
         let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
         let balance = self.reth_api.balance(from.into(), block_id).await?;
 
@@ -178,13 +195,10 @@ where
         at: T,
         block: Option<EthersBlockId>,
     ) -> Result<EthersBytes, Self::Error> {
-        let at: Address = match at.into() {
-            NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
-            NameOrAddress::Address(addr) => addr.into(),
-        };
+        let at = self.get_address(at).await?;
         
         let block_id = block.map(|b| ethers_block_id_to_reth_block_id(b));
-        let code = self.reth_api.get_code(at, block_id).await?;
+        let code = self.reth_api.get_code(at.into(), block_id).await?;
         Ok(code.to_vec().into())
     }
 
@@ -193,10 +207,7 @@ where
         from: T,
         block: Option<EthersBlockId>,
     ) -> Result<EthersU256, Self::Error> {
-        let from = match from.into() {
-            NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
-            NameOrAddress::Address(addr) => addr.into(),
-        };
+        let from = self.get_address(from).await?;
     
         let block_id = block.map(ethers_block_id_to_reth_block_id);
         match self.reth_api.transaction_count(from, block_id).await {
@@ -256,10 +267,7 @@ where
         locations: Vec<EthersH256>,
         block: Option<EthersBlockId>,
     ) -> Result<EthersEIP1186ProofResponse, RethMiddlewareError<M>> {
-        let from: Address = match from.into() {
-            NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await?.into(),
-            NameOrAddress::Address(addr) => addr.into(),
-        };
+        let from = self.get_address(from).await?;
 
         let locations = locations
             .into_iter()
