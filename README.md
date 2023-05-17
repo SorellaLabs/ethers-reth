@@ -1,9 +1,9 @@
 ![](assets/Octane.png)
 
-#Octane
+# Octane
 A ether-rs middleware for reth that bypasses JSON-RPC allowing for faster db queries.
 
-#Work in Progress!
+# Work in Progress!
 Please note that Octane is currently in its early stages of development. 
 
 ## Todo:
