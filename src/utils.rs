@@ -294,7 +294,7 @@ pub fn reth_rpc_transaction_to_ethers(reth_tx: Transaction) -> EthersTransaction
     }
 }
 
-fn convert_block_number_to_block_number_or_tag(
+pub fn convert_block_number_to_block_number_or_tag(
     block: EthersBlockNumber,
 ) -> Result<BlockNumberOrTag> {
     match block {
@@ -307,7 +307,7 @@ fn convert_block_number_to_block_number_or_tag(
     }
 }
 
-fn convert_topics(topics: &[Option<EthersTopic>; 4]) -> [Option<Topic>; 4] {
+pub fn convert_topics(topics: &[Option<EthersTopic>; 4]) -> [Option<Topic>; 4] {
     let mut new_topics: Vec<Option<Topic>> = Vec::new();
 
     for (i, topic) in topics.into_iter().enumerate() {
@@ -321,7 +321,7 @@ fn convert_topics(topics: &[Option<EthersTopic>; 4]) -> [Option<Topic>; 4] {
 
 // need to generalize the following 2 functions
 
-fn option_convert_valueORarray<T, U>(val: &EthersValueOrArray<Option<T>>) -> ValueOrArray<Option<U>>
+pub fn option_convert_valueORarray<T, U>(val: &EthersValueOrArray<Option<T>>) -> ValueOrArray<Option<U>>
 where
     T: Clone,
     U: From<T>,
@@ -335,7 +335,7 @@ where
     }
 }
 
-fn convert_valueORarray<T, U>(val: &EthersValueOrArray<T>) -> ValueOrArray<U>
+pub fn convert_valueORarray<T, U>(val: &EthersValueOrArray<T>) -> ValueOrArray<U>
 where
     T: Clone,
     U: From<T>,
