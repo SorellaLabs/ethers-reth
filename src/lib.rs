@@ -1,23 +1,31 @@
-pub mod middleware;
-pub mod utils;
-use init::{init_client, init_eth_api, init_eth_filter, init_trace};
-use jsonrpsee::types::ErrorObjectOwned;
-use reth_rpc::{EthFilter, TraceApi};
+// std
+use std::path::Path;
 use std::sync::Arc;
-use thiserror::Error;
-pub mod init;
 
+// ethers
 use ethers::providers::{Middleware, MiddlewareError};
 
+//Reth
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::ShareableBlockchainTree;
 use reth_db::mdbx::{Env, NoWriteMap};
 use reth_network_api::test_utils::NoopNetwork;
 use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
-use reth_rpc::EthApi;
+use reth_rpc::eth::error::EthApiError;
+use reth_rpc::{EthApi, EthFilter, TraceApi};
 use reth_transaction_pool::{CostOrdering, EthTransactionValidator, Pool, PooledTransaction};
-use std::path::Path;
+
+//Error
+use thiserror::Error;
+use jsonrpsee::types::ErrorObjectOwned;
+// own modules
+pub mod init;
+pub mod middleware;
+pub mod utils;
+use init::{init_client, init_eth_api, init_eth_filter, init_trace};
+
+
 
 pub type RethClient = BlockchainProvider<
     Arc<Env<NoWriteMap>>,
@@ -30,7 +38,6 @@ pub type RethTxPool =
 pub type RethApi = EthApi<RethClient, RethTxPool, NoopNetwork>;
 pub type RethFilter = EthFilter<RethClient, RethTxPool>;
 pub type RethTrace = TraceApi<RethClient, RethApi>;
-use reth_rpc::eth::error::EthApiError;
 
 #[derive(Clone)]
 pub struct RethMiddleware<M> {
@@ -65,7 +72,6 @@ pub enum RethMiddlewareError<M: Middleware> {
     MissingTrace,
 }
 
-
 impl<M: Middleware> MiddlewareError for RethMiddlewareError<M> {
     type Inner = M::Error;
 
@@ -80,7 +86,6 @@ impl<M: Middleware> MiddlewareError for RethMiddlewareError<M> {
         }
     }
 }
-
 
 impl<M> RethMiddleware<M>
 where

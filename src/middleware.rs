@@ -1,20 +1,20 @@
-use crate::{utils::*, RethMiddleware, RethMiddlewareError};
-use crate::utils::{ethers_block_id_to_reth_block_id};
-use crate::utils::convert_block_number_to_block_number_or_tag;
+use crate::{
+    utils::{convert_block_number_to_block_number_or_tag, ethers_block_id_to_reth_block_id, *},
+    RethMiddleware, RethMiddlewareError,
+};
 use async_trait::async_trait;
 
 // Ether rs Types
 use ethers::{
-    providers::{Middleware, MiddlewareError, ProviderError},
+    providers::Middleware,
     types::{
         transaction::{
-            self,
             eip2718::TypedTransaction,
-            eip2930::{AccessList, AccessListWithGasUsed as EthersAccessListWithGasUsed},
+            eip2930::AccessListWithGasUsed as EthersAccessListWithGasUsed,
         },
         Address as EthersAddress, Block as EthersBlock, BlockId as EthersBlockId,
         BlockNumber as EthersBlocKNumber, BlockNumber as EthersBlockNumber, Bytes as EthersBytes,
-        Bytes, EIP1186ProofResponse as EthersEIP1186ProofResponse, FeeHistory as EthersFeeHistory,
+        EIP1186ProofResponse as EthersEIP1186ProofResponse, FeeHistory as EthersFeeHistory,
         Filter as EthersFilter, Log as EthersLog, NameOrAddress, Trace as EthersTrace,
         Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
         TxHash as EthersTxHash, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
@@ -22,22 +22,11 @@ use ethers::{
 };
 
 // Reth Types
-use reth_network_api::NetworkInfo;
-use reth_provider::{
-    BlockIdProvider, BlockProvider, BlockProviderIdExt, EvmEnvProvider, HeaderProvider,
-    StateProviderFactory,
-};
-use reth_revm::primitives::SpecId::LATEST;
-use reth_rpc::{eth::EthApi, EthApiSpec};
+use reth_rpc::{EthApiSpec};
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
 use reth_rpc_types::Filter;
-
-use reth_primitives::{serde_helper::JsonStorageKey, Address, BlockId, H256, U256};
-use reth_transaction_pool::TransactionPool;
-
-// Std Lib
-use serde::{de::DeserializeOwned, Serialize};
-use std::{convert, fmt::Debug};
+use reth_primitives::rpc::BlockId;
+use reth_primitives::serde_helper::JsonStorageKey;
 
 impl<M> RethMiddleware<M>
 where
@@ -178,8 +167,10 @@ where
             ethers_block_id_to_reth_block_id(reth_primitives::rpc::BlockId::Number(last_block));
         let reward_percentiles = Some(reward_percentiles.to_vec());
 
-        let reth_fee_history =
-            self.reth_api.fee_history(block_count.into_reth(), last_block, reward_percentiles).await?;
+        let reth_fee_history = self
+            .reth_api
+            .fee_history(block_count.into_reth(), last_block, reward_percentiles)
+            .await?;
 
         Ok(reth_fee_history_to_ethers(reth_fee_history))
     }
@@ -309,20 +300,21 @@ where
         Ok(ethers_logs)
     }
 
-    // Tracing 
+    // Tracing
 
     async fn trace_transaction(
         &self,
         tx_hash: EthersTxHash,
     ) -> Result<Vec<EthersTrace>, Self::Error> {
         let trace = self.reth_trace.trace_transaction(tx_hash.into()).await?;
-    
+
         // Convert each LocalizedTransactionTrace to an EthersTrace
-        let ethers_traces: Vec<EthersTrace> = trace.unwrap_or_else(Vec::new)
+        let ethers_traces: Vec<EthersTrace> = trace
+            .unwrap_or_else(Vec::new)
             .into_iter()
             .map(|trace| reth_trace_to_ethers(trace))
             .collect();
-    
+
         Ok(ethers_traces)
     }
 
@@ -332,7 +324,8 @@ where
 
         let trace = trace_opt.ok_or(RethMiddlewareError::MissingTrace)?;
 
-        let ethers_trace: Vec<EthersTrace> = trace.into_iter().map(|trace| reth_trace_to_ethers(trace)).collect();
+        let ethers_trace: Vec<EthersTrace> =
+            trace.into_iter().map(|trace| reth_trace_to_ethers(trace)).collect();
 
         Ok(ethers_trace)
     }

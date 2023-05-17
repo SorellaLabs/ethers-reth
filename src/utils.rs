@@ -9,29 +9,34 @@ use ethers::types::{
             AccessListWithGasUsed as EthersAccessListWithGasUsed,
         },
     },
-    Address as EthersAddress, BlockId as EthersBlockId, BlockNumber as EthersBlockNumber,
-    Bloom as EthersBloom, Filter as EthersFilter, FilterBlockOption as EthersFilterBlockOption,
-    Log as EthersLog, NameOrAddress as EthersNameOrAddress, OtherFields, Topic as EthersTopic,
-    Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
-    ValueOrArray as EthersValueOrArray, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
-    EIP1186ProofResponse as EthersEIP1186ProofResponse,
-    FeeHistory as EthersFeeHistory, Bytes as EthersBytes, StorageProof as EthersStorageProof,
-    Block as EthersBlock, Withdrawal as EthersWithdrawal, Trace as EthersTrace, Action as EthersAction, Call as EthersCall,
-    Create as EthersCreate, Suicide as EthersSuicide, Reward as EthersReward, CallType as EthersCallType,
-    RewardType as EthersRewardType, Res as EthersRes, CallResult as EthersCallResult, CreateResult as EthersCreateResult,
-    ActionType as EthersActionType
+    Action as EthersAction, ActionType as EthersActionType, Address as EthersAddress,
+    Block as EthersBlock, BlockId as EthersBlockId, BlockNumber as EthersBlockNumber,
+    Bloom as EthersBloom, Bytes as EthersBytes, Call as EthersCall, CallResult as EthersCallResult,
+    CallType as EthersCallType, Create as EthersCreate, CreateResult as EthersCreateResult,
+    EIP1186ProofResponse as EthersEIP1186ProofResponse, FeeHistory as EthersFeeHistory,
+    Filter as EthersFilter, FilterBlockOption as EthersFilterBlockOption, Log as EthersLog,
+    NameOrAddress as EthersNameOrAddress, OtherFields, Res as EthersRes, Reward as EthersReward,
+    RewardType as EthersRewardType, StorageProof as EthersStorageProof, Suicide as EthersSuicide,
+    Topic as EthersTopic, Trace as EthersTrace, Transaction as EthersTransaction,
+    TransactionReceipt as EthersTransactionReceipt, ValueOrArray as EthersValueOrArray,
+    Withdrawal as EthersWithdrawal, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
 };
 
 use reth_primitives::{
     serde_helper::JsonStorageKey, AccessList, AccessListItem, AccessListWithGasUsed, Address,
-    BlockHash, BlockId, BlockNumberOrTag, Bloom, Bytes, H160, H256, U128, U256, U64, U8, Withdrawal,
+    BlockHash, BlockId, BlockNumberOrTag, Bloom, Bytes, Withdrawal, H160, H256, U128, U256, U64,
+    U8,
 };
 
-use reth_rpc_types::{
-    CallRequest, Filter, FilterBlockOption, Log, Topic, TransactionReceipt, ValueOrArray, Transaction, FeeHistory, StorageProof, Rich, Block, RichBlock, BlockTransactions, trace::parity::{LocalizedTransactionTrace, Action, CallType, RewardType, TraceResult, TraceOutput}
-};
 use reth_revm::primitives::ruint::Uint;
-use reth_rpc_types::EIP1186AccountProofResponse;
+use reth_rpc_types::{
+    trace::parity::{
+        Action, CallType, LocalizedTransactionTrace, RewardType, TraceOutput, TraceResult,
+    },
+    Block, BlockTransactions, CallRequest, EIP1186AccountProofResponse, FeeHistory, Filter,
+    FilterBlockOption, Log, Rich, RichBlock, StorageProof, Topic, Transaction, TransactionReceipt,
+    ValueOrArray,
+};
 
 pub trait ToReth<T> {
     /// Reth -> Ethers
@@ -42,7 +47,6 @@ pub trait ToReth<T> {
 }
 
 impl ToReth<EthersU256> for U64 {
-
     fn into_ethers(self) -> EthersU256 {
         self.as_u64().into()
     }
@@ -60,7 +64,6 @@ impl ToReth<EthersU64> for U256 {
     fn into_reth(t: EthersU64) -> Self {
         todo!()
     }
-
 }
 
 impl ToReth<EthersU64> for U8 {
@@ -71,7 +74,6 @@ impl ToReth<EthersU64> for U8 {
     fn into_reth(t: EthersU64) -> Self {
         todo!()
     }
-
 }
 
 impl ToReth<EthersU256> for U128 {
@@ -82,7 +84,6 @@ impl ToReth<EthersU256> for U128 {
     fn into_reth(t: EthersU256) -> Self {
         todo!()
     }
-
 }
 
 impl ToReth<EthersH256> for H256 {
@@ -93,7 +94,6 @@ impl ToReth<EthersH256> for H256 {
     fn into_reth(t: EthersH256) -> Self {
         todo!()
     }
-
 }
 
 impl ToReth<EthersBloom> for Bloom {
@@ -104,7 +104,6 @@ impl ToReth<EthersBloom> for Bloom {
     fn into_reth(t: EthersBloom) -> Self {
         todo!()
     }
-
 }
 
 impl ToReth<EthersBytes> for Bytes {
@@ -115,7 +114,6 @@ impl ToReth<EthersBytes> for Bytes {
     fn into_reth(t: EthersBytes) -> Self {
         todo!()
     }
-
 }
 
 impl ToReth<EthersLog> for Log {
@@ -138,7 +136,6 @@ impl ToReth<EthersLog> for Log {
     fn into_reth(t: EthersLog) -> Self {
         todo!()
     }
-
 }
 
 impl ToReth<EthersTransaction> for Transaction {
@@ -170,10 +167,7 @@ impl ToReth<EthersTransaction> for Transaction {
     fn into_reth(t: EthersTransaction) -> Self {
         todo!()
     }
-
 }
-
-
 
 pub fn ethers_block_id_to_reth_block_id(block_id: EthersBlockId) -> BlockId {
     match block_id {
@@ -358,7 +352,9 @@ pub fn convert_topics(topics: &[Option<EthersTopic>; 4]) -> [Option<Topic>; 4] {
 
 // need to generalize the following 2 functions
 
-pub fn option_convert_valueORarray<T, U>(val: &EthersValueOrArray<Option<T>>) -> ValueOrArray<Option<U>>
+pub fn option_convert_valueORarray<T, U>(
+    val: &EthersValueOrArray<Option<T>>,
+) -> ValueOrArray<Option<U>>
 where
     T: Clone,
     U: From<T>,
@@ -483,16 +479,14 @@ pub fn reth_fee_history_to_ethers(fee_history: FeeHistory) -> EthersFeeHistory {
     }
 }
 
-
-pub fn reth_richblock_txs_into_ethers<R, E>(txs: Vec<R>) -> Vec<E> 
+pub fn reth_richblock_txs_into_ethers<R, E>(txs: Vec<R>) -> Vec<E>
 where
-    R: ToReth<E>
+    R: ToReth<E>,
 {
     txs.into_iter().map(|t: R| t.into_ethers()).collect::<Vec<E>>()
 }
 
 pub fn reth_withraw_to_ethers(withdraw: Withdrawal) -> EthersWithdrawal {
-    
     EthersWithdrawal {
         index: withdraw.index.into(),
         validator_index: withdraw.index.into(),
@@ -501,10 +495,7 @@ pub fn reth_withraw_to_ethers(withdraw: Withdrawal) -> EthersWithdrawal {
     }
 }
 
-
-
 pub fn full_rich_block_to_ethers(rich_block: RichBlock) -> EthersBlock<EthersTransaction> {
-
     let block = rich_block.inner;
     let header = block.header;
 
@@ -531,20 +522,20 @@ pub fn full_rich_block_to_ethers(rich_block: RichBlock) -> EthersBlock<EthersTra
         total_difficulty: block.total_difficulty.map(|d| d.into()),
         seal_fields: vec![], // TODO
         uncles: block.uncles.into_iter().map(|unc| unc.into()).collect(),
-        transactions: reth_richblock_txs_into_ethers::<Transaction, EthersTransaction>(txs), 
+        transactions: reth_richblock_txs_into_ethers::<Transaction, EthersTransaction>(txs),
         size: block.size.map(|s| s.into()),
         mix_hash: Some(header.mix_hash.into()),
         nonce: header.nonce.into(),
         base_fee_per_gas: header.base_fee_per_gas.map(|fee| fee.into()),
         withdrawals_root: header.withdrawals_root.map(|root| root.into()),
-        withdrawals: block.withdrawals.map(|list| list.into_iter().map(|w| reth_withraw_to_ethers(w)).collect()),
+        withdrawals: block
+            .withdrawals
+            .map(|list| list.into_iter().map(|w| reth_withraw_to_ethers(w)).collect()),
         other: OtherFields::default(),
     }
 }
 
-
 pub fn hash_rich_block_to_ethers(rich_block: RichBlock) -> EthersBlock<EthersH256> {
-
     let block = rich_block.inner;
     let header = block.header;
 
@@ -569,15 +560,17 @@ pub fn hash_rich_block_to_ethers(rich_block: RichBlock) -> EthersBlock<EthersH25
         timestamp: header.timestamp.into(),
         difficulty: header.difficulty.into(),
         total_difficulty: block.total_difficulty.map(|d| d.into()),
-        seal_fields:  todo!(),
+        seal_fields: todo!(),
         uncles: block.uncles.into_iter().map(|unc| unc.into()).collect(),
-        transactions: reth_richblock_txs_into_ethers::<H256, EthersH256>(tx_hashes), 
+        transactions: reth_richblock_txs_into_ethers::<H256, EthersH256>(tx_hashes),
         size: block.size.map(|s| s.into()),
         mix_hash: Some(header.mix_hash.into()),
         nonce: header.nonce.into(),
         base_fee_per_gas: header.base_fee_per_gas.map(|fee| fee.into()),
         withdrawals_root: header.withdrawals_root.map(|root| root.into()),
-        withdrawals: block.withdrawals.map(|list| list.into_iter().map(|w| reth_withraw_to_ethers(w)).collect()),
+        withdrawals: block
+            .withdrawals
+            .map(|list| list.into_iter().map(|w| reth_withraw_to_ethers(w)).collect()),
         other: OtherFields::default(),
     }
 }
@@ -588,60 +581,59 @@ pub fn convert_location_to_json_key(location: EthersH256) -> JsonStorageKey {
     JsonStorageKey::from(location_u256)
 }
 
-
-
-
 pub fn convert_action(call_type: CallType) -> EthersCallType {
     match call_type {
         CallType::None => EthersCallType::None,
         CallType::Call => EthersCallType::Call,
-        CallType::CallCode => EthersCallType:: CallCode,
+        CallType::CallCode => EthersCallType::CallCode,
         CallType::DelegateCall => EthersCallType::DelegateCall,
-        CallType::StaticCall => EthersCallType::StaticCall
+        CallType::StaticCall => EthersCallType::StaticCall,
     }
 }
 
-
 pub fn reth_trace_to_ethers(trace: LocalizedTransactionTrace) -> EthersTrace {
-    
     let tx_trace = trace.trace;
     let mut action_type: EthersActionType;
     let action = match tx_trace.action {
         Action::Call(a) => {
             action_type = EthersActionType::Call;
-            EthersAction::Call(EthersCall { 
-                from: a.from.into(), 
-                to: a.to.into(), 
-                value: a.value.into(), 
-                gas: a.gas.into_ethers(), 
-                input: a.input.into_ethers(), 
-                call_type: convert_action(a.call_type), 
-            })},
+            EthersAction::Call(EthersCall {
+                from: a.from.into(),
+                to: a.to.into(),
+                value: a.value.into(),
+                gas: a.gas.into_ethers(),
+                input: a.input.into_ethers(),
+                call_type: convert_action(a.call_type),
+            })
+        }
         Action::Create(a) => {
             action_type = EthersActionType::Create;
             EthersAction::Create(EthersCreate {
-                from: a.from.into(), 
-                value: a.value.into(), 
-                gas: a.gas.into_ethers(), 
+                from: a.from.into(),
+                value: a.value.into(),
+                gas: a.gas.into_ethers(),
                 init: a.init.into_ethers(),
-            })},
+            })
+        }
         Action::Selfdestruct(a) => {
             action_type = EthersActionType::Suicide;
             EthersAction::Suicide(EthersSuicide {
-                address: a.address.into(), 
-                refund_address: a.refund_address.into(), 
-                balance: a.balance.into(), 
-            })},
+                address: a.address.into(),
+                refund_address: a.refund_address.into(),
+                balance: a.balance.into(),
+            })
+        }
         Action::Reward(a) => {
             action_type = EthersActionType::Suicide;
             EthersAction::Reward(EthersReward {
-                author: a.author.into(), 
-                value: a.value.into(), 
+                author: a.author.into(),
+                value: a.value.into(),
                 reward_type: match a.reward_type {
                     RewardType::Block => EthersRewardType::Block,
                     RewardType::Uncle => EthersRewardType::Uncle,
-                }, 
-            })},
+                },
+            })
+        }
     };
 
     let mut err: Option<String>;
@@ -657,24 +649,23 @@ pub fn reth_trace_to_ethers(trace: LocalizedTransactionTrace) -> EthersTrace {
                 code: c.code.into_ethers(),
                 address: c.address.into(),
             }),
-        }
-        TraceResult::Error{error } => {
+        },
+        TraceResult::Error { error } => {
             err = Some(error);
             EthersRes::None
-        },    
+        }
     });
-    
+
     EthersTrace {
-        action: action,
-        result: result,
+        action,
+        result,
         trace_address: tx_trace.trace_address,
         subtraces: tx_trace.subtraces,
         transaction_position: trace.transaction_position.map(|pos| pos as usize),
         transaction_hash: trace.transaction_hash.map(|hash| hash.into()),
         block_number: trace.block_number.unwrap_or(0),
         block_hash: trace.block_hash.unwrap().into(),
-        action_type: action_type,
+        action_type,
         error: err,
     }
-    
 }
