@@ -1,4 +1,4 @@
-// Numerous acts of type terrorism having been commited during the making of this program. Please forgive us.
+// Numerous acts of type terrorism have been committed during the making of this program. Please forgive us.
 
 use core::option;
 use eyre::Result;
