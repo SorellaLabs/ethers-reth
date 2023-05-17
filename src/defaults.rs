@@ -1,4 +1,3 @@
-
 use async_trait::async_trait;
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::{
@@ -10,31 +9,25 @@ use reth_primitives::MAINNET;
 use reth_provider::{providers::BlockchainProvider, ShareableDatabase};
 use reth_revm::Factory;
 use reth_rpc::{
-    eth::{cache::{EthStateCache, EthStateCacheConfig}, gas_oracle::{GasPriceOracle, GasPriceOracleConfig}},
+    eth::{
+        cache::{EthStateCache, EthStateCacheConfig},
+        gas_oracle::{GasPriceOracle, GasPriceOracleConfig},
+    },
     EthApi,
 };
-use reth_transaction_pool::{EthTransactionValidator, Pool, PooledTransaction, CostOrdering};
-use std::{sync::Arc, path::Path};
-
-
+use reth_transaction_pool::{CostOrdering, EthTransactionValidator, Pool, PooledTransaction};
+use std::{path::Path, sync::Arc};
 
 pub type NodeClient = BlockchainProvider<
     Arc<Env<NoWriteMap>>,
     ShareableBlockchainTree<Arc<Env<NoWriteMap>>, Arc<BeaconConsensus>, Factory>,
 >;
 
-pub type NodeTxPool = Pool<
-    EthTransactionValidator<
-    NodeClient,
-        PooledTransaction,
-    >,
-    CostOrdering<PooledTransaction>,
->;
-
+pub type NodeTxPool =
+    Pool<EthTransactionValidator<NodeClient, PooledTransaction>, CostOrdering<PooledTransaction>>;
 
 // default client
 pub fn default_client(db_path: &Path) -> NodeClient {
-
     let chain = Arc::new(MAINNET.clone());
     let db = Arc::new(Env::<NoWriteMap>::open(db_path.as_ref(), EnvKind::RO).unwrap());
 
@@ -50,22 +43,18 @@ pub fn default_client(db_path: &Path) -> NodeClient {
         tokio::sync::broadcast::channel(tree_config.max_reorg_depth() as usize * 2);
 
     let blockchain_tree = ShareableBlockchainTree::new(
-        BlockchainTree::new(
-            tree_externals,
-            canon_state_notification_sender.clone(),
-            tree_config,
-        )
-        .unwrap(),
+        BlockchainTree::new(tree_externals, canon_state_notification_sender.clone(), tree_config)
+            .unwrap(),
     );
 
     let blockchain_db = BlockchainProvider::new(
         ShareableDatabase::new(Arc::clone(&db), Arc::clone(&chain)),
-        blockchain_tree
-    ).unwrap();
+        blockchain_tree,
+    )
+    .unwrap();
 
     blockchain_db
 }
-
 
 // default txPool
 pub fn default_pool(client: NodeClient) -> NodeTxPool {

@@ -11,7 +11,7 @@ use ethers::types::{
     BlockId as EthersBlockId, BlockNumber as EthersBlockNumber, Filter as EthersFilter,
     FilterBlockOption as EthersFilterBlockOption, NameOrAddress, OtherFields, Topic as EthersTopic,
     Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
-    ValueOrArray as EthersValueOrArray, H256 as EthersH256,
+    ValueOrArray as EthersValueOrArray, H256 as EthersH256, U64 as EthersU64, Bloom as EthersBloom
 };
 use eyre::Result;
 
@@ -19,7 +19,7 @@ use ethers::types::Address as EthersAddress;
 
 use reth_primitives::{
     AccessList, AccessListItem, AccessListWithGasUsed, Address, BlockId, BlockNumberOrTag, Bytes,
-    H256, U256, U8,
+    H256, U256, U8, Bloom,
 };
 
 pub trait ToEthers<T> {
