@@ -3,7 +3,7 @@ mod utils;
 use std::sync::Arc;
 use init::{init_eth_api, init_eth_filter, init_client};
 use jsonrpsee::types::ErrorObjectOwned;
-use reth_rpc::EthFilter;
+use reth_rpc::{EthFilter, TraceApi};
 use thiserror::Error;
 pub mod init;
 
@@ -21,23 +21,25 @@ use reth_rpc::EthApi;
 use std::path::Path;
 
 
-pub type NodeClient = BlockchainProvider<
+pub type RethClient = BlockchainProvider<
     Arc<Env<NoWriteMap>>,
     ShareableBlockchainTree<Arc<Env<NoWriteMap>>, Arc<BeaconConsensus>, Factory>,
 >;
 
-pub type NodeTxPool =
-    Pool<EthTransactionValidator<NodeClient, PooledTransaction>, CostOrdering<PooledTransaction>>;
+pub type RethTxPool =
+    Pool<EthTransactionValidator<RethClient, PooledTransaction>, CostOrdering<PooledTransaction>>;
 
-pub type NodeEthApi = EthApi<NodeClient, NodeTxPool, NoopNetwork>;
-pub type NodeEthFilter = EthFilter<NodeClient, NodeTxPool>;
-
+pub type RethApi = EthApi<RethClient, RethTxPool, NoopNetwork>;
+pub type RethFilter = EthFilter<RethClient, RethTxPool>;
+pub type RethTrace = TraceApi<RethClient, RethTxPool>;
 
 #[derive(Clone)]
 pub struct RethMiddleware<M> {
     inner: M,
-    reth_api: NodeEthApi,
-    reth_filter: NodeEthFilter,
+    reth_api: RethApi,
+    reth_filter: RethFilter,
+    reth_trace: RethTrace,
+
 }
 
 impl<M: std::fmt::Debug> std::fmt::Debug for RethMiddleware<M> {
@@ -84,6 +86,8 @@ where
         // EthFilter -> EthFilter<Client, Pool>
         // TODO: figure out default max_logs
         let filter = init_eth_filter(client.clone(), 1000);
+
+        let trace = TraceApi::new(client.clone(), api.clone(), todo!());
 
         Self { inner, reth_api: api, reth_filter: filter}
     }
