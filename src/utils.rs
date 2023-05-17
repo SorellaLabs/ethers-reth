@@ -350,3 +350,22 @@ pub fn convert_location_to_json_key(location: EthersH256) -> JsonStorageKey {
     let location_u256: U256 = U256::from_be_bytes(location);
     JsonStorageKey::from(location_u256)
 }
+
+
+pub fn convert_Ethers_U256_to_Reth_U64(u256: EthersU256) -> U64 {
+    let u256 = u256.as_u64();
+    u256.into()
+}
+
+pub fn convert_Reth_U256_to_Ethers_U64(u256: U256) -> EthersU64 {
+    let u256: EthersU256 = u256.into();
+    let u256 = u256.as_u64(); 
+    u256.into()
+}
+
+
+pub fn convert_Reth_U64_to_Ethers_U256(u64: U64) -> EthersU256 {
+    let u64t = u64.as_u64(); 
+    u64t.into()
+}
+
