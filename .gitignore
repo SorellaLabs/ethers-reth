@@ -26,3 +26,4 @@ crates/stages/testdata
 data/
 
 proptest-regressions/
+Cargo.lock
