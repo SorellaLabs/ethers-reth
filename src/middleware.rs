@@ -315,10 +315,23 @@ where
         &self,
         tx_hash: EthersTxHash,
     ) -> Result<Vec<EthersTrace>, Self::Error> {
-        !todo!();
-        let trace = self.reth_trace.trace_transaction(tx_hash.into()).await?;
-        Ok(trace)
+        let trace_option = self
+            .reth_trace
+            .trace_transaction(tx_hash.into())
+            .await?;
+    
+        // If there are no traces, return an empty vector
+        let traces = trace_option.unwrap_or_else(Vec::new);
+    
+        // Convert each LocalizedTransactionTrace to an EthersTrace
+        let ethers_traces: Vec<EthersTrace> = traces
+            .into_iter()
+            .map(|trace| reth_trace_to_ethers(trace))
+            .collect();
+    
+        Ok(ethers_traces)
     }
+    
 
     async fn debug_trace_transaction() {
         !todo!()
