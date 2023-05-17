@@ -258,7 +258,7 @@ where
             EthersBlockId::Number(num) => self.reth_api.block_by_number(num.into(), false).await?,
         };
 
-        Ok(block.map(|block| rich_block_to_ethers::<EthersTxHash>(block)))
+        Ok(block.map(|block| hash_rich_block_to_ethers(block)))
     }
 
     async fn get_uncle<T: Into<EthersBlockId> + Send + Sync>(
@@ -281,7 +281,7 @@ where
             }
         };
 
-        Ok(block.map(|block| rich_block_to_ethers::<EthersTxHash>(block)))
+        Ok(block.map(|block| hash_rich_block_to_ethers(block)))
     }
 
     async fn get_block_with_txs<T: Into<EthersBlockId> + Send + Sync>(
@@ -295,7 +295,7 @@ where
             EthersBlockId::Number(num) => self.reth_api.block_by_number(num.into(), true).await?,
         };
 
-        Ok(block.map(|block| rich_block_to_ethers::<EthersTransaction>(block)))
+        Ok(block.map(|block| full_rich_block_to_ethers(block)))
     }
 
     // Logs
