@@ -20,10 +20,10 @@ use reth_rpc::{
 };
 use std::{path::Path, sync::Arc};
 
-use crate::{NodeClient, NodeEthApi, NodeEthFilter, NodeTxPool};
+use crate::{RethClient, RethApi, RethFilter, RethTxPool, RethTrace};
    
 // EthApi/Filter Client
-pub fn init_client(db_path: &Path) -> NodeClient {
+pub fn init_client(db_path: &Path) -> RethClient {
     let chain = Arc::new(MAINNET.clone());
     let db = Arc::new(Env::<NoWriteMap>::open(db_path.as_ref(), EnvKind::RO).unwrap());
 
@@ -54,7 +54,7 @@ pub fn init_client(db_path: &Path) -> NodeClient {
 
 
 /// EthApi
-pub fn init_eth_api(client: NodeClient) -> NodeEthApi {
+pub fn init_eth_api(client: RethClient) -> RethApi {
     let tx_pool = init_pool(client.clone());
 
     let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
@@ -71,7 +71,7 @@ pub fn init_eth_api(client: NodeClient) -> NodeEthApi {
 }
 
 /// EthFilter
-pub fn init_eth_filter(client: NodeClient, max_logs_per_response: usize) -> NodeEthFilter {
+pub fn init_eth_filter(client: RethClient, max_logs_per_response: usize) -> RethFilter {
 
     let tx_pool = init_pool(client.clone());
 
@@ -88,7 +88,7 @@ pub fn init_eth_filter(client: NodeClient, max_logs_per_response: usize) -> Node
 }
 
 // EthApi/Filter txPool
-pub fn init_pool(client: NodeClient) -> NodeTxPool {
+pub fn init_pool(client: RethClient) -> RethTxPool {
     let chain = Arc::new(MAINNET.clone());
 
     let tx_pool = reth_transaction_pool::Pool::eth_pool(
@@ -98,3 +98,9 @@ pub fn init_pool(client: NodeClient) -> NodeTxPool {
 
     tx_pool
 }
+
+// RethTrace
+pub fn init_Trace() -> RethTrace {
+    todo!()
+}
+
