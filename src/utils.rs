@@ -14,14 +14,9 @@ use ethers::types::{
     Bloom as EthersBloom, Filter as EthersFilter, FilterBlockOption as EthersFilterBlockOption,
     Log as EthersLog, NameOrAddress as EthersNameOrAddress, OtherFields, Topic as EthersTopic,
     Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
-<<<<<<< HEAD
     ValueOrArray as EthersValueOrArray, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
     EIP1186ProofResponse as EthersEIP1186ProofResponse,
     FeeHistory as EthersFeeHistory, Bytes as EthersBytes, StorageProof as EthersStorageProof
-=======
-    ValueOrArray as EthersValueOrArray, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,EIP1186ProofResponse as EthersEIP1186ProofResponse,
-    FeeHistory as EthersFeeHistory, Block as EthersBlock, TxHash as EthersTxHash
->>>>>>> c7be7280fabcb003b77b31078edf36608fc5b16c
 };
 
 use reth_primitives::{
@@ -31,11 +26,7 @@ use reth_primitives::{
 };
 
 use reth_rpc_types::{
-<<<<<<< HEAD
     CallRequest, Filter, FilterBlockOption, Log, Topic, TransactionReceipt, ValueOrArray, Transaction, FeeHistory, StorageProof
-=======
-    CallRequest, Filter, FilterBlockOption, Log, Topic, TransactionReceipt, ValueOrArray, Transaction, RichBlock
->>>>>>> c7be7280fabcb003b77b31078edf36608fc5b16c
 };
 
 use reth_revm::primitives::ruint::Uint;
