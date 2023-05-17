@@ -172,13 +172,13 @@ where
         last_block: EthersBlocKNumber,
         reward_percentiles: &[f64],
     ) -> Result<EthersFeeHistory, Self::Error> {
-        let block_count: EthersU64 = convert_Ethers_U256_to_Reth_U64(block_count.into());
+        let block_count = block_count.into();
         let last_block =
             ethers_block_id_to_reth_block_id(reth_primitives::rpc::BlockId::Number(last_block));
         let reward_percentiles = Some(reward_percentiles.to_vec());
 
         let reth_fee_history =
-            self.reth_api.fee_history(block_count, last_block, reward_percentiles).await?;
+            self.reth_api.fee_history(block_count.into_reth(), last_block, reward_percentiles).await?;
 
         Ok(reth_fee_history_to_ethers(reth_fee_history))
     }
@@ -187,12 +187,12 @@ where
 
     async fn get_chainid(&self) -> Result<EthersU256, RethMiddlewareError<M>> {
         let chain_id = EthApiServer::chain_id(&self.reth_api).await?;
-        Ok(convert_Reth_U64_to_Ethers_U256(chain_id.unwrap()))
+        Ok(chain_id.unwrap().into_ethers())
     }
 
     async fn get_block_number(&self) -> Result<EthersU64, RethMiddlewareError<M>> {
         let block_number = self.reth_api.block_number()?;
-        Ok(convert_Reth_U256_to_Ethers_U64(block_number))
+        Ok(block_number.into_ethers())
     }
 
     /*async fn get_block_receipts<T: Into<EthersBlockNumber> + Send + Sync>(
