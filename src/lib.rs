@@ -30,6 +30,7 @@ pub type RethTxPool =
 pub type RethApi = EthApi<RethClient, RethTxPool, NoopNetwork>;
 pub type RethFilter = EthFilter<RethClient, RethTxPool>;
 pub type RethTrace = TraceApi<RethClient, RethApi>;
+use reth_rpc::eth::error::EthApiError;
 
 #[derive(Clone)]
 pub struct RethMiddleware<M> {
@@ -54,6 +55,10 @@ pub enum RethMiddlewareError<M: Middleware> {
     /// An error occurred in the Reth API.
     #[error(transparent)]
     RethApiError(#[from] ErrorObjectOwned),
+
+    /// An error occurred in the Eth API.
+    #[error(transparent)]
+    EthApiError(#[from] EthApiError),
 }
 
 impl<M: Middleware> MiddlewareError for RethMiddlewareError<M> {
