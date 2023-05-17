@@ -14,7 +14,7 @@ use ethers::types::{
     Log as EthersLog, NameOrAddress as EthersNameOrAddress, OtherFields, Topic as EthersTopic,
     Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
     ValueOrArray as EthersValueOrArray, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,EIP1186ProofResponse as EthersEIP1186ProofResponse,
-    FeeHistory as EthersFeeHistory
+    FeeHistory as EthersFeeHistory, Block as EthersBlock, TxHash as EthersTxHash
 };
 
 use reth_primitives::{
@@ -23,7 +23,7 @@ use reth_primitives::{
 };
 
 use reth_rpc_types::{
-    CallRequest, Filter, FilterBlockOption, Log, Topic, TransactionReceipt, ValueOrArray, Transaction
+    CallRequest, Filter, FilterBlockOption, Log, Topic, TransactionReceipt, ValueOrArray, Transaction, RichBlock
 };
 
 use reth_revm::{
@@ -198,6 +198,8 @@ pub fn ethers_typed_transaction_to_reth_call_request(tx: &EthersTypedTransaction
     }
 }
 
+
+
 pub fn reth_rpc_transaction_to_ethers(reth_tx: Transaction) -> EthersTransaction {
     let v = reth_tx.signature.map_or(0.into(), |sig| sig.v.into_ethers());
     let r = reth_tx.signature.map_or(0.into(), |sig| sig.r.into());
@@ -347,6 +349,8 @@ pub fn reth_proof_to_ethers(proof: EIP1186AccountProofResponse) -> EthersEIP1186
 
 
 pub fn reth_fee_history_to_ethers(fee_history: FeeHistory) -> EthersFeeHistory {}
+
+pub fn rich_block_to_ethers(rich_block: RichBlock) -> EthersBlock<EthersTxHash> {}
 
 
 pub fn convert_location_to_json_key(location: EthersH256) -> JsonStorageKey {
