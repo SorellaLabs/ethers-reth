@@ -1,4 +1,5 @@
 use crate::{utils::*, RethMiddleware, RethMiddlewareError};
+use crate::utils::{ethers_block_id_to_reth_block_id};
 use async_trait::async_trait;
 
 // Ether rs Types

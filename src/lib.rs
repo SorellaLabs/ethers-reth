@@ -1,5 +1,5 @@
 pub mod middleware;
-mod utils;
+pub mod utils;
 use init::{init_client, init_eth_api, init_eth_filter, init_trace};
 use jsonrpsee::types::ErrorObjectOwned;
 use reth_rpc::{EthFilter, TraceApi};
