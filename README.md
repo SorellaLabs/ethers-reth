@@ -13,5 +13,5 @@ Please note that Octane is currently in its early stages of development.
 - [ ] Improved type conversions: The type conversion is a terroristic at best, we'll clean that up soon
 - [ ] Tests, waiting on node sync
 
-Contact
+### Contact
 For any questions or enhancment requests, please open an issue on this repository or dm me on [twitter](https://twitter.com/0xvanbeethoven).
