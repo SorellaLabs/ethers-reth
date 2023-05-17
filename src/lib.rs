@@ -59,7 +59,12 @@ pub enum RethMiddlewareError<M: Middleware> {
     /// An error occurred in the Eth API.
     #[error(transparent)]
     EthApiError(#[from] EthApiError),
+
+    /// A trace was expected but none was found.
+    #[error("Missing trace")]
+    MissingTrace,
 }
+
 
 impl<M: Middleware> MiddlewareError for RethMiddlewareError<M> {
     type Inner = M::Error;
@@ -75,6 +80,7 @@ impl<M: Middleware> MiddlewareError for RethMiddlewareError<M> {
         }
     }
 }
+
 
 impl<M> RethMiddleware<M>
 where

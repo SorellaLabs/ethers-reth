@@ -1,5 +1,6 @@
 use crate::{utils::*, RethMiddleware, RethMiddlewareError};
 use crate::utils::{ethers_block_id_to_reth_block_id};
+use crate::utils::convert_block_number_to_block_number_or_tag;
 use async_trait::async_trait;
 
 // Ether rs Types
@@ -309,29 +310,29 @@ where
     }
 
     // Tracing 
-    // TODO: implement tracing type conversion 
+
     async fn trace_transaction(
         &self,
         tx_hash: EthersTxHash,
     ) -> Result<Vec<EthersTrace>, Self::Error> {
-        let trace_option = self.reth_trace.trace_transaction(tx_hash.into()).await?;
-
-        // If there are no traces, return an empty vector
-        let traces = trace::option.unwrap_or_else(Vec::new);
-
+        let trace = self.reth_trace.trace_transaction(tx_hash.into()).await?;
+    
         // Convert each LocalizedTransactionTrace to an EthersTrace
-        let ethers_traces: Vec<EthersTrace> =
-            traces.into_iter().map(|trace| reth_trace_to_ethers(trace)).collect();
-
+        let ethers_traces: Vec<EthersTrace> = trace.unwrap_or_else(Vec::new)
+            .into_iter()
+            .map(|trace| reth_trace_to_ethers(trace))
+            .collect();
+    
         Ok(ethers_traces)
     }
 
     async fn trace_block(&self, block: EthersBlockNumber) -> Result<Vec<EthersTrace>, Self::Error> {
-        let trace_opt = self.reth_trace.trace_block(block.into()).await?;
+        let block_id = BlockId::from(convert_block_number_to_block_number_or_tag(block).unwrap());
+        let trace_opt = self.reth_trace.trace_block(block_id).await?;
 
         let trace = trace_opt.ok_or(RethMiddlewareError::MissingTrace)?;
 
-        let ethers_trace: Vec<EthersTrace> = traces.into_iter().map(|trace| reth_trace_to_ethers(trace)).collect();
+        let ethers_trace: Vec<EthersTrace> = trace.into_iter().map(|trace| reth_trace_to_ethers(trace)).collect();
 
         Ok(ethers_trace)
     }
