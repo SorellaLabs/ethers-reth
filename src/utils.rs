@@ -1,4 +1,5 @@
 use core::option;
+use std::str::FromStr;
 use eyre::Result;
 
 use ethers::types::{
@@ -13,24 +14,23 @@ use ethers::types::{
     Bloom as EthersBloom, Filter as EthersFilter, FilterBlockOption as EthersFilterBlockOption,
     Log as EthersLog, NameOrAddress as EthersNameOrAddress, OtherFields, Topic as EthersTopic,
     Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
-    ValueOrArray as EthersValueOrArray, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,EIP1186ProofResponse as EthersEIP1186ProofResponse,
-    FeeHistory as EthersFeeHistory
+    ValueOrArray as EthersValueOrArray, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
+    EIP1186ProofResponse as EthersEIP1186ProofResponse,
+    FeeHistory as EthersFeeHistory, Bytes as EthersBytes, StorageProof as EthersStorageProof
 };
 
 use reth_primitives::{
     serde_helper::JsonStorageKey, AccessList, AccessListItem, AccessListWithGasUsed, Address,
-    BlockHash, BlockId, BlockNumberOrTag, Bloom, Bytes, H256, U256, U8, U128, U64
+    BlockHash, BlockId, BlockNumberOrTag, Bloom, Bytes, H256, U256, U8, U128, U64, H160
+    
 };
 
 use reth_rpc_types::{
-    CallRequest, Filter, FilterBlockOption, Log, Topic, TransactionReceipt, ValueOrArray, Transaction
+    CallRequest, Filter, FilterBlockOption, Log, Topic, TransactionReceipt, ValueOrArray, Transaction, FeeHistory, StorageProof
 };
 
-use reth_revm::{
-    precompile::B160,
-    primitives::ruint::{self, Bits, Uint},
-};
-use reth_rpc_types::EIP1186AccountProofResponse;
+use reth_revm::primitives::ruint::Uint;
+use reth_rpc_types::{EIP1186AccountProofResponse};
 
 pub trait ToEthers<T> {
     /// Reth -> Ethers
@@ -72,6 +72,13 @@ impl ToEthers<EthersBloom> for Bloom {
         self.to_fixed_bytes().into()
     }
 }
+
+impl ToEthers<EthersBytes> for Bytes {
+    fn into_ethers(self) -> EthersBytes {
+        self.to_vec().into()
+    }
+}
+
 
 impl ToEthers<EthersLog> for Log {
     fn into_ethers(self) -> EthersLog {
@@ -138,7 +145,7 @@ pub fn reth_access_list_to_ethers_access_list(access_list: AccessList) -> Ethers
 }
 
 pub fn opt_reth_access_list_to_ethers_access_list(
-    opt_access_list: Option<Vec<reth_primitives::AccessListItem>>,
+    opt_access_list: Option<Vec<AccessListItem>>,
 ) -> EthersAccessList {
     let access_list = opt_access_list.unwrap_or_else(Vec::new);
     EthersAccessList(
@@ -179,29 +186,50 @@ pub fn reth_access_list_with_gas_used_to_ethers(
     }
 }
 
+// TODO: implement Name(String)
 pub fn ethers_typed_transaction_to_reth_call_request(tx: &EthersTypedTransaction) -> CallRequest {
-    CallRequest {
-        from: Some(tx.from.into()),
-        to: tx.to.map(|addr| addr.into()),
-        gas_price: tx.gas_price.map(|gas| gas.into()),
-        max_fee_per_gas: tx.max_fee_per_gas.map(|gas| gas.into()),
-        max_priority_fee_per_gas: tx.max_priority_fee_per_gas.map(|gas| gas.into()),
-        gas: Some(tx.gas.into()),
-        value: Some(tx.value.into()),
-        data: Some(tx.input.to_vec().into()),
-        nonce: Some(tx.nonce.into()),
-        chain_id: tx.chain_id.map(|id| id.as_u64().into()),
-        access_list: tx
-            .access_list
-            .map(|list| ethers_access_list_to_reth_access_list(list.clone())),
-        transaction_type: tx.transaction_type.map(|t| t.into())
+
+    let name_or_addr = tx.to().map(|addr| match addr {
+        EthersNameOrAddress::Name(_) => None,
+        EthersNameOrAddress::Address(a) =>  Some(Into::<H160>::into(*a))
+    });
+
+    let mut into_tx = CallRequest {
+        from: tx.from().map(|addr| Into::<H160>::into(*addr)),
+        to: name_or_addr.map(|a| a.unwrap()),
+        gas_price: tx.gas_price().map(|gas| gas.into()),
+        max_fee_per_gas: None,
+        max_priority_fee_per_gas: None,
+        gas: tx.gas().map(|gas| Into::<U256>::into(*gas)),
+        value: tx.value().map(|val| Into::<U256>::into(*val)),
+        data: tx.data().map(|d| Into::<Bytes>::into(d.to_vec())),
+        nonce: tx.nonce().map(|n| Into::<U256>::into(*n)),
+        chain_id: tx.chain_id().map(|id| id.into()),
+        access_list: tx.access_list().map(|list| ethers_access_list_to_reth_access_list(list.clone())),
+        transaction_type: None
+    };
+
+    match tx {
+        EthersTypedTransaction::Legacy(_) => {
+            into_tx.transaction_type = Some(Uint::from(0));
+            ()
+        },
+        EthersTypedTransaction::Eip2930(inner_tx) => {
+            into_tx.transaction_type = Some(Uint::from(1));
+            ()
+        },
+        EthersTypedTransaction::Eip1559(inner_tx) => {
+            into_tx.max_fee_per_gas = inner_tx.max_fee_per_gas.map(|gas| gas.into());
+            into_tx.max_priority_fee_per_gas = inner_tx.max_priority_fee_per_gas.map(|gas| gas.into());
+            into_tx.transaction_type = Some(Uint::from(2));
+            ()
+        },
     }
+
+    into_tx
 }
 
 pub fn reth_rpc_transaction_to_ethers(reth_tx: Transaction) -> EthersTransaction {
-    let v = reth_tx.signature.map_or(0.into(), |sig| sig.v.into_ethers());
-    let r = reth_tx.signature.map_or(0.into(), |sig| sig.r.into());
-    let s = reth_tx.signature.map_or(0.into(), |sig| sig.s.into());
 
     EthersTransaction {
         hash: reth_tx.hash.into(),
@@ -215,11 +243,11 @@ pub fn reth_rpc_transaction_to_ethers(reth_tx: Transaction) -> EthersTransaction
         gas_price: reth_tx.gas_price.map(|p| p.into_ethers()),
         gas: reth_tx.gas.into(),
         input: reth_tx.input.to_vec().into(),
-        v,
-        r,
-        s,
+        v: reth_tx.signature.clone().map_or(0.into(), |sig| sig.v.into_ethers()),
+        r: reth_tx.signature.clone().map_or(0.into(), |sig| sig.r.into()),
+        s: reth_tx.signature.clone().map_or(0.into(), |sig| sig.s.into()),
         transaction_type: reth_tx.transaction_type,
-        access_list: Some(opt_reth_access_list_to_ethers_access_list(reth_tx.access_list)),
+        access_list: reth_tx.access_list.map(|list| list.into()),
         max_priority_fee_per_gas: reth_tx.max_priority_fee_per_gas.map(|p| p.into_ethers()),
         max_fee_per_gas: reth_tx.max_fee_per_gas.map(|p| p.into_ethers()),
         chain_id: reth_tx.chain_id.map(|id| id.into_ethers()),
@@ -242,7 +270,7 @@ fn convert_block_number_to_block_number_or_tag(
     }
 }
 
-fn convert_topics(topics: [Option<EthersTopic>; 4]) -> [Option<Topic>; 4] {
+fn convert_topics(topics: &[Option<EthersTopic>; 4]) -> [Option<Topic>; 4] {
     let mut new_topics: Vec<Option<Topic>> = Vec::new();
 
     for (i, topic) in topics.into_iter().enumerate() {
@@ -265,7 +293,7 @@ where
         EthersValueOrArray::Value(Some(addr)) => ValueOrArray::Value(Some(addr.clone().into())),
         EthersValueOrArray::Value(None) => ValueOrArray::Value(None),
         EthersValueOrArray::Array(addrs) => {
-            ValueOrArray::Array(addrs.into_iter().map(|a| a.map(U::from)).collect())
+            ValueOrArray::Array(addrs.into_iter().map(|a| a.clone().map(U::from)).collect())
         }
     }
 }
@@ -287,8 +315,8 @@ where
 
 pub fn ethers_filter_to_reth_filter(filter: &EthersFilter) -> Filter {
     return Filter {
-        block_option: match filter.block_option {
-            EthersFilterBlockOption::AtBlockHash(x) => FilterBlockOption::AtBlockHash(x.into()),
+        block_option: match &filter.block_option {
+            EthersFilterBlockOption::AtBlockHash(x) => FilterBlockOption::AtBlockHash(Into::<H256>::into(*x)),
             EthersFilterBlockOption::Range { from_block, to_block } => FilterBlockOption::Range {
                 from_block: convert_block_number_to_block_number_or_tag(from_block.unwrap()).ok(),
                 to_block: convert_block_number_to_block_number_or_tag(to_block.unwrap()).ok(),
@@ -296,11 +324,11 @@ pub fn ethers_filter_to_reth_filter(filter: &EthersFilter) -> Filter {
         },
 
         address: match &filter.address {
-            Some(addr) => Some(convert_valueORarray(addr)),
+            Some(addr) => Some(convert_valueORarray(&addr)),
             None => None,
         },
 
-        topics: convert_topics(filter.topics),
+        topics: convert_topics(&filter.topics),
     }
 }
 
@@ -343,10 +371,46 @@ pub fn reth_transaction_receipt_to_ethers(receipt: TransactionReceipt) -> Ethers
 }
 
 
-pub fn reth_proof_to_ethers(proof: EIP1186AccountProofResponse) -> EthersEIP1186ProofResponse {}
+pub fn reth_storage_proof_to_ethers(proof: StorageProof) -> EthersStorageProof {
+
+    EthersStorageProof {
+        key: H256::from_str(&Into::<String>::into(proof.key)).unwrap().into(),
+        proof: proof.proof.into_iter().map(|p| p.into_ethers()).collect(),
+        value: proof.value.into(),
+    }
+}
 
 
-pub fn reth_fee_history_to_ethers(fee_history: FeeHistory) -> EthersFeeHistory {}
+pub fn reth_proof_to_ethers(proof: EIP1186AccountProofResponse) -> EthersEIP1186ProofResponse {
+
+    EthersEIP1186ProofResponse {
+        address: proof.address.into(),
+        balance:  proof.balance.into(),
+        code_hash: proof.code_hash.into(),
+        nonce:  proof.nonce.into(),
+        storage_hash:  proof.storage_hash.into(),
+        account_proof:  proof.account_proof.into_iter().map(|a| a.into_ethers()).collect(),
+        storage_proof:  proof.storage_proof.into_iter().map(|s| reth_storage_proof_to_ethers(s)).collect(),
+    }
+}
+
+
+pub fn reth_fee_history_to_ethers(fee_history: FeeHistory) -> EthersFeeHistory {
+
+    EthersFeeHistory {
+        base_fee_per_gas: fee_history.base_fee_per_gas.into_iter().map(|fee| fee.into()).collect(),
+        gas_used_ratio: fee_history.gas_used_ratio.into_iter().map(|gas| gas).collect(),
+        oldest_block: fee_history.oldest_block.into(),
+        reward: fee_history.reward.unwrap().into_iter().map(|inner_vec| {
+            inner_vec.into_iter()
+                .map(|num| num.into())
+                .collect()
+        })
+        .collect(),
+    }
+}
+
+
 
 
 pub fn convert_location_to_json_key(location: EthersH256) -> JsonStorageKey {
