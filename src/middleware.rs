@@ -25,8 +25,13 @@ use ethers::{
 use reth_rpc::{EthApiSpec};
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
 use reth_rpc_types::Filter;
-use reth_primitives::rpc::BlockId;
-use reth_primitives::serde_helper::JsonStorageKey;
+
+use reth_primitives::{serde_helper::JsonStorageKey, Address, BlockId, H256, U256, U64};
+use reth_transaction_pool::TransactionPool;
+
+// Std Lib
+use serde::{de::DeserializeOwned, Serialize};
+use std::{convert, fmt::Debug};
 
 impl<M> RethMiddleware<M>
 where
@@ -167,10 +172,9 @@ where
             ethers_block_id_to_reth_block_id(reth_primitives::rpc::BlockId::Number(last_block));
         let reward_percentiles = Some(reward_percentiles.to_vec());
 
-        let reth_fee_history = self
-            .reth_api
-            .fee_history(block_count.into_reth(), last_block, reward_percentiles)
-            .await?;
+        let reth_fee_history =
+            self.reth_api.fee_history(U64::to_reth(block_count), last_block, reward_percentiles).await?;
+
 
         Ok(reth_fee_history_to_ethers(reth_fee_history))
     }
