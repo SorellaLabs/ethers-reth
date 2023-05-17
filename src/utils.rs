@@ -33,65 +33,92 @@ use reth_rpc_types::{
 use reth_revm::primitives::ruint::Uint;
 use reth_rpc_types::EIP1186AccountProofResponse;
 
-pub trait ToEthers<T> {
-    /// Reth -> Ethers
-    fn into_ethers(self) -> T;
-}
-
 pub trait ToReth<T> {
     /// Reth -> Ethers
-    fn into_reth(self) -> T;
+    fn into_ethers(self) -> T;
+
+    /// Ethers -> Reth
+    fn into_reth(t: T) -> Self;
 }
 
-impl ToReth<U64> for EthersU256 {
-    fn into_reth(self) -> U64 {
+impl ToReth<EthersU256> for U64 {
+
+    fn into_ethers(self) -> EthersU256 {
         self.as_u64().into()
     }
-}
 
-impl ToEthers<EthersU64> for U256 {
-    fn into_ethers(self) -> EthersU64 {
-        self.to_le_bytes().into()
+    fn into_reth(t: EthersU256) -> Self {
+        t.as_u64().into()
     }
 }
 
-impl ToEthers<EthersU64> for U8 {
+impl ToReth<EthersU64> for U256 {
     fn into_ethers(self) -> EthersU64 {
         self.to_le_bytes().into()
     }
+
+    fn into_reth(t: EthersU64) -> Self {
+        todo!()
+    }
+
 }
 
-impl ToEthers<EthersU256> for U128 {
+impl ToReth<EthersU64> for U8 {
+    fn into_ethers(self) -> EthersU64 {
+        self.to_le_bytes().into()
+    }
+
+    fn into_reth(t: EthersU64) -> Self {
+        todo!()
+    }
+
+}
+
+impl ToReth<EthersU256> for U128 {
     fn into_ethers(self) -> EthersU256 {
         self.to_le_bytes().into()
     }
+
+    fn into_reth(t: EthersU256) -> Self {
+        todo!()
+    }
+
 }
 
-impl ToEthers<EthersH256> for H256 {
+impl ToReth<EthersH256> for H256 {
     fn into_ethers(self) -> EthersH256 {
         self.into()
     }
-}
 
-impl ToEthers<EthersU256> for U64 {
-    fn into_ethers(self) -> EthersU256 {
-        self.as_u64().into()
+    fn into_reth(t: EthersH256) -> Self {
+        todo!()
     }
+
 }
 
-impl ToEthers<EthersBloom> for Bloom {
+impl ToReth<EthersBloom> for Bloom {
     fn into_ethers(self) -> EthersBloom {
         self.to_fixed_bytes().into()
     }
+
+    fn into_reth(t: EthersBloom) -> Self {
+        todo!()
+    }
+
 }
 
-impl ToEthers<EthersBytes> for Bytes {
+impl ToReth<EthersBytes> for Bytes {
     fn into_ethers(self) -> EthersBytes {
         self.to_vec().into()
     }
+
+    fn into_reth(t: EthersBytes) -> Self {
+        todo!()
+    }
+
 }
 
-impl ToEthers<EthersLog> for Log {
+impl ToReth<EthersLog> for Log {
     fn into_ethers(self) -> EthersLog {
         EthersLog {
             address: self.address.into(),
@@ -107,9 +134,14 @@ impl ToEthers<EthersLog> for Log {
             removed: Some(self.removed),
         }
     }
+
+    fn into_reth(t: EthersLog) -> Self {
+        todo!()
+    }
+
 }
 
-impl ToEthers<EthersTransaction> for Transaction {
+impl ToReth<EthersTransaction> for Transaction {
     fn into_ethers(self) -> EthersTransaction {
         EthersTransaction {
             hash: self.hash.into(),
@@ -134,6 +166,11 @@ impl ToEthers<EthersTransaction> for Transaction {
             ..Default::default()
         }
     }
+
+    fn into_reth(t: EthersTransaction) -> Self {
+        todo!()
+    }
+
 }
 
 
@@ -294,7 +331,7 @@ pub fn reth_rpc_transaction_to_ethers(reth_tx: Transaction) -> EthersTransaction
     }
 }
 
-fn convert_block_number_to_block_number_or_tag(
+pub fn convert_block_number_to_block_number_or_tag(
     block: EthersBlockNumber,
 ) -> Result<BlockNumberOrTag> {
     match block {
@@ -307,7 +344,7 @@ fn convert_block_number_to_block_number_or_tag(
     }
 }
 
-fn convert_topics(topics: &[Option<EthersTopic>; 4]) -> [Option<Topic>; 4] {
+pub fn convert_topics(topics: &[Option<EthersTopic>; 4]) -> [Option<Topic>; 4] {
     let mut new_topics: Vec<Option<Topic>> = Vec::new();
 
     for (i, topic) in topics.into_iter().enumerate() {
@@ -321,7 +358,7 @@ fn convert_topics(topics: &[Option<EthersTopic>; 4]) -> [Option<Topic>; 4] {
 
 // need to generalize the following 2 functions
 
-fn option_convert_valueORarray<T, U>(val: &EthersValueOrArray<Option<T>>) -> ValueOrArray<Option<U>>
+pub fn option_convert_valueORarray<T, U>(val: &EthersValueOrArray<Option<T>>) -> ValueOrArray<Option<U>>
 where
     T: Clone,
     U: From<T>,
@@ -335,7 +372,7 @@ where
     }
 }
 
-fn convert_valueORarray<T, U>(val: &EthersValueOrArray<T>) -> ValueOrArray<U>
+pub fn convert_valueORarray<T, U>(val: &EthersValueOrArray<T>) -> ValueOrArray<U>
 where
     T: Clone,
     U: From<T>,
@@ -449,7 +486,7 @@ pub fn reth_fee_history_to_ethers(fee_history: FeeHistory) -> EthersFeeHistory {
 
 pub fn reth_richblock_txs_into_ethers<R, E>(txs: Vec<R>) -> Vec<E> 
 where
-    R: ToEthers<E>
+    R: ToReth<E>
 {
     txs.into_iter().map(|t: R| t.into_ethers()).collect::<Vec<E>>()
 }
