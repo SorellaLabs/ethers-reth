@@ -14,9 +14,14 @@ use ethers::types::{
     Bloom as EthersBloom, Filter as EthersFilter, FilterBlockOption as EthersFilterBlockOption,
     Log as EthersLog, NameOrAddress as EthersNameOrAddress, OtherFields, Topic as EthersTopic,
     Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
+<<<<<<< HEAD
     ValueOrArray as EthersValueOrArray, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
     EIP1186ProofResponse as EthersEIP1186ProofResponse,
     FeeHistory as EthersFeeHistory, Bytes as EthersBytes, StorageProof as EthersStorageProof
+=======
+    ValueOrArray as EthersValueOrArray, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,EIP1186ProofResponse as EthersEIP1186ProofResponse,
+    FeeHistory as EthersFeeHistory, Block as EthersBlock, TxHash as EthersTxHash
+>>>>>>> c7be7280fabcb003b77b31078edf36608fc5b16c
 };
 
 use reth_primitives::{
@@ -26,7 +31,11 @@ use reth_primitives::{
 };
 
 use reth_rpc_types::{
+<<<<<<< HEAD
     CallRequest, Filter, FilterBlockOption, Log, Topic, TransactionReceipt, ValueOrArray, Transaction, FeeHistory, StorageProof
+=======
+    CallRequest, Filter, FilterBlockOption, Log, Topic, TransactionReceipt, ValueOrArray, Transaction, RichBlock
+>>>>>>> c7be7280fabcb003b77b31078edf36608fc5b16c
 };
 
 use reth_revm::primitives::ruint::Uint;
@@ -229,6 +238,8 @@ pub fn ethers_typed_transaction_to_reth_call_request(tx: &EthersTypedTransaction
     into_tx
 }
 
+
+
 pub fn reth_rpc_transaction_to_ethers(reth_tx: Transaction) -> EthersTransaction {
 
     EthersTransaction {
@@ -411,6 +422,8 @@ pub fn reth_fee_history_to_ethers(fee_history: FeeHistory) -> EthersFeeHistory {
 }
 
 
+
+pub fn rich_block_to_ethers(rich_block: RichBlock) -> EthersBlock<EthersTxHash> {}
 
 
 pub fn convert_location_to_json_key(location: EthersH256) -> JsonStorageKey {

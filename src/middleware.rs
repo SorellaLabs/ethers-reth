@@ -15,7 +15,7 @@ use ethers::{
         FeeHistory as EthersFeeHistory, Filter as EthersFilter, Log as EthersLog, NameOrAddress,
         Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
         TxHash as EthersTxHash, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
-        BlockNumber as EthersBlockNumber,
+        BlockNumber as EthersBlockNumber, Block as EthersBlock,
     },
 };
 
@@ -131,7 +131,6 @@ where
         }
     }
 
-    //TODO: implement filter type conversion into reth & log query & type reconversion
     async fn get_logs(&self, filter: &EthersFilter) -> Result<Vec<EthersLog>, Self::Error> {
         let to_reth_filter: Filter = ethers_filter_to_reth_filter(filter);
         let reth_logs = self.reth_filter.logs(to_reth_filter).await?;
@@ -188,6 +187,7 @@ where
 
 
 
+
     async fn fee_history<T: Into<EthersU256> + Send + Sync>(
         &self,
         block_count: T,
@@ -216,7 +216,35 @@ where
         Ok(receipts)
     }
     */
-    
+
+    async fn get_block<T: Into<EthersBlockId> + Send + Sync>(
+        &self,
+        block_hash_or_number: T,
+    ) -> Result<Option<EthersBlock<EthersTxHash>>, Self::Error> {
+        let block_id = block_hash_or_number.into();
+
+        let block = match block_id {
+            EthersBlockId::Hash(hash) => self.reth_api.block_by_hash(hash.into(), false).await?,
+            EthersBlockId::Number(num) => self.reth_api.block_by_number(num.into(), false).await?,
+        };
+
+        Ok(block.map(|block| rich_block_to_ethers(block)))
+    }
+
+    async fn get_uncle<T: Into<EthersBlockId> + Send + Sync>(
+        &self,
+        block_hash_or_number: T,
+        idx: EthersU64,
+    ) -> Result<Option<EthersBlock<EthersTxHash>>, Self::Error> {
+        let block_id = block_hash_or_number.into();
+
+        let block = match block_id {
+            EthersBlockId::Hash(hash) => self.reth_api.uncle_by_block_hash_and_index(hash.into(), idx.as_usize().into()).await?,
+            EthersBlockId::Number(num) => self.reth_api.uncle_by_block_number_and_index(num.into(), idx.as_usize().into()).await?,
+        };
+
+        Ok(block.map(|block| rich_block_to_ethers(block)))
+    }
 
     async fn get_proof<T: Into<NameOrAddress> + Send + Sync>(
         &self,
@@ -250,6 +278,14 @@ where
             None => Ok(None),
         }
     }
+
+    
+
+    // Tracing
+
+
+
+
 }
 
 
