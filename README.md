@@ -11,3 +11,5 @@ A ether-rs middleware for reth that bypasses JSON-RPC.
 - [ ] Implement all log functionality
 - [ ] Implement all trace functionality
 - [ ] Integrate with anvil for blazing fast simulation in fork mode
+- [ ] Clean type conversions
+

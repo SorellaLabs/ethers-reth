@@ -33,65 +33,92 @@ use reth_rpc_types::{
 use reth_revm::primitives::ruint::Uint;
 use reth_rpc_types::EIP1186AccountProofResponse;
 
-pub trait ToEthers<T> {
-    /// Reth -> Ethers
-    fn into_ethers(self) -> T;
-}
-
 pub trait ToReth<T> {
     /// Reth -> Ethers
-    fn into_reth(self) -> T;
+    fn into_ethers(self) -> T;
+
+    /// Ethers -> Reth
+    fn into_reth(t: T) -> Self;
 }
 
-impl ToReth<U64> for EthersU256 {
-    fn into_reth(self) -> U64 {
+impl ToReth<EthersU256> for U64 {
+
+    fn into_ethers(self) -> EthersU256 {
         self.as_u64().into()
     }
-}
 
-impl ToEthers<EthersU64> for U256 {
-    fn into_ethers(self) -> EthersU64 {
-        self.to_le_bytes().into()
+    fn into_reth(t: EthersU256) -> Self {
+        t.as_u64().into()
     }
 }
 
-impl ToEthers<EthersU64> for U8 {
+impl ToReth<EthersU64> for U256 {
     fn into_ethers(self) -> EthersU64 {
         self.to_le_bytes().into()
     }
+
+    fn into_reth(t: EthersU64) -> Self {
+        todo!()
+    }
+
 }
 
-impl ToEthers<EthersU256> for U128 {
+impl ToReth<EthersU64> for U8 {
+    fn into_ethers(self) -> EthersU64 {
+        self.to_le_bytes().into()
+    }
+
+    fn into_reth(t: EthersU64) -> Self {
+        todo!()
+    }
+
+}
+
+impl ToReth<EthersU256> for U128 {
     fn into_ethers(self) -> EthersU256 {
         self.to_le_bytes().into()
     }
+
+    fn into_reth(t: EthersU256) -> Self {
+        todo!()
+    }
+
 }
 
-impl ToEthers<EthersH256> for H256 {
+impl ToReth<EthersH256> for H256 {
     fn into_ethers(self) -> EthersH256 {
         self.into()
     }
-}
 
-impl ToEthers<EthersU256> for U64 {
-    fn into_ethers(self) -> EthersU256 {
-        self.as_u64().into()
+    fn into_reth(t: EthersH256) -> Self {
+        todo!()
     }
+
 }
 
-impl ToEthers<EthersBloom> for Bloom {
+impl ToReth<EthersBloom> for Bloom {
     fn into_ethers(self) -> EthersBloom {
         self.to_fixed_bytes().into()
     }
+
+    fn into_reth(t: EthersBloom) -> Self {
+        todo!()
+    }
+
 }
 
-impl ToEthers<EthersBytes> for Bytes {
+impl ToReth<EthersBytes> for Bytes {
     fn into_ethers(self) -> EthersBytes {
         self.to_vec().into()
     }
+
+    fn into_reth(t: EthersBytes) -> Self {
+        todo!()
+    }
+
 }
 
-impl ToEthers<EthersLog> for Log {
+impl ToReth<EthersLog> for Log {
     fn into_ethers(self) -> EthersLog {
         EthersLog {
             address: self.address.into(),
@@ -107,9 +134,14 @@ impl ToEthers<EthersLog> for Log {
             removed: Some(self.removed),
         }
     }
+
+    fn into_reth(t: EthersLog) -> Self {
+        todo!()
+    }
+
 }
 
-impl ToEthers<EthersTransaction> for Transaction {
+impl ToReth<EthersTransaction> for Transaction {
     fn into_ethers(self) -> EthersTransaction {
         EthersTransaction {
             hash: self.hash.into(),
@@ -134,6 +166,11 @@ impl ToEthers<EthersTransaction> for Transaction {
             ..Default::default()
         }
     }
+
+    fn into_reth(t: EthersTransaction) -> Self {
+        todo!()
+    }
+
 }
 
 
@@ -449,7 +486,7 @@ pub fn reth_fee_history_to_ethers(fee_history: FeeHistory) -> EthersFeeHistory {
 
 pub fn reth_richblock_txs_into_ethers<R, E>(txs: Vec<R>) -> Vec<E> 
 where
-    R: ToEthers<E>
+    R: ToReth<E>
 {
     txs.into_iter().map(|t: R| t.into_ethers()).collect::<Vec<E>>()
 }
@@ -532,7 +569,7 @@ pub fn hash_rich_block_to_ethers(rich_block: RichBlock) -> EthersBlock<EthersH25
         timestamp: header.timestamp.into(),
         difficulty: header.difficulty.into(),
         total_difficulty: block.total_difficulty.map(|d| d.into()),
-        seal_fields:  vec![], // TODO
+        seal_fields:  todo!(),
         uncles: block.uncles.into_iter().map(|unc| unc.into()).collect(),
         transactions: reth_richblock_txs_into_ethers::<H256, EthersH256>(tx_hashes), 
         size: block.size.map(|s| s.into()),
