@@ -11,18 +11,39 @@ use ethers::types::{
     BlockId as EthersBlockId, BlockNumber as EthersBlockNumber, Filter as EthersFilter,
     FilterBlockOption as EthersFilterBlockOption, NameOrAddress, OtherFields, Topic as EthersTopic,
     Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
-    ValueOrArray as EthersValueOrArray, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
+    ValueOrArray as EthersValueOrArray, H256 as EthersH256, U64 as EthersU64, Bloom as EthersBloom
 };
 use eyre::Result;
 
 use ethers::types::Address as EthersAddress;
 
 use reth_primitives::{
-    hex::ToHex, AccessList, AccessListItem, AccessListWithGasUsed, Address, BlockId,
-    BlockNumberOrTag, Bytes, H256, U256, U8, U64,
+    AccessList, AccessListItem, AccessListWithGasUsed, Address, BlockId, BlockNumberOrTag, Bytes,
+    H256, U256, U8, Bloom,
 };
 
-use reth_primitives::BlockHash;
+pub trait ToEthers<T> {
+    /// Reth -> Ethers
+    fn into_ethers(self) -> T;
+}
+
+impl ToEthers<EthersU64> for U256 {
+    fn into_ethers(self) -> EthersU64 {
+        self.to_le_bytes().into()
+    }
+}
+
+impl ToEthers<EthersU64> for U8 {
+    fn into_ethers(self) -> EthersU64 {
+        self.to_le_bytes().into()
+    }
+}
+
+impl ToEthers<EthersBloom> for Bloom {
+    fn into_ethers(self) -> EthersBloom {
+        self.to_fixed_bytes().into()
+    }
+}
 
 use reth_revm::{
     precompile::B160,
@@ -157,13 +178,13 @@ pub fn reth_rpc_transaction_to_ethers(reth_tx: reth_rpc_types::Transaction) -> E
     EthersTransaction {
         hash: reth_tx.hash.into(),
         nonce: reth_tx.nonce.into(),
-        block_hash: reth_tx.block_hash.into(),
-        block_number: reth_tx.block_number.map(|n| n.low_u64().into()),
-        transaction_index: reth_tx.transaction_index.map(|n| n.low_u64().into()),
+        block_hash: reth_tx.block_hash.map(|hash| hash.into()),
+        block_number: reth_tx.block_number.map(|n| n.into_ethers()),
+        transaction_index: reth_tx.transaction_index.map(|n| n.into_ethers()),
         from: reth_tx.from.into(),
-        to: reth_tx.to,
+        to: reth_tx.to.map(|t| t.into()),
         value: reth_tx.value.into(),
-        gas_price: reth_tx.gas_price.map(|p| p.into()),
+        gas_price: reth_tx.gas_price.map(|p| p.into_ethers()),
         gas: reth_tx.gas.into(),
         input: reth_tx.input,
         v,
@@ -256,15 +277,15 @@ pub fn ethers_filter_to_reth_filter(filter: &EthersFilter) -> Filter {
 pub fn reth_transaction_receipt_to_ethers(receipt: TransactionReceipt) -> EthersTransactionReceipt {
     EthersTransactionReceipt {
         transaction_hash: receipt.transaction_hash.unwrap().into(),
-        transaction_index: receipt.transaction_index.unwrap().into(),
-        block_hash: receipt.block_hash.unwrap().into(),
-        block_number: receipt.block_number.map(|num| num.as_u64().into()),
-        from: receipt.from,
-        to: receipt.to,
-        cumulative_gas_used: receipt.cumulative_gas_used,
-        gas_used: receipt.gas_used,
-        contract_address: receipt.contract_address,
-        logs: receipt.logs,
+        transaction_index: receipt.transaction_index.unwrap().into_ethers(),
+        block_hash: receipt.block_hash.map(|hash| hash.into()),
+        block_number: receipt.block_number.map(|num| num.into_ethers()),
+        from: receipt.from.into(),
+        to: receipt.to.map(|t| t.into()),
+        cumulative_gas_used: receipt.cumulative_gas_used.into(),
+        gas_used: receipt.gas_used.map(|gas| gas.into()),
+        contract_address: receipt.contract_address.map(|addr| addr.into()),
+        logs: receipt.logs.into_iter().map(|log| log.into_ethers()).collect(),
         status: receipt.status_code.map(|num| num.as_u64().into()),
         root: receipt.state_root,
         logs_bloom: receipt.logs_bloom.into(),
