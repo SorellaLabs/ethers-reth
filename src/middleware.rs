@@ -31,7 +31,7 @@ use reth_rpc::{eth::EthApi, EthApiSpec};
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
 use reth_rpc_types::Filter;
 
-use reth_primitives::{serde_helper::JsonStorageKey, Address, BlockId, H256, U256};
+use reth_primitives::{serde_helper::JsonStorageKey, Address, BlockId, H256, U256, U64};
 use reth_transaction_pool::TransactionPool;
 
 // Std Lib
@@ -178,7 +178,7 @@ where
         let reward_percentiles = Some(reward_percentiles.to_vec());
 
         let reth_fee_history =
-            self.reth_api.fee_history(block_count.into_reth(), last_block, reward_percentiles).await?;
+            self.reth_api.fee_history(U64::to_reth(block_count), last_block, reward_percentiles).await?;
 
         Ok(reth_fee_history_to_ethers(reth_fee_history))
     }
