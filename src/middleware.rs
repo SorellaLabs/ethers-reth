@@ -122,8 +122,7 @@ where
         &self,
         transaction_hash: T,
     ) -> Result<Option<EthersTransaction>, Self::Error> {
-        let maybe_transaction =
-            self.reth_api.transaction_by_hash(transaction_hash.into().into()).await?;
+        let maybe_transaction = self.reth_api.transaction_by_hash(transaction_hash.into().into()).await?;
 
         match maybe_transaction {
             Some(reth_tx) => Ok(Some(reth_transaction_to_ethers_transaction(reth_tx))),
@@ -178,7 +177,7 @@ where
     async fn get_chainid(&self) -> Result<EthersU256, RethMiddlewareError<M>> {
         let chain_id = EthApiServer::chain_id(&self.reth_api).await?;
     }
-
+    
     // TODO type conversion between Option U64 & EthersU256
     async fn get_block_number(&self) -> Result<EthersU64, RethMiddlewareError<M>> {
         let block_number = self.reth_api.block_number()?;
@@ -195,8 +194,9 @@ where
         let last_block = ethers_block_id_to_reth_block_id(last_block);
         let reward_percentiles = Some(reward_percentiles.to_vec());
 
-        reth_fee_history =
-            self.reth_api.fee_history(block_count, last_block, reward_percentiles).await?;
+        reth_fee_history = self.reth_api.fee_history(block_count, last_block, reward_percentiles).await?;
+
+    
     }
 
     /*async fn get_block_receipts<T: Into<BlockNumber> + Send + Sync>(
@@ -227,7 +227,10 @@ where
             .collect();
 
         let block_id = Some(ethers_block_id_to_reth_block_id(block.unwrap()));
-        let proof = self.reth_api.get_proof(from.into(), locations, block_id).await?;
+        let proof = self
+            .reth_api
+            .get_proof(from.into(), locations, block_id)
+            .await?;
 
         Ok(proof.into())
     }
