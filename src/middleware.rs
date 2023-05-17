@@ -295,7 +295,7 @@ where
             EthersBlockId::Number(num) => self.reth_api.block_by_number(num.into(), true).await?,
         };
 
-        Ok(block.map(|block| rich_block_to_ethers_rich::<EthersTransaction>(block)))
+        Ok(block.map(|block| rich_block_to_ethers::<EthersTransaction>(block)))
     }
 
     // Logs
