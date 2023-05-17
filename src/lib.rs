@@ -1,6 +1,6 @@
 pub mod middleware;
 mod utils;
-use init::{init_client, init_eth_api, init_eth_filter};
+use init::{init_client, init_eth_api, init_eth_filter, init_trace};
 use jsonrpsee::types::ErrorObjectOwned;
 use reth_rpc::{EthFilter, TraceApi};
 use std::sync::Arc;
@@ -29,7 +29,8 @@ pub type RethTxPool =
 
 pub type RethApi = EthApi<RethClient, RethTxPool, NoopNetwork>;
 pub type RethFilter = EthFilter<RethClient, RethTxPool>;
-pub type RethTrace = TraceApi<RethClient, RethTxPool>;
+pub type RethTrace = TraceApi<RethClient, RethApi>;
+use reth_rpc::eth::error::EthApiError;
 
 #[derive(Clone)]
 pub struct RethMiddleware<M> {
@@ -54,6 +55,10 @@ pub enum RethMiddlewareError<M: Middleware> {
     /// An error occurred in the Reth API.
     #[error(transparent)]
     RethApiError(#[from] ErrorObjectOwned),
+
+    /// An error occurred in the Eth API.
+    #[error(transparent)]
+    EthApiError(#[from] EthApiError),
 }
 
 impl<M: Middleware> MiddlewareError for RethMiddlewareError<M> {
@@ -77,18 +82,19 @@ where
 {
     pub fn new(inner: M, db_path: &Path) -> Self {
         let client = init_client(db_path);
+        // Create a runtime here and use Arc to share it across functions
+        let rt = Arc::new(tokio::runtime::Runtime::new().unwrap());
+
         // EthApi -> EthApi<Client, Pool, Network>
         let api = init_eth_api(client.clone());
         // EthFilter -> EthFilter<Client, Pool>
-        // TODO: figure out default max_logs
-        let filter = init_eth_filter(client.clone(), 1000);
+        let filter = init_eth_filter(client.clone(), 1000, rt.clone());
+        let trace = init_trace(client.clone(), api.clone(), rt.clone(), 10);
 
-        let trace = TraceApi::new(client.clone(), api.clone(), todo!());
-
-        Self { inner, reth_api: api, reth_filter: filter }
+        Self { inner, reth_api: api, reth_filter: filter, reth_trace: trace }
     }
 
-    pub fn reth_api(&self) -> &NodeEthApi {
+    pub fn reth_api(&self) -> &RethApi {
         &self.reth_api
     }
 }

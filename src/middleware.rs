@@ -295,7 +295,7 @@ where
             EthersBlockId::Number(num) => self.reth_api.block_by_number(num.into(), true).await?,
         };
 
-        Ok(block.map(|block| rich_block_to_ethers_rich::<EthersTransaction>(block)))
+        Ok(block.map(|block| rich_block_to_ethers::<EthersTransaction>(block)))
     }
 
     // Logs
@@ -307,29 +307,37 @@ where
         Ok(ethers_logs)
     }
 
-    
-
     // Tracing
 
     async fn trace_transaction(
         &self,
         tx_hash: EthersTxHash,
     ) -> Result<Vec<EthersTrace>, Self::Error> {
-        !todo!();
-        let trace = self.reth_trace.trace_transaction(tx_hash.into()).await?;
-        Ok(trace)
-    }
+        let trace_option = self.reth_trace.trace_transaction(tx_hash.into()).await?;
 
-    async fn debug_trace_transaction() {
-        !todo!()
+        // If there are no traces, return an empty vector
+        let traces = trace::option.unwrap_or_else(Vec::new);
+
+        // Convert each LocalizedTransactionTrace to an EthersTrace
+        let ethers_traces: Vec<EthersTrace> =
+            traces.into_iter().map(|trace| reth_trace_to_ethers(trace)).collect();
+
+        Ok(ethers_traces)
     }
 
     async fn trace_block(&self, block: EthersBlockNumber) -> Result<Vec<EthersTrace>, Self::Error> {
-        !todo!();
-        let trace = self.reth_trace.trace_block(block.into()).await?;
-        Ok(trace)
+        let trace_opt = self.reth_trace.trace_block(block.into()).await?;
+
+        let trace = trace_opt.ok_or(RethMiddlewareError::MissingTrace)?;
+
+        let ethers_trace: Vec<EthersTrace> = trace.into_iter().map(reth_trace_to_ethers).collect();
+
+        Ok(ethers_trace)
     }
 }
+
+// thinking of implementing a request so we don't have to change the anvil fork.rs but adds useless
+// indirection
 
 /*
 impl<M> RethMiddleware<M>
