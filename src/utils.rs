@@ -115,7 +115,7 @@ impl ToReth<EthersBytes> for Bytes {
     }
 
     fn into_reth(t: EthersBytes) -> Self {
-        todo!()
+        t.to_vec().into()
     }
 }
 
@@ -672,3 +672,9 @@ pub fn reth_trace_to_ethers(trace: LocalizedTransactionTrace) -> EthersTrace {
         error: err,
     }
 }
+
+
+//TODO:
+// from Vec<ethers::types::TraceType> to HashSet<reth_rpc_types::trace::parity::TraceType>`
+// from  EthResult<TraceResults> to ethers_core::types::trace (prob only interior type and wrap it after if ez)
+//
