@@ -1,5 +1,5 @@
 [package]
-name = "rethdb-middleware"
+name = "ethers-reth"
 version = "0.1.0"
 edition = "2021"
 

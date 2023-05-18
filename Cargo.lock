@@ -1091,6 +1091,33 @@ dependencies = [
 ]
 
 [[package]]
+name = "ethers-reth"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "ethers",
+ "eyre",
+ "jsonrpsee",
+ "reth-beacon-consensus",
+ "reth-blockchain-tree",
+ "reth-db",
+ "reth-interfaces",
+ "reth-network-api",
+ "reth-primitives",
+ "reth-provider",
+ "reth-revm",
+ "reth-rpc",
+ "reth-rpc-api",
+ "reth-rpc-types",
+ "reth-tasks",
+ "reth-transaction-pool",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+]
+
+[[package]]
 name = "ethers-signers"
 version = "2.0.4"
 source = "git+https://github.com/gakonst/ethers-rs#3e7606d81b423593db5a38dcf3b5174987efc74c"
@@ -3071,33 +3098,6 @@ dependencies = [
  "thiserror",
  "tokio",
  "tracing",
-]
-
-[[package]]
-name = "rethdb-middleware"
-version = "0.1.0"
-dependencies = [
- "async-trait",
- "ethers",
- "eyre",
- "jsonrpsee",
- "reth-beacon-consensus",
- "reth-blockchain-tree",
- "reth-db",
- "reth-interfaces",
- "reth-network-api",
- "reth-primitives",
- "reth-provider",
- "reth-revm",
- "reth-rpc",
- "reth-rpc-api",
- "reth-rpc-types",
- "reth-tasks",
- "reth-transaction-pool",
- "serde",
- "serde_json",
- "thiserror",
- "tokio",
 ]
 
 [[package]]
