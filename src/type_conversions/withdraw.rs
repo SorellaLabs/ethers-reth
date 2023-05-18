@@ -3,7 +3,7 @@ use super::{ToEthers, ToReth};
 use ethers::types::Withdrawal as EthersWithdrawal;
 use reth_primitives::Withdrawal;
 
-/// Withdrawal (ethers) + (reth)
+/// Withdrawal (ethers) -> (reth)
 impl ToReth<Withdrawal> for EthersWithdrawal {
     fn into_reth(self) -> Withdrawal {
         Withdrawal {
@@ -15,6 +15,7 @@ impl ToReth<Withdrawal> for EthersWithdrawal {
     }
 }
 
+/// Withdrawal (reth) -> (ethers)
 impl ToEthers<EthersWithdrawal> for Withdrawal {
     fn into_ethers(self) -> EthersWithdrawal {
         EthersWithdrawal {

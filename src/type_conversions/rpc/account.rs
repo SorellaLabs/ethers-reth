@@ -6,7 +6,7 @@ use ethers::types::{
 use reth_primitives::serde_helper::JsonStorageKey;
 use reth_rpc_types::{EIP1186AccountProofResponse, StorageProof};
 
-/// TransactionReceipt (ethers) + (reth)
+/// TransactionReceipt (ethers) -> (reth)
 impl ToReth<StorageProof> for EthersStorageProof {
     fn into_reth(self) -> StorageProof {
         StorageProof {
@@ -16,7 +16,7 @@ impl ToReth<StorageProof> for EthersStorageProof {
         }
     }
 }
-
+/// TransactionReceipt (reth) -> (ethers)
 impl ToEthers<EthersStorageProof> for StorageProof {
     fn into_ethers(self) -> EthersStorageProof {
         EthersStorageProof {
@@ -29,7 +29,7 @@ impl ToEthers<EthersStorageProof> for StorageProof {
 
 // -----------------------------------------------
 
-/// EIP1186AccountProofResponse (ethers) + (reth)
+/// EIP1186AccountProofResponse (ethers) -> (reth)
 impl ToReth<EIP1186AccountProofResponse> for EthersEIP1186ProofResponse {
     fn into_reth(self) -> EIP1186AccountProofResponse {
         EIP1186AccountProofResponse {
@@ -44,6 +44,7 @@ impl ToReth<EIP1186AccountProofResponse> for EthersEIP1186ProofResponse {
     }
 }
 
+/// EIP1186AccountProofResponse (reth) -> (ethers)
 impl ToEthers<EthersEIP1186ProofResponse> for EIP1186AccountProofResponse {
     fn into_ethers(self) -> EthersEIP1186ProofResponse {
         EthersEIP1186ProofResponse {

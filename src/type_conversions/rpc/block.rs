@@ -4,7 +4,7 @@ use ethers::types::{Block as EthersBlock, OtherFields};
 use reth_primitives::H256;
 use reth_rpc_types::{Block, BlockTransactions, Header, Rich, RichBlock, Transaction};
 
-/// FeeHistory (ethers) + (reth)
+/// FeeHistory (ethers) -> (reth)
 impl<TX> ToReth<RichBlock> for EthersBlock<TX> {
     fn into_reth(self) -> RichBlock {
         let block = Block {
@@ -38,6 +38,7 @@ impl<TX> ToReth<RichBlock> for EthersBlock<TX> {
     }
 }
 
+/// FeeHistory (reth) -> (ethers)
 impl<TX> ToEthers<EthersBlock<TX>> for RichBlock
 where
     BlockTransactions: ToEthers<Vec<TX>>,

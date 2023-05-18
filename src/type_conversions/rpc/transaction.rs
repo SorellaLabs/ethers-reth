@@ -7,7 +7,7 @@ use ethers::types::{
 use reth_revm::primitives::ruint::Uint;
 use reth_rpc_types::{Signature, Transaction, TransactionReceipt};
 
-// Transaction (ethers) + (reth)
+/// Transaction (ethers) -> (reth)
 impl ToReth<Transaction> for EthersTransaction {
     fn into_reth(self) -> Transaction {
         Transaction {
@@ -36,6 +36,7 @@ impl ToReth<Transaction> for EthersTransaction {
     }
 }
 
+/// Transaction (reth) -> (ethers)
 impl ToEthers<EthersTransaction> for Transaction {
     fn into_ethers(self) -> EthersTransaction {
         let (v, r, s) =
@@ -67,7 +68,7 @@ impl ToEthers<EthersTransaction> for Transaction {
 
 // -----------------------------------------------
 
-/// TransactionReceipt (ethers) + (reth)
+/// TransactionReceipt (ethers) -> (reth)
 impl ToReth<TransactionReceipt> for EthersTransactionReceipt {
     fn into_reth(self) -> TransactionReceipt {
         TransactionReceipt {
@@ -90,6 +91,7 @@ impl ToReth<TransactionReceipt> for EthersTransactionReceipt {
     }
 }
 
+/// TransactionReceipt (reth) -> (ethers)
 impl ToEthers<EthersTransactionReceipt> for TransactionReceipt {
     fn into_ethers(self) -> EthersTransactionReceipt {
         EthersTransactionReceipt {

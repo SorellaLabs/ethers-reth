@@ -4,7 +4,7 @@ use ethers::types::transaction::eip2718::TypedTransaction as EthersTypedTransact
 use reth_revm::primitives::ruint::Uint;
 use reth_rpc_types::CallRequest;
 
-/// Typed Tx (ethers) ... Call Request (reth)
+/// Typed Tx (ethers) -> Call Request (reth)
 impl ToReth<CallRequest> for EthersTypedTransaction {
     fn into_reth(self) -> CallRequest {
         CallRequest {
