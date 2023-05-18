@@ -28,8 +28,6 @@ use reth_rpc_types::Filter;
 
 use reth_primitives::{serde_helper::JsonStorageKey, BlockId, H256, U256, U64};
 
-
-
 impl<M> RethMiddleware<M>
 where
     Self: EthApiServer + EthApiSpec + 'static,
