@@ -3,14 +3,14 @@
 # Octane
 A ether-rs middleware for reth that bypasses JSON-RPC allowing for faster db queries.
 
-# Work in Progress!
+## Work in Progress!
 Please note that Octane is currently in its early stages of development. 
 
 ## Todo:
-- [ ] Full log functionality: We're working on implementing comprehensive logging capabilities to help with debugging and monitoring.
-- [ ] Complete trace functionality
+- [ ] Full log functionality
+- [ ] Full trace functionality
 - [ ] Integration with Anvil: We plan to integrate with Anvil to offer super-fast simulation in fork mode
-- [ ] Improved type conversions: The type conversion is a terroristic at best, we'll clean that up soon
+- [ ] Improved type conversions: The type conversion is terroristic at best, we'll clean that up soon
 - [ ] Tests, waiting on node sync
 
 ### Contact

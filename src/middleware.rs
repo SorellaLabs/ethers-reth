@@ -26,7 +26,7 @@ use reth_rpc::EthApiSpec;
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
 use reth_rpc_types::Filter;
 
-use reth_primitives::{serde_helper::JsonStorageKey, BlockId, H256, U256, U64};
+use reth_primitives::{serde_helper::JsonStorageKey, BlockId};
 
 impl<M> RethMiddleware<M>
 where
