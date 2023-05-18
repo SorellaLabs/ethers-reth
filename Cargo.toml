@@ -5,21 +5,22 @@ edition = "2021"
 
 
 [dependencies]
-ethers = { version = "2.0", git = "https://github.com/gakonst/ethers-rs", default-features = false }
-tokio = "1.28.0"
-reth-tasks = { path = "../reth/crates/tasks" }
-reth-rpc = { path = "../reth/crates/rpc/rpc" }
-reth-rpc-api = { path = "../reth/crates/rpc/rpc-api" }
-reth-rpc-types = { path = "../reth/crates/rpc/rpc-types" }
-reth-provider = { path = "../reth/crates/storage/provider" }
-reth-transaction-pool = { path = "../reth/crates/transaction-pool", features = ["test-utils"] }
-reth-network-api = { path = "../reth/crates/net/network-api", features = ["test-utils"] }
-reth-primitives = { path = "../reth/crates/primitives" }
-reth-db = { path = "../reth/crates/storage/db" }
-reth-blockchain-tree = { path = "../reth/crates/blockchain-tree" }
-reth-beacon-consensus = { path = "../reth/crates/consensus/beacon"}
-reth-revm = { path = "../reth/crates/revm"}
-reth-interfaces = { path = "../reth/crates/interfaces"}
+reth-tasks = { git = "https://github.com/paradigmxyz/reth", package = "reth-tasks" }
+reth-rpc = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc" }
+reth-rpc-api = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-api" }
+reth-rpc-types = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-types" }
+reth-provider = { git = "https://github.com/paradigmxyz/reth", package = "reth-provider" }
+reth-transaction-pool = { git = "https://github.com/paradigmxyz/reth", package = "reth-transaction-pool" }
+reth-network-api = { git = "https://github.com/paradigmxyz/reth", package = "reth-network-api", features = ["test-utils"] }
+reth-primitives = { git = "https://github.com/paradigmxyz/reth", package = "reth-primitives" }
+reth-db = { git = "https://github.com/paradigmxyz/reth", package = "reth-db" }
+reth-blockchain-tree = { git = "https://github.com/paradigmxyz/reth", package = "reth-blockchain-tree" }
+reth-beacon-consensus = { git = "https://github.com/paradigmxyz/reth", package = "reth-beacon-consensus" }
+reth-revm = { git = "https://github.com/paradigmxyz/reth", package = "reth-revm"}
+reth-interfaces = { git = "https://github.com/paradigmxyz/reth", package = "reth-interfaces"}
+
+
+
 eyre = "0.6.8"
 
 jsonrpsee = { version = "0.18", features = ["server", "macros"] }
