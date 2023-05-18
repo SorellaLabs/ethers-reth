@@ -401,7 +401,7 @@ where
 
     async fn trace_block(&self, block: BlockNumber) -> Result<Vec<Trace>, Self::Error> {}
 
-
+}
 // thinking of implementing a request so we don't have to change the anvil fork.rs but adds useless
 // indirection
 
