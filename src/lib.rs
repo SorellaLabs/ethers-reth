@@ -96,7 +96,7 @@ where
         let api = init_eth_api(client.clone());
         // EthFilter -> EthFilter<Client, Pool>
         let filter = init_eth_filter(client.clone(), 1000, rt.clone());
-        let trace = init_trace(client.clone(), api.clone(), rt.clone(), 10);
+        let trace = init_trace(client, api.clone(), rt, 10);
 
         Self { inner, reth_api: api, reth_filter: filter, reth_trace: trace }
     }

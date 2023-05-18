@@ -37,7 +37,7 @@ use reth_rpc_types::{
         Action, CallType, LocalizedTransactionTrace, RewardType, TraceOutput, TraceResult,
     },
     BlockTransactions, CallRequest, EIP1186AccountProofResponse, FeeHistory, Filter,
-    FilterBlockOption, Log, Rich, RichBlock, StorageProof, Topic, Transaction, TransactionReceipt,
+    FilterBlockOption, Log, RichBlock, StorageProof, Topic, Transaction, TransactionReceipt,
     ValueOrArray,
 };
 
@@ -285,18 +285,18 @@ pub fn ethers_typed_transaction_to_reth_call_request(tx: &EthersTypedTransaction
     match tx {
         EthersTypedTransaction::Legacy(_) => {
             into_tx.transaction_type = Some(Uint::from(0));
-            ()
+            
         }
         EthersTypedTransaction::Eip2930(inner_tx) => {
             into_tx.transaction_type = Some(Uint::from(1));
-            ()
+            
         }
         EthersTypedTransaction::Eip1559(inner_tx) => {
             into_tx.max_fee_per_gas = inner_tx.max_fee_per_gas.map(|gas| gas.into());
             into_tx.max_priority_fee_per_gas =
                 inner_tx.max_priority_fee_per_gas.map(|gas| gas.into());
             into_tx.transaction_type = Some(Uint::from(2));
-            ()
+            
         }
     }
 
@@ -366,7 +366,7 @@ where
         EthersValueOrArray::Value(Some(addr)) => ValueOrArray::Value(Some(addr.clone().into())),
         EthersValueOrArray::Value(None) => ValueOrArray::Value(None),
         EthersValueOrArray::Array(addrs) => {
-            ValueOrArray::Array(addrs.into_iter().map(|a| a.clone().map(U::from)).collect())
+            ValueOrArray::Array(addrs.iter().map(|a| a.clone().map(U::from)).collect())
         }
     }
 }
@@ -596,7 +596,7 @@ pub fn convert_action(call_type: CallType) -> EthersCallType {
 
 pub fn reth_trace_to_ethers(trace: LocalizedTransactionTrace) -> EthersTrace {
     let tx_trace = trace.trace;
-    let mut action_type: EthersActionType;
+    let action_type: EthersActionType;
     let action = match tx_trace.action {
         Action::Call(a) => {
             action_type = EthersActionType::Call;

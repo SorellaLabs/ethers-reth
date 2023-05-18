@@ -22,7 +22,7 @@ use std::{path::Path, sync::Arc};
 // EthApi/Filter Client
 pub fn init_client(db_path: &Path) -> RethClient {
     let chain = Arc::new(MAINNET.clone());
-    let db = Arc::new(Env::<NoWriteMap>::open(db_path.as_ref(), EnvKind::RO).unwrap());
+    let db = Arc::new(Env::<NoWriteMap>::open(db_path, EnvKind::RO).unwrap());
 
     let tree_externals = TreeExternals::new(
         Arc::clone(&db),
@@ -36,17 +36,14 @@ pub fn init_client(db_path: &Path) -> RethClient {
         tokio::sync::broadcast::channel(tree_config.max_reorg_depth() as usize * 2);
 
     let blockchain_tree = ShareableBlockchainTree::new(
-        BlockchainTree::new(tree_externals, canon_state_notification_sender.clone(), tree_config)
-            .unwrap(),
+        BlockchainTree::new(tree_externals, canon_state_notification_sender, tree_config).unwrap(),
     );
 
-    let blockchain_db = BlockchainProvider::new(
+    BlockchainProvider::new(
         ShareableDatabase::new(Arc::clone(&db), Arc::clone(&chain)),
         blockchain_tree,
     )
-    .unwrap();
-
-    blockchain_db
+    .unwrap()
 }
 
 /// EthApi
@@ -55,27 +52,23 @@ pub fn init_eth_api(client: RethClient) -> RethApi {
 
     let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
 
-    let api = EthApi::new(
+    EthApi::new(
         client.clone(),
         tx_pool,
         NoopNetwork,
         state_cache.clone(),
-        GasPriceOracle::new(client.clone(), GasPriceOracleConfig::default(), state_cache.clone()),
-    );
-
-    api
+        GasPriceOracle::new(client, GasPriceOracleConfig::default(), state_cache),
+    )
 }
 
 // EthApi/Filter txPool
 pub fn init_pool(client: RethClient) -> RethTxPool {
     let chain = Arc::new(MAINNET.clone());
 
-    let tx_pool = reth_transaction_pool::Pool::eth_pool(
+    reth_transaction_pool::Pool::eth_pool(
         EthTransactionValidator::new(client, chain),
         Default::default(),
-    );
-
-    tx_pool
+    )
 }
 
 // RethTrace
@@ -92,9 +85,7 @@ pub fn init_trace(
 
     let tracing_call_guard = TracingCallGuard::new(max_tracing_requests);
 
-    let trace = TraceApi::new(client, eth_api, state_cache, task_spawn_handle, tracing_call_guard);
-
-    trace
+    TraceApi::new(client, eth_api, state_cache, task_spawn_handle, tracing_call_guard)
 }
 
 // EthFilter
@@ -110,8 +101,5 @@ pub fn init_eth_filter(
     let task_manager = TaskManager::new(rt.handle().clone());
     let task_spawn_handle: Box<dyn TaskSpawner> = Box::new(task_manager.executor());
 
-    let filter =
-        EthFilter::new(client, tx_pool, state_cache, max_logs_per_response, task_spawn_handle);
-
-    filter
+    EthFilter::new(client, tx_pool, state_cache, max_logs_per_response, task_spawn_handle)
 }
