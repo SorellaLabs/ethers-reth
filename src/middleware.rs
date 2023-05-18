@@ -17,9 +17,11 @@ use ethers::{
         EIP1186ProofResponse as EthersEIP1186ProofResponse, FeeHistory as EthersFeeHistory,
         Filter as EthersFilter, Log as EthersLog, NameOrAddress, Trace as EthersTrace,
         Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
-        TxHash as EthersTxHash, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
+        TxHash as EthersTxHash, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64, TraceType as EthersTraceType, BlockTrace as EthersBlockTrace,
     },
 };
+
+
 
 // Reth Types
 use reth_rpc::EthApiSpec;
@@ -298,8 +300,63 @@ where
         let reth_logs = self.reth_filter.logs(to_reth_filter).await?;
         Ok(reth_logs.into_ethers())
     }
+    
+    //TODO: Implement get_logs_paginated
+    //TODO: Implement stream event logs (watch)
+    //TODO: Watch pending tx 
+    //TODO: 
 
     // Tracing
+    //TODO: 
+    /*
+    - trace call 
+    - trace call many
+    - trace raw tx
+    - trace replay tx
+    - trace replay block transactions
+    - trace block
+    - trace filter
+    - trace get
+    - trace transaction
+    - log & tx pool subscriptions
+    
+     */
+    
+     async fn trace_call<T: Into<TypedTransaction> + Send + Sync>(
+        &self,
+        req: T,
+        trace_type: Vec<EthersTraceType>,
+        block: Option<EthersBlockNumber>,
+    ) -> Result<EthersBlockTrace, Self::Error> {
+        let tx = ethers_typed_transaction_to_reth_call_request(&req.into());
+        let block_id = Some(BlockId::from(convert_block_number_to_block_number_or_tag(block.unwrap()).unwrap()));
+        //let trace_type = ;
+        let  trace = self.reth_trace.trace_call(tx , trace_type, block_id).await?;
+
+        let ethers_trace = reth_trace_result_to_ethers_block_trace(trace.unwrap());
+    }
+
+
+    async fn trace_call_many<T: Into<TypedTransaction> + Send + Sync>(
+        &self,
+        req: Vec<(T, Vec<EthersTraceType>)>,
+        block: Option<EthersBlockNumber>,
+    ) -> Result<Vec<EthersBlockTrace>, Self::Error> {
+        //TODO type conversion
+
+    }
+
+    async fn trace_raw_transaction(
+        &self,
+        data: EthersBytes,
+        trace_type: Vec<EthersTraceType>,
+    ) -> Result<EthersBlockTrace, Self::Error> {
+        bytes = ToReth::into_reth(data);
+        trace_types: HashSet<TraceType>,
+        block_id: Option<BlockId>,
+        let trace_raw = self.reth_trace.trace_raw_transaction(data, trace_type).await?;
+
+    }
 
     async fn trace_transaction(
         &self,
@@ -321,7 +378,21 @@ where
 
         Ok(trace.into_ethers())
     }
-}
+
+    async fn trace_replay_transaction(
+        &self,
+        hash: H256,
+        trace_type: Vec<TraceType>,
+    ) -> Result<BlockTrace, Self::Error> {}
+
+    async fn trace_replay_block_transactions(
+        &self,
+        block: BlockNumber,
+        trace_type: Vec<TraceType>,
+    ) -> Result<Vec<BlockTrace>, Self::Error> {}
+
+    async fn trace_block(&self, block: BlockNumber) -> Result<Vec<Trace>, Self::Error> {}
+
 
 // thinking of implementing a request so we don't have to change the anvil fork.rs but adds useless
 // indirection
