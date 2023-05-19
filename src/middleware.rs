@@ -328,12 +328,9 @@ where
         trace_type: Vec<EthersTraceType>,
         block: Option<EthersBlockNumber>,
     ) -> Result<EthersBlockTrace, Self::Error> {
-        let tx = ethers_typed_transaction_to_reth_call_request(&req.into());
-        let block_id = Some(BlockId::from(convert_block_number_to_block_number_or_tag(block.unwrap()).unwrap()));
-        //let trace_type = ;
-        let  trace = self.reth_trace.trace_call(tx , trace_type, block_id).await?;
-
-        let ethers_trace = reth_trace_result_to_ethers_block_trace(trace.unwrap());
+        let tx = req.into().into_reth();
+        let  trace = self.reth_trace.trace_call(tx , trace_type.into_reth(), block.into_reth()).await?;
+        Ok(trace.into_ethers())
     }
 
 
@@ -342,7 +339,7 @@ where
         req: Vec<(T, Vec<EthersTraceType>)>,
         block: Option<EthersBlockNumber>,
     ) -> Result<Vec<EthersBlockTrace>, Self::Error> {
-        //TODO type conversion
+
 
     }
 
@@ -351,10 +348,8 @@ where
         data: EthersBytes,
         trace_type: Vec<EthersTraceType>,
     ) -> Result<EthersBlockTrace, Self::Error> {
-        bytes = ToReth::into_reth(data);
-        trace_types: HashSet<TraceType>,
-        block_id: Option<BlockId>,
-        let trace_raw = self.reth_trace.trace_raw_transaction(data, trace_type).await?;
+
+        let trace_raw = self.reth_trace.trace_raw_transaction(data.into_reth(), trace_type.into_reth()).await?;
 
     }
 
@@ -381,9 +376,13 @@ where
 
     async fn trace_replay_transaction(
         &self,
-        hash: H256,
-        trace_type: Vec<TraceType>,
-    ) -> Result<BlockTrace, Self::Error> {}
+        hash: EthersH256,
+        trace_type: Vec<EthersTraceType>
+    ) -> Result<EthersBlockTrace, Self::Error> {
+
+        let trace = self.reth_trace.replay_transaction(hash.into(), trace_type.into_reth()).await?;
+        Ok(trace.into_ethers())
+    }
 
     async fn trace_replay_block_transactions(
         &self,
@@ -394,44 +393,3 @@ where
     async fn trace_block(&self, block: BlockNumber) -> Result<Vec<Trace>, Self::Error> {}
 
 }
-// thinking of implementing a request so we don't have to change the anvil fork.rs but adds useless
-// indirection
-
-/*
-impl<M> RethMiddleware<M>
-where
-    Self: EthApiServer + EthApiSpec + 'static,
-    M: Middleware,
-
-{
-    pub async fn request<T, R>(&self, method: &str, params: T) -> Result<R, RethMiddlewareError<M>>
-    where
-        T: Debug + Serialize + Send + Sync,
-        R: Serialize + DeserializeOwned + Debug + Send,
-
-    {
-        match method {
-            "eth_call" => {
-                let tx = serde_json::from_value::<&TypedTransaction>(params);
-                let block = serde_json::from_value::<Option<EthersBlockId>>(params);
-                let res = <&RethMiddleware<M> as Middleware>::call(&self, tx, block).await?;
-                Ok(res)
-            }
-            "eth_estimateGas" => {
-                let tx = serde_json::from_value::<&TypedTransaction>(params)?;
-                let block = serde_json::from_value::<Option<BlockId>>(params)?;
-                let res = self.estimate_gas(tx, block).await?;
-                Ok(res)
-            }
-            "eth_createAcessList" => {
-                let tx = serde_json::from_value::<&TypedTransaction>(params)?;
-                let block = serde_json::from_value::<Option<BlockId>>(params)?;
-                let res = self.create_access_list(tx, block).await?;
-                Ok(res)
-            }
-            _ => ProviderError::from(ProviderError::UnsupportedRPC(method.to_string
-    }
-}
-
-
-*/
