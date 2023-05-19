@@ -13,22 +13,21 @@ use ethers::{
             eip2930::AccessListWithGasUsed as EthersAccessListWithGasUsed,
         },
         Address as EthersAddress, Block as EthersBlock, BlockId as EthersBlockId,
-        BlockNumber as EthersBlocKNumber, BlockNumber as EthersBlockNumber, Bytes as EthersBytes,
+        BlockNumber as EthersBlocKNumber, BlockNumber as EthersBlockNumber,
+        BlockTrace as EthersBlockTrace, Bytes as EthersBytes,
         EIP1186ProofResponse as EthersEIP1186ProofResponse, FeeHistory as EthersFeeHistory,
         Filter as EthersFilter, Log as EthersLog, NameOrAddress, Trace as EthersTrace,
-        Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
-        TxHash as EthersTxHash, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64, TraceType as EthersTraceType, BlockTrace as EthersBlockTrace,
+        TraceType as EthersTraceType, Transaction as EthersTransaction,
+        TransactionReceipt as EthersTransactionReceipt, TxHash as EthersTxHash, H256 as EthersH256,
+        U256 as EthersU256, U64 as EthersU64,
     },
 };
 
-
-
 // Reth Types
+use reth_primitives::{serde_helper::JsonStorageKey, BlockId};
 use reth_rpc::EthApiSpec;
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
-use reth_rpc_types::Filter;
-
-use reth_primitives::{serde_helper::JsonStorageKey, BlockId};
+use reth_rpc_types::{Filter, Index};
 
 impl<M> RethMiddleware<M>
 where
@@ -300,47 +299,40 @@ where
         let reth_logs = self.reth_filter.logs(to_reth_filter).await?;
         Ok(reth_logs.into_ethers())
     }
-    
+
     //TODO: Implement get_logs_paginated
     //TODO: Implement stream event logs (watch)
-    //TODO: Watch pending tx 
-    //TODO: 
+    //TODO: Watch pending tx
+    //TODO:
 
     // Tracing
-    //TODO: 
+    //TODO:
     /*
-    - trace call 
-    - trace call many
-    - trace raw tx
-    - trace replay tx
-    - trace replay block transactions
-    - trace block
-    - trace filter
-    - trace get
-    - trace transaction
+
     - log & tx pool subscriptions
-    
+
      */
-    
-     async fn trace_call<T: Into<TypedTransaction> + Send + Sync>(
+
+    async fn trace_call<T: Into<TypedTransaction> + Send + Sync>(
         &self,
         req: T,
         trace_type: Vec<EthersTraceType>,
         block: Option<EthersBlockNumber>,
     ) -> Result<EthersBlockTrace, Self::Error> {
         let tx = req.into().into_reth();
-        let  trace = self.reth_trace.trace_call(tx , trace_type.into_reth(), block.into_reth()).await?;
+        let trace = self
+            .reth_trace
+            .trace_call(tx, trace_type.into_reth(), block.into().into_reth())
+            .await?;
         Ok(trace.into_ethers())
     }
-
 
     async fn trace_call_many<T: Into<TypedTransaction> + Send + Sync>(
         &self,
         req: Vec<(T, Vec<EthersTraceType>)>,
         block: Option<EthersBlockNumber>,
     ) -> Result<Vec<EthersBlockTrace>, Self::Error> {
-
-
+        Ok(self.reth_trace.trace_call_many(req.into_reth(), block.into_reth()).await?.into_ethers())
     }
 
     async fn trace_raw_transaction(
@@ -348,40 +340,23 @@ where
         data: EthersBytes,
         trace_type: Vec<EthersTraceType>,
     ) -> Result<EthersBlockTrace, Self::Error> {
-
-        let trace_raw = self.reth_trace.trace_raw_transaction(data.into_reth(), trace_type.into_reth()).await?;
-
-    }
-
-    async fn trace_transaction(
-        &self,
-        tx_hash: EthersTxHash,
-    ) -> Result<Vec<EthersTrace>, Self::Error> {
-        let trace = self.reth_trace.trace_transaction(tx_hash.into()).await?;
-
-        // Convert each LocalizedTransactionTrace to an EthersTrace
-        let ethers_traces = trace.into_ethers();
-
-        Ok(ethers_traces.unwrap())
-    }
-
-    async fn trace_block(&self, block: EthersBlockNumber) -> Result<Vec<EthersTrace>, Self::Error> {
-        let block_id = block.into_reth();
-        let trace_opt = self.reth_trace.trace_block(BlockId::Number(block_id)).await?;
-
-        let trace = trace_opt.ok_or(RethMiddlewareError::MissingTrace)?;
-
-        Ok(trace.into_ethers())
+        Ok(self
+            .reth_trace
+            .trace_raw_transaction(data.into_reth(), trace_type.into_reth(), None)
+            .await?
+            .into_ethers())
     }
 
     async fn trace_replay_transaction(
         &self,
         hash: EthersH256,
-        trace_type: Vec<EthersTraceType>
+        trace_type: Vec<EthersTraceType>,
     ) -> Result<EthersBlockTrace, Self::Error> {
-
-        let trace = self.reth_trace.replay_transaction(hash.into(), trace_type.into_reth()).await?;
-        Ok(trace.into_ethers())
+        Ok(self
+            .reth_trace
+            .replay_transaction(hash.into(), trace_type.into_reth())
+            .await?
+            .into_ethers())
     }
 
     async fn trace_replay_block_transactions(
@@ -389,12 +364,35 @@ where
         block: EthersBlockNumber,
         trace_type: Vec<EthersTraceType>,
     ) -> Result<Vec<EthersBlockTrace>, Self::Error> {
-        
-        let trace = self.reth_trace.replay_block_transactions(BlockId::Number(block.into()), trace_type.into_reth()).await?;
-    
-        
+        Ok(self
+            .reth_trace
+            .replay_block_transactions(BlockId::Number(block.into()), trace_type.into_reth())
+            .await?
+            .into_ethers())
     }
 
+    async fn trace_block(&self, block: EthersBlockNumber) -> Result<Vec<EthersTrace>, Self::Error> {
+        let block_id = block.into_reth();
+        let trace_opt = self.reth_trace.trace_block(BlockId::Number(block_id)).await?;
+        Ok(trace_opt.ok_or(RethMiddlewareError::MissingTrace)?.into_ethers())
+    }
 
+    // TODO: Implement trace_filter when implemented in reth
 
+    async fn trace_get<T: Into<EthersU64> + Send + Sync>(
+        &self,
+        hash: EthersH256,
+        index: Vec<T>,
+    ) -> Result<EthersTrace, Self::Error> {
+        let index: Vec<usize> = index.into_iter().map(|i| i.into().as_usize()).collect();
+        Ok(self.reth_trace.trace_get(hash.into(), index).await?.into_ethers().unwrap())
+    }
+
+    async fn trace_transaction(
+        &self,
+        tx_hash: EthersTxHash,
+    ) -> Result<Vec<EthersTrace>, Self::Error> {
+        let trace = self.reth_trace.trace_transaction(tx_hash.into()).await?;
+        Ok(trace.into_ethers().unwrap())
+    }
 }

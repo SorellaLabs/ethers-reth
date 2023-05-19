@@ -681,3 +681,5 @@ pub fn reth_trace_to_ethers(trace: LocalizedTransactionTrace) -> EthersTrace {
 // EthResult<TraceResults> -> EthersBlockTrace (ethers)
 // Vec<EthersTraceType> -> HashSet<TraceType> (reth)
 // EthResult<Option<Vec<TraceResultsWithTransactionHash>>> -> <Vec<EthersBlockTrace> (ethers)
+// Vec<(T, Vec<EthersTraceType>)> -> Vec<(CallRequest, HashSet<TraceType>)> (reth)
+// EthersBlockNumber -> BlockId (reth)
