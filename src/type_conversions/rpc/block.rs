@@ -167,6 +167,6 @@ impl ToReth<BlockTransactions> for Vec<EthersH256> {
 /// EthersBlock<Transaction> (ethers) -> BlockTransactions (reth)
 impl ToReth<BlockTransactions> for Vec<EthersTransaction> {
     fn into_reth(self) -> BlockTransactions {
-        BlockTransactions::Full(self.transactions.into_reth())
+        BlockTransactions::Full(self.into_reth())
     }
 }
