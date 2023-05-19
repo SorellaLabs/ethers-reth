@@ -25,7 +25,6 @@ use ethers::{
 
 // Reth Types
 use reth_primitives::BlockId;
-use reth_rpc::EthApiSpec;
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
 use reth_rpc_types::Filter;
 
@@ -41,7 +40,7 @@ where
             NameOrAddress::Name(ens_name) => {
                 self.inner.resolve_name(&ens_name).await.map_err(RethMiddlewareError::from_err)
             }
-            NameOrAddress::Address(addr) => Ok(addr.into()),
+            NameOrAddress::Address(addr) => Ok(addr),
         }
     }
 }

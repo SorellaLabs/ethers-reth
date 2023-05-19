@@ -11,8 +11,7 @@ use reth_db::mdbx::{Env, NoWriteMap};
 use reth_network_api::test_utils::NoopNetwork;
 use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
-use reth_rpc::{eth::error::EthApiError, EthApi, EthApiSpec, EthFilter, TraceApi};
-use reth_rpc_api::EthApiServer;
+use reth_rpc::{eth::error::EthApiError, EthApi, EthFilter, TraceApi};
 use reth_transaction_pool::{CostOrdering, EthTransactionValidator, Pool, PooledTransaction};
 //Error
 use jsonrpsee::types::ErrorObjectOwned;
