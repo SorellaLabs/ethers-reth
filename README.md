@@ -14,4 +14,4 @@ Please note that Octane is currently in its early stages of development.
 - [ ] Tests, waiting on node sync
 
 ### Contact
-For any questions or enhancment requests, please open an issue on this repository or dm me on [twitter](https://twitter.com/0xvanbeethoven).
+For any questions or enhancements requests, please open an issue on this repository or dm me on [twitter](https://twitter.com/0xvanbeethoven).
