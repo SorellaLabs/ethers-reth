@@ -1,6 +1,8 @@
 use crate::type_conversions::{ToEthers, ToReth};
 
-use ethers::types::{Block as EthersBlock, OtherFields, H256 as EthersH256, Transaction as EthersTransaction,};
+use ethers::types::{
+    Block as EthersBlock, OtherFields, Transaction as EthersTransaction, H256 as EthersH256,
+};
 use reth_rpc_types::{Block, BlockTransactions, Header, Rich};
 
 /// FeeHistory (ethers) -> (reth)
@@ -39,7 +41,6 @@ impl<TX> ToReth<Rich<Block>> for EthersBlock<TX> {
 
 /// FeeHistory (reth) -> (ethers)
 impl ToEthers<EthersBlock<EthersH256>> for Rich<Block> {
-
     fn into_ethers(self) -> EthersBlock<EthersH256> {
         let txs = match &self.transactions {
             BlockTransactions::Hashes(hashes) => hashes.into_ethers(),
@@ -63,7 +64,7 @@ impl ToEthers<EthersBlock<EthersH256>> for Rich<Block> {
             total_difficulty: self.inner.total_difficulty.into_ethers(),
             seal_fields: vec![],
             uncles: self.inner.uncles.clone().into_ethers(),
-            transactions: txs.into(), 
+            transactions: txs.into(),
             size: self.inner.size.into_ethers(),
             mix_hash: Some(self.header.mix_hash.into_ethers()),
             nonce: self.header.nonce.into_ethers(),
@@ -75,10 +76,8 @@ impl ToEthers<EthersBlock<EthersH256>> for Rich<Block> {
     }
 }
 
-
 /// FeeHistory (reth) -> (ethers)
 impl ToEthers<EthersBlock<EthersTransaction>> for Rich<Block> {
-
     fn into_ethers(self) -> EthersBlock<EthersTransaction> {
         let txs = match &self.transactions {
             BlockTransactions::Full(txs) => txs.into_ethers(),
@@ -102,7 +101,7 @@ impl ToEthers<EthersBlock<EthersTransaction>> for Rich<Block> {
             total_difficulty: self.inner.total_difficulty.into_ethers(),
             seal_fields: vec![],
             uncles: self.inner.uncles.clone().into_ethers(),
-            transactions: txs.into(), 
+            transactions: txs.into(),
             size: self.inner.size.into_ethers(),
             mix_hash: Some(self.header.mix_hash.into_ethers()),
             nonce: self.header.nonce.into_ethers(),

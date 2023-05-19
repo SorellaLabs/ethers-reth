@@ -1,5 +1,6 @@
 use crate::{
-    RethMiddleware, RethMiddlewareError, type_conversions::{ToReth, ToEthers},
+    type_conversions::{ToEthers, ToReth},
+    RethMiddleware, RethMiddlewareError,
 };
 use async_trait::async_trait;
 
@@ -20,7 +21,6 @@ use ethers::{
     },
 };
 
-use jsonrpsee::types::ErrorObjectOwned;
 // Reth Types
 use reth_rpc::EthApiSpec;
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
@@ -165,7 +165,11 @@ where
 
         let reth_fee_history = self
             .reth_api
-            .fee_history(ToReth::into_reth(block_count), BlockId::Number(last_block), reward_percentiles)
+            .fee_history(
+                ToReth::into_reth(block_count),
+                BlockId::Number(last_block),
+                reward_percentiles,
+            )
             .await?;
 
         Ok(reth_fee_history.into_ethers())
@@ -247,7 +251,7 @@ where
             EthersBlockId::Number(num) => self.reth_api.block_by_number(num.into(), false).await?,
         };
 
-       Ok(block.into_ethers())
+        Ok(block.into_ethers())
     }
 
     async fn get_uncle<T: Into<EthersBlockId> + Send + Sync>(
