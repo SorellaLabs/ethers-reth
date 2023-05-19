@@ -132,3 +132,27 @@ where
         self.into_iter().map(|x| (x.0.into_ethers(), x.1.into_ethers())).collect()
     }
 }
+
+// -----------------------------------------------
+
+/// generic Tuple of 2 conversion
+impl<T, K, F, U> ToReth<(T, K)> for (F, U)
+where
+    F: ToReth<T> + Clone,
+    U: ToReth<K> + Clone,
+{
+    fn into_reth(self) -> (T, K) {
+        (self.0.into_reth(), self.1.into_reth())
+    }
+}
+
+
+impl<F, U, T, K> ToEthers<(F, U)> for (T, K)
+where
+    T: ToEthers<F> + Clone,
+    K: ToEthers<U> + Clone,
+{
+    fn into_ethers(self) -> (F, U) {
+        (self.0.into_ethers(), self.1.into_ethers())
+    }
+}

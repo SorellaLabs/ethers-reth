@@ -15,7 +15,7 @@ use reth_rpc_types::trace::parity::{
     Action, CallAction, CallOutput, CallType, CreateAction, CreateOutput,
     LocalizedTransactionTrace, RewardAction, RewardType, SelfdestructAction, TraceOutput,
     TraceResult, TransactionTrace, TraceType, TraceResults, VmTrace, VmInstruction, VmExecutedOperation, 
-    MemoryDelta, StorageDelta, AccountDiff, Delta, ChangedType, StateDiff
+    MemoryDelta, StorageDelta, AccountDiff, Delta, ChangedType, StateDiff, TraceResultsWithTransactionHash
 };
 
 /// Action (ethers) -> (reth)
@@ -258,6 +258,25 @@ impl ToReth<TraceResults> for EthersBlockTrace {
 
 /// TraceResults (reth) -> EthersBlockTrace (ethers)
 impl ToEthers<EthersBlockTrace> for TraceResults {
+    fn into_ethers(self) -> EthersBlockTrace {
+        todo!()
+    }
+}
+
+// -----------------------------------------------
+
+/// EthersBlockTrace (ethers) -> TraceResultsWithTransactionHash (reth)
+impl ToReth<TraceResultsWithTransactionHash> for EthersBlockTrace {
+    fn into_reth(self) -> TraceResultsWithTransactionHash {
+        TraceResultsWithTransactionHash {
+            full_trace: self.clone().into_reth(),
+            transaction_hash: self.transaction_hash.into_reth().unwrap(),
+        }
+    }
+}
+
+/// TraceResultsWithTransactionHash (reth) -> EthersBlockTrace (ethers)
+impl ToEthers<EthersBlockTrace> for TraceResultsWithTransactionHash {
     fn into_ethers(self) -> EthersBlockTrace {
         todo!()
     }

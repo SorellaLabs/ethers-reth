@@ -305,10 +305,10 @@ where
         trace_type: Vec<EthersTraceType>,
         block: Option<EthersBlockNumber>,
     ) -> Result<EthersBlockTrace, Self::Error> {
-        let tx = req.into().into_reth();
+        let tx = req.into();
         let trace = self
             .reth_trace
-            .trace_call(tx, trace_type.into_reth(), block.into().into_reth())
+            .trace_call(tx.into_reth(), trace_type.into_reth(), block.into_reth())
             .await?;
         Ok(trace.into_ethers())
     }
@@ -318,7 +318,8 @@ where
         req: Vec<(T, Vec<EthersTraceType>)>,
         block: Option<EthersBlockNumber>,
     ) -> Result<Vec<EthersBlockTrace>, Self::Error> {
-        Ok(self.reth_trace.trace_call_many(req.into_reth(), block.into_reth()).await?.into_ethers())
+        let tx: Vec<(TypedTransaction, Vec<EthersTraceType>)> = req.into_iter().map(|r| (r.0.into(), r.1)).collect();
+        Ok(self.reth_trace.trace_call_many(tx.into_reth(), block.into_reth()).await?.into_ethers())
     }
 
     async fn trace_raw_transaction(
@@ -350,11 +351,11 @@ where
         block: EthersBlockNumber,
         trace_type: Vec<EthersTraceType>,
     ) -> Result<Vec<EthersBlockTrace>, Self::Error> {
-        Ok(self
-            .reth_trace
-            .replay_block_transactions(BlockId::Number(block.into()), trace_type.into_reth())
-            .await?
-            .into_ethers())
+        let res = self
+        .reth_trace
+        .replay_block_transactions(BlockId::Number(block.into()), trace_type.into_reth())
+        .await?;
+        Ok(res.unwrap().into_ethers())
     }
 
     async fn trace_block(&self, block: EthersBlockNumber) -> Result<Vec<EthersTrace>, Self::Error> {
