@@ -399,9 +399,10 @@ mod tests {
     async fn test_get_address() {
         let provider = Provider::<Ipc>::connect_ipc(DEFAULT_IPC_ENDPOINT).await.unwrap();
         let middleware = RethMiddleware::new(provider, TEST_DB_PATH);
-
+        let ens: NameOrAddress = "vanbeethoven.eth".parse().unwrap();
+        let address = middleware.get_address(ens).await.unwrap();
+        assert_eq!(address, "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap());
     }
-
 
 
 }
