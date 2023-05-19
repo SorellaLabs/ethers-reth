@@ -676,4 +676,8 @@ pub fn reth_trace_to_ethers(trace: LocalizedTransactionTrace) -> EthersTrace {
 //TODO:
 // from Vec<ethers::types::TraceType> to HashSet<reth_rpc_types::trace::parity::TraceType>`
 // from  EthResult<TraceResults> to ethers_core::types::trace (prob only interior type and wrap it after if ez)
-//
+// need type conversions for:
+
+// EthResult<TraceResults> -> EthersBlockTrace (ethers)
+// Vec<EthersTraceType> -> HashSet<TraceType> (reth)
+// EthResult<Option<Vec<TraceResultsWithTransactionHash>>> -> <Vec<EthersBlockTrace> (ethers)

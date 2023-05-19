@@ -386,10 +386,15 @@ where
 
     async fn trace_replay_block_transactions(
         &self,
-        block: BlockNumber,
-        trace_type: Vec<TraceType>,
-    ) -> Result<Vec<BlockTrace>, Self::Error> {}
+        block: EthersBlockNumber,
+        trace_type: Vec<EthersTraceType>,
+    ) -> Result<Vec<EthersBlockTrace>, Self::Error> {
+        
+        let trace = self.reth_trace.replay_block_transactions(BlockId::Number(block.into()), trace_type.into_reth()).await?;
+    
+        
+    }
 
-    async fn trace_block(&self, block: BlockNumber) -> Result<Vec<Trace>, Self::Error> {}
+
 
 }
