@@ -384,3 +384,24 @@ where
         Ok(trace.into_ethers().unwrap())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::path::Path;
+    use super::*;
+    use crate::RethMiddleware;
+    use ethers::providers::{Provider, Ipc};
+    use reth_rpc_builder::constants::DEFAULT_IPC_ENDPOINT;
+
+    const TEST_DB_PATH: &Path = Path::new("./test_db");
+
+    #[tokio::test]
+    async fn test_get_address() {
+        let provider = Provider::<Ipc>::connect_ipc(DEFAULT_IPC_ENDPOINT).await.unwrap();
+        let middleware = RethMiddleware::new(provider, TEST_DB_PATH);
+
+    }
+
+
+
+}
