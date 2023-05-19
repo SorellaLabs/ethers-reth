@@ -58,3 +58,22 @@ impl ToEthers<EthersBlockNumber> for BlockNumberOrTag {
         }
     }
 }
+
+// -----------------------------------------------
+
+/// BlockNumber (ethers) -> BlockID (reth)
+impl ToReth<BlockId> for EthersBlockNumber {
+    fn into_reth(self) -> BlockId {
+        BlockId::Number(self.into_reth())
+    }
+}
+
+/// BlockNumber (reth) -> (ethers)
+impl ToEthers<EthersBlockNumber> for BlockId {
+    fn into_ethers(self) -> EthersBlockNumber {
+        match self {
+        BlockId::Number(x) => x.into_ethers(),
+        _ => EthersBlockNumber::Latest // default
+        }
+    }
+}

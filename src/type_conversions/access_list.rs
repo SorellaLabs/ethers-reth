@@ -38,7 +38,8 @@ impl ToReth<AccessList> for EthersAccessList {
 /// AccessList (reth) -> (ethers)
 impl ToEthers<EthersAccessList> for AccessList {
     fn into_ethers(self) -> EthersAccessList {
-        EthersAccessList::from(self.0.into_ethers())
+        let ethers_al: Vec<EthersAccessListItem> = self.0.into_ethers();
+        EthersAccessList::from(ethers_al)
     }
 }
 

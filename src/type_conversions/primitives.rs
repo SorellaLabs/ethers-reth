@@ -123,7 +123,7 @@ macro_rules! array_impls {
 array_impls!(4, 32);
 
 impl_ToEthers_Uint!(EthersU256, (U256, U128));
-impl_ToEthers!(EthersU256, (U64));
+impl_ToEthers!(EthersU256, (U64, H256));
 
 impl_ToEthers_Uint!(EthersU64, (U256, U8));
 impl_ToEthers!(EthersU64, (U64));
