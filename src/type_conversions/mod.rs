@@ -1,4 +1,7 @@
-use std::{hash::Hash, collections::{HashSet, BTreeMap}};
+use std::{
+    collections::{BTreeMap, HashSet},
+    hash::Hash,
+};
 
 use ethers::prelude::k256::sha2::digest::typenum::Ord;
 
@@ -85,22 +88,21 @@ where
 // -----------------------------------------------
 
 /// generic HashSet<> -> Vec<> conversion
-/// mainly for Vec<> (ethers) -> Hashset<> (reth) 
+/// mainly for Vec<> (ethers) -> Hashset<> (reth)
 impl<T, F> ToReth<HashSet<T>> for Vec<F>
 where
     F: ToReth<T>,
-    T: Hash + Eq
+    T: Hash + Eq,
 {
     fn into_reth(self) -> HashSet<T> {
         self.into_iter().map(|x| x.into_reth()).collect()
     }
 }
 
-
 impl<F, T> ToEthers<HashSet<F>> for Vec<T>
 where
     T: ToEthers<F>,
-    F: Hash + Eq
+    F: Hash + Eq,
 {
     fn into_ethers(self) -> HashSet<F> {
         self.into_iter().map(|x| x.into_ethers()).collect()
@@ -114,19 +116,18 @@ impl<T, K, F, U> ToReth<BTreeMap<T, K>> for BTreeMap<F, U>
 where
     F: ToReth<T>,
     U: ToReth<K>,
-    BTreeMap<T, K>: FromIterator<(T, K)>
+    BTreeMap<T, K>: FromIterator<(T, K)>,
 {
     fn into_reth(self) -> BTreeMap<T, K> {
         self.into_iter().map(|x| (x.0.into_reth(), x.1.into_reth())).collect::<BTreeMap<T, K>>()
     }
 }
 
-
 impl<F, U, T, K> ToEthers<BTreeMap<F, U>> for BTreeMap<T, K>
 where
     T: ToEthers<F>,
     K: ToEthers<U>,
-    BTreeMap<F, U>: FromIterator<(F, U)>
+    BTreeMap<F, U>: FromIterator<(F, U)>,
 {
     fn into_ethers(self) -> BTreeMap<F, U> {
         self.into_iter().map(|x| (x.0.into_ethers(), x.1.into_ethers())).collect()
@@ -145,7 +146,6 @@ where
         (self.0.into_reth(), self.1.into_reth())
     }
 }
-
 
 impl<F, U, T, K> ToEthers<(F, U)> for (T, K)
 where

@@ -11,10 +11,9 @@ use reth_db::mdbx::{Env, NoWriteMap};
 use reth_network_api::test_utils::NoopNetwork;
 use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
-use reth_rpc::{eth::error::EthApiError, EthApi, EthFilter, TraceApi};
-use reth_transaction_pool::{CostOrdering, EthTransactionValidator, Pool, PooledTransaction};
+use reth_rpc::{eth::error::EthApiError, EthApi, EthApiSpec, EthFilter, TraceApi};
 use reth_rpc_api::EthApiServer;
-use reth_rpc::EthApiSpec;
+use reth_transaction_pool::{CostOrdering, EthTransactionValidator, Pool, PooledTransaction};
 //Error
 use jsonrpsee::types::ErrorObjectOwned;
 use thiserror::Error;
@@ -55,7 +54,7 @@ pub enum RethMiddlewareError<M: Middleware> {
     /// An error occured in one of the middlewares.
     #[error("{0}")]
     MiddlewareError(M::Error),
-    
+
     /// An error occurred in the Reth API.
     #[error(transparent)]
     RethApiError(#[from] ErrorObjectOwned),
@@ -78,7 +77,6 @@ impl<M: Middleware> MiddlewareError for RethMiddlewareError<M> {
     fn from_err(e: Self::Inner) -> Self {
         RethMiddlewareError::MiddlewareError(e)
     }
-
 
     fn as_inner(&self) -> Option<&Self::Inner> {
         match self {

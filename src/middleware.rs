@@ -27,12 +27,11 @@ use ethers::{
 use reth_primitives::BlockId;
 use reth_rpc::EthApiSpec;
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
-use reth_rpc_types::{Filter};
+use reth_rpc_types::Filter;
 
 impl<M> RethMiddleware<M>
 where
     M: Middleware,
-
 {
     async fn get_address<T: Into<NameOrAddress>>(
         &self,
@@ -44,7 +43,7 @@ where
             }
             NameOrAddress::Address(addr) => Ok(addr.into()),
         }
-    }   
+    }
 }
 
 #[async_trait]
@@ -295,8 +294,6 @@ where
         Ok(reth_logs.into_ethers())
     }
 
-    
-
     //TODO: Implement get_logs_paginated
     //TODO: Implement stream event logs (watch)
     //TODO: Watch pending tx
@@ -321,7 +318,8 @@ where
         req: Vec<(T, Vec<EthersTraceType>)>,
         block: Option<EthersBlockNumber>,
     ) -> Result<Vec<EthersBlockTrace>, Self::Error> {
-        let tx: Vec<(TypedTransaction, Vec<EthersTraceType>)> = req.into_iter().map(|r| (r.0.into(), r.1)).collect();
+        let tx: Vec<(TypedTransaction, Vec<EthersTraceType>)> =
+            req.into_iter().map(|r| (r.0.into(), r.1)).collect();
         Ok(self.reth_trace.trace_call_many(tx.into_reth(), block.into_reth()).await?.into_ethers())
     }
 
@@ -355,9 +353,9 @@ where
         trace_type: Vec<EthersTraceType>,
     ) -> Result<Vec<EthersBlockTrace>, Self::Error> {
         let res = self
-        .reth_trace
-        .replay_block_transactions(BlockId::Number(block.into()), trace_type.into_reth())
-        .await?;
+            .reth_trace
+            .replay_block_transactions(BlockId::Number(block.into()), trace_type.into_reth())
+            .await?;
         Ok(res.unwrap().into_ethers())
     }
 
@@ -389,21 +387,21 @@ where
 
 #[cfg(test)]
 mod tests {
-    use std::path::Path;
     use super::*;
     use crate::*;
-    use ethers::providers::{Provider, Ipc};
-    use ethers::prelude::*;
+    use ethers::{
+        prelude::*,
+        providers::{Ipc, Provider},
+    };
     use reth_rpc_builder::constants::DEFAULT_IPC_ENDPOINT;
-    use ethers::abi::parse_abi;
+    use std::path::Path;
 
     const TEST_DB_PATH: &str = "./test_db";
-    
+
     async fn spawn_middleware() -> RethMiddleware<Provider<Ipc>> {
         let provider = Provider::connect_ipc(DEFAULT_IPC_ENDPOINT).await.unwrap();
         RethMiddleware::new(provider, Path::new(TEST_DB_PATH))
     }
-
 
     #[tokio::test]
     async fn test_get_address() {
@@ -431,17 +429,18 @@ mod tests {
         // storage[10] = price1CumulativeLast: uint256                 //
         // storage[11] = kLast: uint256                                //
         // =========================================================== //
-    
-        // convert the H256 value to bytes, then take the last 20 bytes and create an address from it
+
+        // convert the H256 value to bytes, then take the last 20 bytes and create an address from
+        // it
         let decoded_addr = EthersAddress::from_slice(&storage.as_bytes()[12..]);
-    
-        let factory_address: NameOrAddress = "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f".parse().unwrap();
-    
+
+        let factory_address: NameOrAddress =
+            "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f".parse().unwrap();
+
         if let NameOrAddress::Address(expected_addr) = factory_address {
             assert_eq!(decoded_addr, expected_addr);
         } else {
             panic!("Failed to parse expected factory address");
         }
     }
-
 }
