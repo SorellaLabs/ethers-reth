@@ -395,6 +395,7 @@ mod tests {
     use ethers::providers::{Provider, Ipc};
     use ethers::prelude::*;
     use reth_rpc_builder::constants::DEFAULT_IPC_ENDPOINT;
+    use ethers::abi::parse_abi;
 
     const TEST_DB_PATH: &str = "./test_db";
     
@@ -416,7 +417,31 @@ mod tests {
     async fn test_get_storage_at() {
         let middleware = spawn_middleware().await;
         let from: NameOrAddress = "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852".parse().unwrap();
-        // let location = H256::from("8");
-        
+        let location = EthersH256::from_low_u64_be(5);
+        let storage = middleware.get_storage_at(from, location, None).await.unwrap();
+
+        // ----------------------------------------------------------- //
+        //             Storage slots of UniV2Pair contract             //
+        // =========================================================== //
+        // storage[5] = factory: address                               //
+        // storage[6] = token0: address                                //
+        // storage[7] = token1: address                                //
+        // storage[8] = (res0, res1, ts): (uint112, uint112, uint32)   //
+        // storage[9] = price0CumulativeLast: uint256                  //
+        // storage[10] = price1CumulativeLast: uint256                 //
+        // storage[11] = kLast: uint256                                //
+        // =========================================================== //
+    
+        // convert the H256 value to bytes, then take the last 20 bytes and create an address from it
+        let decoded_addr = EthersAddress::from_slice(&storage.as_bytes()[12..]);
+    
+        let factory_address: NameOrAddress = "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f".parse().unwrap();
+    
+        if let NameOrAddress::Address(expected_addr) = factory_address {
+            assert_eq!(decoded_addr, expected_addr);
+        } else {
+            panic!("Failed to parse expected factory address");
+        }
     }
+
 }
