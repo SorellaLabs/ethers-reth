@@ -1,11 +1,11 @@
 use crate::type_conversions::{ToEthers, ToReth};
-use std::mem;
+use std::{mem, fmt::Debug};
 
 use ethers::types::{
     Bloom as EthersBloom, Bytes as EthersBytes, H160 as EthersH160, H256 as EthersH256,
     H64 as EthersH64, U256 as EthersU256, U64 as EthersU64,
 };
-use reth_primitives::{Bloom, Bytes, H160, H256, H64, U128, U256, U64, U8};
+use reth_primitives::{Bloom, Bytes, H160, H256, H64, U128, U256, U64, U8, serde_helper::JsonStorageKey};
 
 /// non-Uint numerical conversions
 #[macro_export]
@@ -90,9 +90,10 @@ macro_rules! array_impls {
             impl<T, F> ToReth<[T; $N]> for [F; $N]
             where
                 F: ToReth<T> + Clone,
+                T: Default + Debug,
             {
                 fn into_reth(self) -> [T; $N] {
-                    let mut result: [T; $N];
+                    let mut result: [T; $N] = (0..$N).map(|i| self[i].clone().into_reth()).collect::<Vec<T>>().try_into().unwrap();
                     for (i, item) in self.iter().enumerate() {
                         result[i] = item.clone().into_reth();
                     }
@@ -103,9 +104,10 @@ macro_rules! array_impls {
             impl<F, T> ToEthers<[F; $N]> for [T; $N]
             where
                 T: ToEthers<F> + Clone,
+                F: Default + Debug,
             {
                 fn into_ethers(self) -> [F; $N] {
-                    let mut result: [F; $N];
+                    let mut result: [F; $N] = (0..$N).map(|i| self[i].clone().into_ethers()).collect::<Vec<F>>().try_into().unwrap();
                     for (i, item) in self.iter().enumerate() {
                         result[i] = item.clone().into_ethers();
                     }
@@ -140,5 +142,20 @@ impl ToReth<Bytes> for EthersBytes {
 impl ToEthers<EthersBytes> for Bytes {
     fn into_ethers(self) -> EthersBytes {
         self.to_vec().into()
+    }
+}
+
+
+/// JsonStorageKey (reth) -> H256 (ethers)
+impl ToReth<JsonStorageKey> for EthersH256 {
+    fn into_reth(self) -> JsonStorageKey {
+        JsonStorageKey(self.into())
+    }
+}
+
+/// JsonStorageKey (ethers) -> H256 (reth)
+impl ToEthers<H256> for JsonStorageKey {
+    fn into_ethers(self) -> H256 {
+        self.0
     }
 }

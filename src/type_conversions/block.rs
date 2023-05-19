@@ -1,13 +1,13 @@
 use super::{ToEthers, ToReth};
 
-use ethers::types::{BlockId as EthersBlockId, BlockNumber as EthersBlockNumber};
-use reth_primitives::{BlockId, BlockNumberOrTag};
+use ethers::types::{BlockId as EthersBlockId, BlockNumber as EthersBlockNumber, H256 as EthersH256};
+use reth_primitives::{BlockId, BlockNumberOrTag, H256};
 
 /// BlockId (ethers) -> (reth)
 impl ToReth<BlockId> for EthersBlockId {
     fn into_reth(self) -> BlockId {
         match self {
-            EthersBlockId::Hash(hash) => BlockId::Hash(hash.into_reth().into()),
+            EthersBlockId::Hash(hash) => BlockId::Hash(<EthersH256 as ToReth<H256>>::into_reth(hash).into()),
             EthersBlockId::Number(number) => {
                 BlockId::Number(BlockNumberOrTag::Number(number.as_number().unwrap().as_u64()))
             }

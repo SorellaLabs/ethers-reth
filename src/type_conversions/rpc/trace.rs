@@ -129,7 +129,7 @@ impl ToReth<TransactionTrace> for EthersTrace {
 impl ToReth<LocalizedTransactionTrace> for EthersTrace {
     fn into_reth(self) -> LocalizedTransactionTrace {
         LocalizedTransactionTrace {
-            trace: self.into_reth(),
+            trace: self.clone().into_reth(),
             transaction_position: self.transaction_position.map(|x| x.as_u64()),
             transaction_hash: self.transaction_hash.into_reth(),
             block_number: Some(self.block_number),
@@ -143,8 +143,8 @@ impl ToEthers<EthersTrace> for LocalizedTransactionTrace {
     fn into_ethers(self) -> EthersTrace {
         let action = self.trace.action.into_ethers();
         EthersTrace {
-            action,
-            result: self.trace.result.into_ethers(),
+            action: action.clone(),
+            result: self.trace.result.clone().into_ethers(),
             trace_address: self.trace.trace_address,
             subtraces: self.trace.subtraces,
             transaction_position: self.transaction_position.map(|x| x as usize),
@@ -208,7 +208,7 @@ impl ToEthers<EthersRes> for TraceResult {
                     })
                 }
             },
-            TraceResult::Error { error } => EthersRes::None,
+            TraceResult::Error { error: _ } => EthersRes::None,
         }
     }
 }

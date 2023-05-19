@@ -3,7 +3,6 @@ use std::{path::Path, sync::Arc};
 
 // ethers
 use ethers::providers::{Middleware, MiddlewareError};
-pub mod type_conversions;
 
 //Reth
 use reth_beacon_consensus::BeaconConsensus;
@@ -21,6 +20,7 @@ use thiserror::Error;
 // own modules
 pub mod init;
 pub mod middleware;
+pub mod type_conversions;
 use init::{init_client, init_eth_api, init_eth_filter, init_trace};
 
 pub type RethClient = BlockchainProvider<
