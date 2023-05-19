@@ -1,5 +1,4 @@
-// Numerous acts of type terrorism having been commited during the making of this program. Please
-// forgive us.
+
 
 use eyre::Result;
 use std::str::FromStr;
