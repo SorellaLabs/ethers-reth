@@ -7,9 +7,7 @@ use reth_rpc_types::{Block, BlockTransactions, Header, Rich};
 
 /// EthersBlock<EthersH256> (ethers) -> Rich<Block> (reth)
 impl ToReth<Rich<Block>> for EthersBlock<EthersH256> {
-
     fn into_reth(self) -> Rich<Block> {
-
         let txs = self.transactions;
         let block = Block {
             header: Header {
@@ -44,7 +42,6 @@ impl ToReth<Rich<Block>> for EthersBlock<EthersH256> {
 
 /// EthersBlock<EthersTransaction> (ethers) -> Rich<Block> (reth)
 impl ToReth<Rich<Block>> for EthersBlock<EthersTransaction> {
-
     fn into_reth(self) -> Rich<Block> {
         let txs = self.transactions;
         let block = Block {
@@ -116,7 +113,6 @@ impl ToEthers<EthersBlock<EthersH256>> for Rich<Block> {
         }
     }
 }
-
 
 /// Rich<Block> (reth) -> EthersBlock<EthersTransaction> (ethers)
 impl ToEthers<EthersBlock<EthersTransaction>> for Rich<Block> {
