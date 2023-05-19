@@ -24,10 +24,10 @@ use ethers::{
 };
 
 // Reth Types
-use reth_primitives::{serde_helper::JsonStorageKey, BlockId};
+use reth_primitives::BlockId;
 use reth_rpc::EthApiSpec;
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
-use reth_rpc_types::{Filter, Index};
+use reth_rpc_types::{Filter};
 
 impl<M> RethMiddleware<M>
 where
@@ -133,9 +133,7 @@ where
         block: Option<EthersBlockId>,
     ) -> Result<EthersU256, Self::Error> {
         let from = self.get_address(from).await?;
-
-        let block_id = block.into_reth();
-        Ok(self.reth_api.balance(from.into(), block_id).await?.into())
+        Ok(self.reth_api.balance(from.into(), block.into_reth()).await?.into())
     }
 
     async fn get_proof<T: Into<NameOrAddress> + Send + Sync>(
@@ -146,12 +144,11 @@ where
     ) -> Result<EthersEIP1186ProofResponse, RethMiddlewareError<M>> {
         let from = self.get_address(from).await?;
 
-        let locations = locations.into_reth();
-
-        let block_id = block.into_reth();
-        let proof = self.reth_api.get_proof(from.into(), locations, block_id).await?;
-
-        Ok(proof.into_ethers())
+        Ok(self
+            .reth_api
+            .get_proof(from.into(), locations.into_reth(), block.into_reth())
+            .await?
+            .into_ethers())
     }
 
     async fn fee_history<T: Into<EthersU256> + Send + Sync>(
@@ -160,32 +157,29 @@ where
         last_block: EthersBlocKNumber,
         reward_percentiles: &[f64],
     ) -> Result<EthersFeeHistory, Self::Error> {
-        let block_count = block_count.into();
-        let last_block = last_block.into_reth();
-        let reward_percentiles = Some(reward_percentiles.to_vec());
-
-        let reth_fee_history = self
+        Ok(self
             .reth_api
             .fee_history(
-                ToReth::into_reth(block_count),
-                BlockId::Number(last_block),
-                reward_percentiles,
+                block_count.into().into_reth(),
+                last_block.into_reth(),
+                Some(reward_percentiles.to_vec()),
             )
-            .await?;
-
-        Ok(reth_fee_history.into_ethers())
+            .await?
+            .into_ethers())
     }
 
     // Chain Info
 
     async fn get_chainid(&self) -> Result<EthersU256, RethMiddlewareError<M>> {
-        let chain_id = EthApiServer::chain_id(&self.reth_api).await?;
-        Ok(chain_id.unwrap().into_ethers())
+        let chain_id = EthApiServer::chain_id(&self.reth_api)
+            .await?
+            .ok_or_else(|| RethMiddlewareError::ChainIdUnavailable)?;
+
+        Ok(chain_id.into_ethers())
     }
 
     async fn get_block_number(&self) -> Result<EthersU64, RethMiddlewareError<M>> {
-        let block_number = self.reth_api.block_number()?;
-        Ok(block_number.into_ethers())
+        Ok(self.reth_api.block_number()?.into_ethers())
     }
 
     /*async fn get_block_receipts<T: Into<EthersBlockNumber> + Send + Sync>(
@@ -300,19 +294,13 @@ where
         Ok(reth_logs.into_ethers())
     }
 
+    
+
     //TODO: Implement get_logs_paginated
     //TODO: Implement stream event logs (watch)
     //TODO: Watch pending tx
-    //TODO:
 
     // Tracing
-    //TODO:
-    /*
-
-    - log & tx pool subscriptions
-
-     */
-
     async fn trace_call<T: Into<TypedTransaction> + Send + Sync>(
         &self,
         req: T,

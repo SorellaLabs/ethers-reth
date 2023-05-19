@@ -66,6 +66,9 @@ pub enum RethMiddlewareError<M: Middleware> {
     /// A trace was expected but none was found.
     #[error("Missing trace")]
     MissingTrace,
+
+    #[error("Chain Id unavailable")]
+    ChainIdUnavailable,
 }
 
 impl<M: Middleware> MiddlewareError for RethMiddlewareError<M> {
