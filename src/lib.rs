@@ -55,7 +55,7 @@ pub enum RethMiddlewareError<M: Middleware> {
     /// An error occured in one of the middlewares.
     #[error("{0}")]
     MiddlewareError(M::Error),
-
+    
     /// An error occurred in the Reth API.
     #[error(transparent)]
     RethApiError(#[from] ErrorObjectOwned),
@@ -79,6 +79,7 @@ impl<M: Middleware> MiddlewareError for RethMiddlewareError<M> {
         RethMiddlewareError::MiddlewareError(e)
     }
 
+
     fn as_inner(&self) -> Option<&Self::Inner> {
         match self {
             RethMiddlewareError::MiddlewareError(e) => Some(e),
@@ -89,7 +90,6 @@ impl<M: Middleware> MiddlewareError for RethMiddlewareError<M> {
 
 impl<M> RethMiddleware<M>
 where
-    Self: EthApiServer + EthApiSpec + 'static,
     M: Middleware,
 {
     pub fn new(inner: M, db_path: &Path) -> Self {
