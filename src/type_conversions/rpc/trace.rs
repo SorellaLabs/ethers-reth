@@ -261,7 +261,13 @@ impl ToReth<TraceResults> for EthersBlockTrace {
 /// TraceResults (reth) -> EthersBlockTrace (ethers)
 impl ToEthers<EthersBlockTrace> for TraceResults {
     fn into_ethers(self) -> EthersBlockTrace {
-        todo!()
+        EthersBlockTrace {
+            output: self.output.into_ethers(),
+            trace: self.trace.into_ethers(),
+            vm_trace: self.vm_trace.into_ethers(),
+            state_diff: self.state_diff.into_ethers(),
+            transaction_hash: None,
+        }
     }
 }
 
@@ -280,7 +286,13 @@ impl ToReth<TraceResultsWithTransactionHash> for EthersBlockTrace {
 /// TraceResultsWithTransactionHash (reth) -> EthersBlockTrace (ethers)
 impl ToEthers<EthersBlockTrace> for TraceResultsWithTransactionHash {
     fn into_ethers(self) -> EthersBlockTrace {
-        todo!()
+        EthersBlockTrace {
+            output: self.full_trace.output.into_ethers(),
+            trace: self.full_trace.trace.into_ethers(),
+            vm_trace: self.full_trace.vm_trace.into_ethers(),
+            state_diff: self.full_trace.state_diff.into_ethers(),
+            transaction_hash: Some(self.transaction_hash.into_ethers()),
+        }
     }
 }
 
@@ -298,26 +310,12 @@ impl ToReth<TransactionTrace> for EthersTransactionTrace {
     }
 }
 
-/// TransactionTrace (reth) -> (ethers)
-impl ToEthers<EthersTransactionTrace> for TransactionTrace {
-    fn into_ethers(self) -> EthersTransactionTrace {
-        todo!()
-    }
-}
-
 // -----------------------------------------------
 
 /// VMTrace (ethers) -> (reth)
 impl ToReth<VmTrace> for EthersVMTrace {
     fn into_reth(self) -> VmTrace {
         VmTrace { code: self.code.into_reth(), ops: self.ops.into_reth() }
-    }
-}
-
-/// VMTrace (reth) -> (ethers)
-impl ToEthers<EthersVMTrace> for VmTrace {
-    fn into_ethers(self) -> EthersVMTrace {
-        todo!()
     }
 }
 
@@ -335,12 +333,6 @@ impl ToReth<VmInstruction> for EthersVMOperation {
     }
 }
 
-/// VmInstruction (reth) -> EthersVMOperation (ethers)
-impl ToEthers<EthersVMOperation> for VmInstruction {
-    fn into_ethers(self) -> EthersVMOperation {
-        todo!()
-    }
-}
 
 // -----------------------------------------------
 
@@ -356,12 +348,6 @@ impl ToReth<VmExecutedOperation> for EthersVMExecutedOperation {
     }
 }
 
-/// VmExecutedOperation (reth) -> (ethers)
-impl ToEthers<EthersVMExecutedOperation> for VmExecutedOperation {
-    fn into_ethers(self) -> EthersVMExecutedOperation {
-        todo!()
-    }
-}
 
 // -----------------------------------------------
 
@@ -369,13 +355,6 @@ impl ToEthers<EthersVMExecutedOperation> for VmExecutedOperation {
 impl ToReth<MemoryDelta> for EthersMemoryDiff {
     fn into_reth(self) -> MemoryDelta {
         MemoryDelta { off: self.off, data: self.data.into_reth() }
-    }
-}
-
-/// MemoryDelta (reth) -> EthersMemoryDiff (ethers)
-impl ToEthers<EthersMemoryDiff> for MemoryDelta {
-    fn into_ethers(self) -> EthersMemoryDiff {
-        todo!()
     }
 }
 
@@ -388,12 +367,6 @@ impl ToReth<StorageDelta> for EthersStorageDiff {
     }
 }
 
-/// StorageDelta (reth) -> EthersStorageDiff (ethers)
-impl ToEthers<EthersStorageDiff> for StorageDelta {
-    fn into_ethers(self) -> EthersStorageDiff {
-        todo!()
-    }
-}
 
 // -----------------------------------------------
 
@@ -409,25 +382,12 @@ impl ToReth<AccountDiff> for EthersAccountDiff {
     }
 }
 
-/// AccountDiff (reth) -> (ethers)
-impl ToEthers<EthersAccountDiff> for AccountDiff {
-    fn into_ethers(self) -> EthersAccountDiff {
-        todo!()
-    }
-}
 // -----------------------------------------------
 
 /// StateDiff (ethers) -> (reth)
 impl ToReth<StateDiff> for EthersStateDiff {
     fn into_reth(self) -> StateDiff {
         StateDiff(self.0.into_reth())
-    }
-}
-
-/// StateDiff (reth) -> (ethers)
-impl ToEthers<EthersStateDiff> for StateDiff {
-    fn into_ethers(self) -> EthersStateDiff {
-        todo!()
     }
 }
 
@@ -449,13 +409,6 @@ where
     }
 }
 
-/// Delta (reth) -> Diff (ethers)
-impl<F, T> ToEthers<EthersDiff<F>> for Delta<T> {
-    fn into_ethers(self) -> EthersDiff<F> {
-        todo!()
-    }
-}
-
 // -----------------------------------------------
 
 /// ChangedType (ethers) -> (reth)
@@ -469,9 +422,3 @@ where
     }
 }
 
-/// ChangedType (reth) -> (ethers)
-impl<F, T> ToEthers<EthersChangedType<F>> for ChangedType<T> {
-    fn into_ethers(self) -> EthersChangedType<F> {
-        todo!()
-    }
-}
