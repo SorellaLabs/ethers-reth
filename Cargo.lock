@@ -989,7 +989,6 @@ dependencies = [
 name = "ethers-core"
 version = "2.0.4"
 source = "git+https://github.com/gakonst/ethers-rs#3e710bc110d23cd06dbcf895513e321b5597d916"
-source = "git+https://github.com/gakonst/ethers-rs#3e710bc110d23cd06dbcf895513e321b5597d916"
 dependencies = [
  "arrayvec",
  "bytes",
@@ -1090,6 +1089,33 @@ dependencies = [
  "wasm-bindgen-futures",
  "web-sys",
  "ws_stream_wasm",
+]
+
+[[package]]
+name = "ethers-reth"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "ethers",
+ "eyre",
+ "jsonrpsee",
+ "reth-beacon-consensus",
+ "reth-blockchain-tree",
+ "reth-db",
+ "reth-interfaces",
+ "reth-network-api",
+ "reth-primitives",
+ "reth-provider",
+ "reth-revm",
+ "reth-rpc",
+ "reth-rpc-api",
+ "reth-rpc-types",
+ "reth-tasks",
+ "reth-transaction-pool",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
 ]
 
 [[package]]
@@ -3102,33 +3128,6 @@ dependencies = [
  "thiserror",
  "tokio",
  "tracing",
-]
-
-[[package]]
-name = "rethdb-middleware"
-version = "0.1.0"
-dependencies = [
- "async-trait",
- "ethers",
- "eyre",
- "jsonrpsee",
- "reth-beacon-consensus",
- "reth-blockchain-tree",
- "reth-db",
- "reth-interfaces",
- "reth-network-api",
- "reth-primitives",
- "reth-provider",
- "reth-revm",
- "reth-rpc",
- "reth-rpc-api",
- "reth-rpc-types",
- "reth-tasks",
- "reth-transaction-pool",
- "serde",
- "serde_json",
- "thiserror",
- "tokio",
 ]
 
 [[package]]
