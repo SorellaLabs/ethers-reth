@@ -6,7 +6,7 @@ use async_trait::async_trait;
 
 // Ether rs Types
 use ethers::{
-    providers::Middleware,
+    providers::{Middleware, MiddlewareError},
     types::{
         transaction::{
             eip2718::TypedTransaction,
@@ -31,24 +31,25 @@ use reth_rpc_types::{Filter};
 
 impl<M> RethMiddleware<M>
 where
-    Self: EthApiServer + EthApiSpec + 'static,
     M: Middleware,
+
 {
     async fn get_address<T: Into<NameOrAddress>>(
         &self,
         who: T,
-    ) -> Result<EthersAddress, <Self as Middleware>::Error> {
+    ) -> Result<EthersAddress, RethMiddlewareError<M>> {
         match who.into() {
-            NameOrAddress::Name(ens_name) => self.resolve_name(&ens_name).await,
+            NameOrAddress::Name(ens_name) => {
+                self.inner.resolve_name(&ens_name).await.map_err(RethMiddlewareError::from_err)
+            }
             NameOrAddress::Address(addr) => Ok(addr.into()),
         }
-    }
+    }   
 }
 
 #[async_trait]
 impl<M> Middleware for RethMiddleware<M>
 where
-    Self: EthApiServer + EthApiSpec + 'static,
     M: Middleware,
 {
     type Error = RethMiddlewareError<M>;
@@ -416,5 +417,6 @@ mod tests {
         let middleware = spawn_middleware().await;
         let from: NameOrAddress = "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852".parse().unwrap();
         // let location = H256::from("8");
+        
     }
 }
