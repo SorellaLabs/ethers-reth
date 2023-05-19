@@ -20,6 +20,7 @@ reth-beacon-consensus = { git = "https://github.com/paradigmxyz/reth", package =
 reth-revm = { git = "https://github.com/paradigmxyz/reth", package = "reth-revm"}
 reth-interfaces = { git = "https://github.com/paradigmxyz/reth", package = "reth-interfaces"}
 ethers = { version = "2.0", git = "https://github.com/gakonst/ethers-rs", default-features = false, features = ["ipc"] }
+ethers-providers = {version = "2.0", features = ["ipc"]}
 
 eyre = "0.6.8"
 tokio = "1.28.0"

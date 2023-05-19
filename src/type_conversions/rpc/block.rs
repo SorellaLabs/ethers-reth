@@ -5,9 +5,12 @@ use ethers::types::{
 };
 use reth_rpc_types::{Block, BlockTransactions, Header, Rich};
 
-/// FeeHistory (ethers) -> (reth)
-impl<TX> ToReth<Rich<Block>> for EthersBlock<TX> {
+/// EthersBlock<EthersH256> (ethers) -> Rich<Block> (reth)
+impl ToReth<Rich<Block>> for EthersBlock<EthersH256> {
+
     fn into_reth(self) -> Rich<Block> {
+
+        let txs = self.transactions;
         let block = Block {
             header: Header {
                 hash: self.hash.into_reth(),
@@ -31,7 +34,7 @@ impl<TX> ToReth<Rich<Block>> for EthersBlock<TX> {
             },
             total_difficulty: self.total_difficulty.into_reth(),
             uncles: self.uncles.into_reth(),
-            transactions: todo!(),
+            transactions: txs.into_reth(),
             size: self.size.into_reth(),
             withdrawals: self.withdrawals.into_reth(),
         };
@@ -39,7 +42,45 @@ impl<TX> ToReth<Rich<Block>> for EthersBlock<TX> {
     }
 }
 
-/// FeeHistory (reth) -> (ethers)
+/// EthersBlock<EthersTransaction> (ethers) -> Rich<Block> (reth)
+impl ToReth<Rich<Block>> for EthersBlock<EthersTransaction> {
+
+    fn into_reth(self) -> Rich<Block> {
+        let txs = self.transactions;
+        let block = Block {
+            header: Header {
+                hash: self.hash.into_reth(),
+                parent_hash: self.parent_hash.into_reth(),
+                uncles_hash: self.uncles_hash.into_reth(),
+                miner: self.author.into_reth().unwrap(),
+                state_root: self.state_root.into_reth(),
+                transactions_root: self.transactions_root.into_reth(),
+                receipts_root: self.receipts_root.into_reth(),
+                logs_bloom: self.logs_bloom.into_reth().unwrap(),
+                difficulty: self.difficulty.into_reth(),
+                number: self.number.into_reth(),
+                gas_limit: self.gas_limit.into_reth(),
+                gas_used: self.gas_used.into_reth(),
+                timestamp: self.timestamp.into_reth(),
+                extra_data: self.extra_data.into_reth(),
+                mix_hash: self.mix_hash.into_reth().unwrap(),
+                nonce: self.nonce.into_reth(),
+                base_fee_per_gas: self.base_fee_per_gas.into_reth(),
+                withdrawals_root: self.withdrawals_root.into_reth(),
+            },
+            total_difficulty: self.total_difficulty.into_reth(),
+            uncles: self.uncles.into_reth(),
+            transactions: txs.into_reth(),
+            size: self.size.into_reth(),
+            withdrawals: self.withdrawals.into_reth(),
+        };
+        Rich::from(block)
+    }
+}
+
+// ---------------------------------------
+
+/// Rich<Block> (reth) -> EthersBlock<EthersTransaction> (ethers)
 impl ToEthers<EthersBlock<EthersH256>> for Rich<Block> {
     fn into_ethers(self) -> EthersBlock<EthersH256> {
         let txs = match &self.transactions {
@@ -76,7 +117,8 @@ impl ToEthers<EthersBlock<EthersH256>> for Rich<Block> {
     }
 }
 
-/// FeeHistory (reth) -> (ethers)
+
+/// Rich<Block> (reth) -> EthersBlock<EthersTransaction> (ethers)
 impl ToEthers<EthersBlock<EthersTransaction>> for Rich<Block> {
     fn into_ethers(self) -> EthersBlock<EthersTransaction> {
         let txs = match &self.transactions {
@@ -114,3 +156,17 @@ impl ToEthers<EthersBlock<EthersTransaction>> for Rich<Block> {
 }
 
 // -----------------------------------------------
+
+/// EthersBlock<H256> (ethers) -> BlockTransactions (reth)
+impl ToReth<BlockTransactions> for Vec<EthersH256> {
+    fn into_reth(self) -> BlockTransactions {
+        BlockTransactions::Hashes(self.into_reth())
+    }
+}
+
+/// EthersBlock<Transaction> (ethers) -> BlockTransactions (reth)
+impl ToReth<BlockTransactions> for Vec<EthersTransaction> {
+    fn into_reth(self) -> BlockTransactions {
+        BlockTransactions::Full(self.transactions.into_reth())
+    }
+}
