@@ -27,7 +27,7 @@ use ethers::{
 use reth_primitives::BlockId;
 use reth_rpc::EthApiSpec;
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
-use reth_rpc_types::{Filter};
+use reth_rpc_types::Filter;
 
 impl<M> RethMiddleware<M>
 where
@@ -294,8 +294,6 @@ where
         Ok(reth_logs.into_ethers())
     }
 
-    
-
     //TODO: Implement get_logs_paginated
     //TODO: Implement stream event logs (watch)
     //TODO: Watch pending tx
@@ -387,11 +385,11 @@ where
 
 #[cfg(test)]
 mod tests {
-    use std::path::Path;
     use super::*;
     use crate::RethMiddleware;
-    use ethers::providers::{Provider, Ipc};
+    use ethers::providers::{Ipc, Provider};
     use reth_rpc_builder::constants::DEFAULT_IPC_ENDPOINT;
+    use std::path::Path;
 
     const TEST_DB_PATH: &Path = Path::new("./test_db");
 
@@ -403,6 +401,4 @@ mod tests {
         let address = middleware.get_address(ens).await.unwrap();
         assert_eq!(address, "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap());
     }
-
-
 }
