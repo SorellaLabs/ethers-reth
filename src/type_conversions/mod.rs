@@ -3,8 +3,6 @@ use std::{
     hash::Hash,
 };
 
-use ethers::prelude::k256::sha2::digest::typenum::Ord;
-
 // Numerous acts of type terrorism having been commited during the making of this program. Please
 // forgive us.
 pub mod access_list;
