@@ -390,21 +390,22 @@ where
 mod tests {
     use std::path::Path;
     use super::*;
-    use crate::RethMiddleware;
+    use crate::*;
     use ethers::providers::{Provider, Ipc};
     use ethers::prelude::*;
     use reth_rpc_builder::constants::DEFAULT_IPC_ENDPOINT;
 
-    const TEST_DB_PATH: &Path = Path::new("./test_db");
+    const TEST_DB_PATH: &str = "./test_db";
     
-    async fn spawn_middleware() -> RethMiddleware<Ipc> {
-        let provider = Provider::<Ipc>::connect_ipc(DEFAULT_IPC_ENDPOINT).await.unwrap();
-        RethMiddleware::new(provider, TEST_DB_PATH)
+    async fn spawn_middleware() -> RethMiddleware<Provider<Ipc>> {
+        let provider = Provider::connect_ipc(DEFAULT_IPC_ENDPOINT).await.unwrap();
+        RethMiddleware::new(provider, Path::new(TEST_DB_PATH))
     }
+
 
     #[tokio::test]
     async fn test_get_address() {
-        let middleware = spawn_middleware();
+        let middleware = spawn_middleware().await;
         let ens: NameOrAddress = "vanbeethoven.eth".parse().unwrap();
         let address = middleware.get_address(ens).await.unwrap();
         assert_eq!(address, "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap());
@@ -412,10 +413,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_storage_at() {
-        let middleware = spawn_middleware();
+        let middleware = spawn_middleware().await;
         let from: NameOrAddress = "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852".parse().unwrap();
-        let location = H256::from(8);
-
-
+        // let location = H256::from("8");
     }
 }
