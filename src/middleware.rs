@@ -390,7 +390,6 @@ mod tests {
     use crate::*;
     use ethers::{
         prelude::*,
-        providers::{Ipc, Provider},
     };
     use reth_rpc_builder::constants::DEFAULT_IPC_ENDPOINT;
     use std::path::Path;
@@ -441,5 +440,14 @@ mod tests {
         } else {
             panic!("Failed to parse expected factory address");
         }
+    }
+
+    #[tokio::test]
+    async fn test_get_code() {
+        let middleware = spawn_middleware().await;
+        let address: NameOrAddress = "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap();
+        let code = middleware.get_code(address, None).await.unwrap();
+        // Address contains no code
+        assert_eq!(code.len(), 0);
     }
 }
