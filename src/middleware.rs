@@ -388,9 +388,7 @@ where
 mod tests {
     use super::*;
     use crate::*;
-    use ethers::{
-        prelude::*,
-    };
+    use ethers::prelude::*;
     use reth_rpc_builder::constants::DEFAULT_IPC_ENDPOINT;
     use std::path::Path;
 
