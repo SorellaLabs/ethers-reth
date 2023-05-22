@@ -326,8 +326,8 @@ impl ToEthers<EthersTransactionTrace> for TransactionTrace {
             },
             error: match self.result {
                 Some(TraceResult::Error { error }) => Some(error),
-                _ => None,
-            },
+                _ => None
+            }
         }
     }
 }
