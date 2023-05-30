@@ -76,7 +76,7 @@ pub fn init_trace(
     client: RethClient,
     eth_api: RethApi,
     rt: Arc<tokio::runtime::Runtime>,
-    max_tracing_requests: usize,
+    max_tracing_requests: u32,
 ) -> RethTrace {
     let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
 

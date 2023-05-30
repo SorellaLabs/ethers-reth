@@ -5,20 +5,20 @@ edition = "2021"
 
 
 [dependencies]
-reth-tasks = { git = "https://github.com/paradigmxyz/reth", rev = "7d36dea", package = "reth-tasks" }
-reth-rpc = { git = "https://github.com/paradigmxyz/reth", rev = "7d36dea", package = "reth-rpc" }
-reth-rpc-api = { git = "https://github.com/paradigmxyz/reth", rev = "7d36dea", package = "reth-rpc-api" }
-reth-rpc-builder = { git = "https://github.com/paradigmxyz/reth", rev = "7d36dea", package = "reth-rpc-builder" }
-reth-rpc-types = { git = "https://github.com/paradigmxyz/reth", rev = "7d36dea", package = "reth-rpc-types" }
-reth-provider = { git = "https://github.com/paradigmxyz/reth", rev = "7d36dea", package = "reth-provider" }
-reth-transaction-pool = { git = "https://github.com/paradigmxyz/reth", rev = "7d36dea", package = "reth-transaction-pool" }
-reth-network-api = { git = "https://github.com/paradigmxyz/reth", rev = "7d36dea", package = "reth-network-api", features = ["test-utils"] }
-reth-primitives = { git = "https://github.com/paradigmxyz/reth", rev = "7d36dea", package = "reth-primitives" }
-reth-db = { git = "https://github.com/paradigmxyz/reth", rev = "7d36dea", package = "reth-db" }
-reth-blockchain-tree = { git = "https://github.com/paradigmxyz/reth", rev = "7d36dea", package = "reth-blockchain-tree" }
-reth-beacon-consensus = { git = "https://github.com/paradigmxyz/reth", rev = "7d36dea", package = "reth-beacon-consensus" }
-reth-revm = { git = "https://github.com/paradigmxyz/reth", rev = "7d36dea", package = "reth-revm"}
-reth-interfaces = { git = "https://github.com/paradigmxyz/reth", rev = "7d36dea", package = "reth-interfaces"}
+reth-tasks = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-tasks" }
+reth-rpc = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-rpc" }
+reth-rpc-api = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-rpc-api" }
+reth-rpc-builder = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-rpc-builder" }
+reth-rpc-types = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-rpc-types" }
+reth-provider = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-provider" }
+reth-transaction-pool = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-transaction-pool" }
+reth-network-api = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-network-api", features = ["test-utils"] }
+reth-primitives = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-primitives" }
+reth-db = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-db" }
+reth-blockchain-tree = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-blockchain-tree" }
+reth-beacon-consensus = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-beacon-consensus" }
+reth-revm = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-revm"}
+reth-interfaces = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-interfaces"}
 
 # ethers
 ethers = { version = "2.0.4", default-features = false, features = ["ipc"] }
