@@ -399,9 +399,16 @@ mod tests {
         RethMiddleware::new(provider, Path::new(TEST_DB_PATH))
     }
 
+    async fn spawn_middleware_http() -> RethMiddleware<Provider<Http>> {
+        let provider = Provider::connect("http://localhost:8489
+        ").await;
+        RethMiddleware::new(provider, Path::new(TEST_DB_PATH))
+    }
+
+
     #[tokio::test]
     async fn test_get_address() {
-        let middleware = spawn_middleware().await;
+        let middleware = spawn_middleware_http().await;
         let ens: NameOrAddress = "vanbeethoven.eth".parse().unwrap();
         let address = middleware.get_address(ens).await.unwrap();
         assert_eq!(address, "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap());
@@ -409,7 +416,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_storage_at() {
-        let middleware = spawn_middleware().await;
+        let middleware = spawn_middleware_http().await;
         let from: NameOrAddress = "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852".parse().unwrap();
         let location = EthersH256::from_low_u64_be(5);
         let storage = middleware.get_storage_at(from, location, None).await.unwrap();
@@ -442,7 +449,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_code() {
-        let middleware = spawn_middleware().await;
+        let middleware = spawn_middleware_http().await;
         let address: NameOrAddress = "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap();
         let code = middleware.get_code(address, None).await.unwrap();
         // Address contains no code
