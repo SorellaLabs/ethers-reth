@@ -392,10 +392,10 @@ mod tests {
     use reth_rpc_builder::constants::DEFAULT_IPC_ENDPOINT;
     use std::path::Path;
 
-    const TEST_DB_PATH: &str = "./test_db";
+    const TEST_DB_PATH: &str = "/NVMe/backup/reth_data2/db";
 
     async fn spawn_middleware() -> RethMiddleware<Provider<Ipc>> {
-        let provider = Provider::connect_ipc(DEFAULT_IPC_ENDPOINT).await.unwrap();
+        let provider = Provider::connect_ipc("/NVMe/backup/reth_data2/db/tmp/reth.ipc").await.unwrap();
         RethMiddleware::new(provider, Path::new(TEST_DB_PATH))
     }
 
