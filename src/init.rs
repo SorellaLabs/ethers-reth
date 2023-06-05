@@ -25,9 +25,9 @@ pub fn init_client(db_path: &Path) -> RethClient {
     let db = Arc::new(Env::<NoWriteMap>::open(db_path, EnvKind::RO).unwrap());
 
     let tree_externals = TreeExternals::new(
-        Arc::clone(&db),
+        db.clone(),
         Arc::new(BeaconConsensus::new(Arc::clone(&chain))),
-        Factory::new(Arc::clone(&chain)),
+        Factory::new(chain.clone()),
         Arc::clone(&chain),
     );
 
@@ -36,7 +36,7 @@ pub fn init_client(db_path: &Path) -> RethClient {
         tokio::sync::broadcast::channel(tree_config.max_reorg_depth() as usize * 2);
 
     let blockchain_tree = ShareableBlockchainTree::new(
-        BlockchainTree::new(tree_externals, canon_state_notification_sender, tree_config).unwrap(),
+        BlockchainTree::new(tree_externals, canon_state_notification_sender.clone(), tree_config).unwrap(),
     );
 
     BlockchainProvider::new(
