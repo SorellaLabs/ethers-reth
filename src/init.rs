@@ -3,7 +3,7 @@ use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::{
     externals::TreeExternals, BlockchainTree, BlockchainTreeConfig, ShareableBlockchainTree,
 };
-use reth_db::mdbx::{Env, EnvKind, NoWriteMap};
+use reth_db::mdbx::{Env, EnvKind, WriteMap};
 use reth_network_api::test_utils::NoopNetwork;
 use reth_primitives::MAINNET;
 use reth_provider::{providers::BlockchainProvider, ShareableDatabase};
@@ -22,7 +22,7 @@ use std::{path::Path, sync::Arc};
 // EthApi/Filter Client
 pub fn init_client(db_path: &Path) -> RethClient {
     let chain = Arc::new(MAINNET.clone());
-    let db = Arc::new(Env::<NoWriteMap>::open(db_path, EnvKind::RO).unwrap());
+    let db = Arc::new(Env::<WriteMap>::open(db_path, EnvKind::RO).unwrap());
 
     let tree_externals = TreeExternals::new(
         db.clone(),

@@ -7,7 +7,7 @@ use ethers::providers::{Middleware, MiddlewareError};
 //Reth
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::ShareableBlockchainTree;
-use reth_db::mdbx::{Env, NoWriteMap};
+use reth_db::mdbx::{Env, WriteMap};
 use reth_network_api::test_utils::NoopNetwork;
 use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
@@ -23,8 +23,8 @@ pub mod type_conversions;
 use init::{init_client, init_eth_api, init_eth_filter, init_trace};
 
 pub type RethClient = BlockchainProvider<
-    Arc<Env<NoWriteMap>>,
-    ShareableBlockchainTree<Arc<Env<NoWriteMap>>, Arc<BeaconConsensus>, Factory>,
+    Arc<Env<WriteMap>>,
+    ShareableBlockchainTree<Arc<Env<WriteMap>>, Arc<BeaconConsensus>, Factory>,
 >;
 
 pub type RethTxPool =
