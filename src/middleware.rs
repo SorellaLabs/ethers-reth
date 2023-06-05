@@ -395,16 +395,19 @@ mod tests {
     const TEST_DB_PATH: &str = "/NVMe/data/reth/db";
 
     async fn spawn_middleware() -> RethMiddleware<Provider<Ipc>> {
-        let provider = Provider::connect_ipc("/NVMe/backup/reth_data2/db/tmp/reth.ipc").await.unwrap();
+        let provider =
+            Provider::connect_ipc("/NVMe/backup/reth_data2/db/tmp/reth.ipc").await.unwrap();
         RethMiddleware::new(provider, Path::new(TEST_DB_PATH))
     }
 
     async fn spawn_middleware_http() -> RethMiddleware<Provider<Http>> {
-        let provider = Provider::connect("http://localhost:8489
-        ").await;
+        let provider = Provider::connect(
+            "http://localhost:8489
+        ",
+        )
+        .await;
         RethMiddleware::new(provider, Path::new(TEST_DB_PATH))
     }
-
 
     #[tokio::test]
     async fn test_get_address() {

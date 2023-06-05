@@ -36,7 +36,8 @@ pub fn init_client(db_path: &Path) -> RethClient {
         tokio::sync::broadcast::channel(tree_config.max_reorg_depth() as usize * 2);
 
     let blockchain_tree = ShareableBlockchainTree::new(
-        BlockchainTree::new(tree_externals, canon_state_notification_sender.clone(), tree_config).unwrap(),
+        BlockchainTree::new(tree_externals, canon_state_notification_sender.clone(), tree_config)
+            .unwrap(),
     );
 
     BlockchainProvider::new(
