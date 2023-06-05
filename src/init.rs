@@ -3,7 +3,7 @@ use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::{
     externals::TreeExternals, BlockchainTree, BlockchainTreeConfig, ShareableBlockchainTree,
 };
-use reth_db::mdbx::{Env, EnvKind, WriteMap};
+use reth_db::{mdbx::{Env, EnvKind, WriteMap, DatabaseFlags, EnvironmentKind}, DatabaseError, TableType, TABLES};
 use reth_network_api::test_utils::NoopNetwork;
 use reth_primitives::MAINNET;
 use reth_provider::{providers::BlockchainProvider, ShareableDatabase};
@@ -19,10 +19,22 @@ use reth_tasks::{TaskManager, TaskSpawner};
 use reth_transaction_pool::EthTransactionValidator;
 use std::{path::Path, sync::Arc};
 
+
+pub fn create_tables_ro<E: EnvironmentKind>(env: &Env<E>) -> Result<(), DatabaseError> {
+    let tx = env.inner.begin_ro_txn().map_err(|e| DatabaseError::InitTransaction(e.into())).unwrap();
+
+    for (_, table) in TABLES {
+        tx.open_db(Some(table)).map_err(|e| DatabaseError::TableCreation(e.into())).unwrap();
+    }
+
+    Ok(())
+}
+
 // EthApi/Filter Client
 pub fn init_client(db_path: &Path) -> RethClient {
     let chain = Arc::new(MAINNET.clone());
-    let db = Arc::new(Env::<WriteMap>::open(db_path, EnvKind::RO).unwrap());
+    let db = Arc::new(Env::<WriteMap>::open(db_path.as_ref(), EnvKind::RO).unwrap());
+    create_tables_ro(&db).unwrap();
 
     let tree_externals = TreeExternals::new(
         db.clone(),
