@@ -33,8 +33,10 @@ pub fn create_tables_ro<E: EnvironmentKind>(env: &Env<E>) -> Result<(), Database
 // EthApi/Filter Client
 pub fn init_client(db_path: &Path) -> RethClient {
     let chain = Arc::new(MAINNET.clone());
-    let db = Arc::new(Env::<WriteMap>::open(db_path.as_ref(), EnvKind::RO).unwrap());
-    create_tables_ro(&db).unwrap();
+    let open_db = Env::<WriteMap>::open(db_path.as_ref(), EnvKind::RO).unwrap();
+    create_tables_ro(&open_db).unwrap();
+    let db = Arc::new(open_db);
+
 
     let tree_externals = TreeExternals::new(
         db.clone(),
