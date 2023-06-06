@@ -391,6 +391,7 @@ mod tests {
     use ethers::prelude::*;
     use reth_rpc_builder::constants::DEFAULT_IPC_ENDPOINT;
     use std::{path::Path, time::Duration};
+    use serial_test::serial;
 
     const TEST_DB_PATH: &str = "/NVMe/data/reth/db";
     const TEST_HTTP_URL: &str = "http://localhost:8489";
