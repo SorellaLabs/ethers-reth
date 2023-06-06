@@ -37,8 +37,7 @@ pub fn init_db<P: AsRef<Path> + Debug>(path: P) -> eyre::Result<Env<WriteMap>> {
         for table in tables::TABLES.iter().map(|(_, name)| name) {
             tx.inner.open_db(Some(table)).wrap_err("Could not open db.").unwrap();
         }
-    })
-    .unwrap();
+    })?;
 
     Ok(db)
 }

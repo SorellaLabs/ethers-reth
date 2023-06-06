@@ -19,9 +19,9 @@ pub fn view<F, T>(db: &Env<WriteMap>, f: F) -> Result<T, DatabaseError>
 where
     F: FnOnce(&<Env<WriteMap> as DatabaseGAT<'_>>::TX) -> T,
 {
-    let tx = db.tx().unwrap();
+    let tx = db.tx()?;
     let res = f(&tx);
-    tx.commit().unwrap();
+    tx.commit()?;
 
     Ok(res)
 }

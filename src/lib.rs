@@ -1,5 +1,6 @@
 // std
 use std::{path::Path, sync::Arc};
+use eyre::Result;
 
 // ethers
 use ethers::providers::{Middleware, MiddlewareError};
@@ -92,8 +93,8 @@ impl<M> RethMiddleware<M>
 where
     M: Middleware,
 {
-    pub fn new(inner: M, db_path: &Path, handle: &Handle) -> Self {
-        let client = init_client(db_path).unwrap();
+    pub fn new(inner: M, db_path: &Path, handle: &Handle) -> Result<Self> {
+        let client = init_client(db_path)?;
 
         // EthApi -> EthApi<Client, Pool, Network>
         let api = init_eth_api(client.clone());
@@ -101,7 +102,7 @@ where
         let filter = init_eth_filter(client.clone(), 1000, TaskManager::new(handle.clone()));
         let trace = init_trace(client, api.clone(), TaskManager::new(handle.clone()), 10);
 
-        Self { inner, reth_api: api, reth_filter: filter, reth_trace: trace }
+       Ok( Self { inner, reth_api: api, reth_filter: filter, reth_trace: trace } )
     }
 
     pub fn reth_api(&self) -> &RethApi {
