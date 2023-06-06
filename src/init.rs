@@ -38,7 +38,7 @@ pub fn init_client(db_path: &Path) -> RethClient {
     //let open_db = Env::<WriteMap>::open(db_path.as_ref(), EnvKind::RW).unwrap();
     //open_db.create_tables().unwrap();
     //let db = Arc::new(open_db);
-    let db = Arc::new(init_db(db_path).unwrap());
+    let db = Arc::new(init_db(&db_path).unwrap());
 
 
     let tree_externals = TreeExternals::new(
