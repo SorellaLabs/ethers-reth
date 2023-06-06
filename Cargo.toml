@@ -19,7 +19,6 @@ reth-blockchain-tree = { git = "https://github.com/paradigmxyz/reth", package = 
 reth-beacon-consensus = { git = "https://github.com/paradigmxyz/reth", package = "reth-beacon-consensus" }
 reth-revm = { git = "https://github.com/paradigmxyz/reth", package = "reth-revm"}
 reth-interfaces = { git = "https://github.com/paradigmxyz/reth", package = "reth-interfaces"}
-reth = { git = "https://github.com/paradigmxyz/reth"}
 
 # ethers
 ethers = { version = "2.0.7", default-features = false, features = ["ipc"] }
