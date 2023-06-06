@@ -20,12 +20,25 @@ use reth_transaction_pool::EthTransactionValidator;
 use std::{path::Path, sync::Arc};
 
 
+/// Opens up an existing database or creates a new one at the specified path.
+pub fn init_db<P: AsRef<Path>>(path: P) -> eyre::Result<Env<WriteMap>> {
+    std::fs::create_dir_all(path.as_ref())?;
+    let db = reth_db::mdbx::Env::<reth_db::mdbx::WriteMap>::open(
+        path.as_ref(),
+        reth_db::mdbx::EnvKind::RW,
+    )?;
+    db.create_tables()?;
+
+    Ok(db)
+}
+
 // EthApi/Filter Client
 pub fn init_client(db_path: &Path) -> RethClient {
     let chain = Arc::new(MAINNET.clone());
-    let open_db = Env::<WriteMap>::open(db_path.as_ref(), EnvKind::RW).unwrap();
-    open_db.create_tables().unwrap();
-    let db = Arc::new(open_db);
+    //let open_db = Env::<WriteMap>::open(db_path.as_ref(), EnvKind::RW).unwrap();
+    //open_db.create_tables().unwrap();
+    //let db = Arc::new(open_db);
+    let db = Arc::new(init_db(db_path).unwrap());
 
 
     let tree_externals = TreeExternals::new(
