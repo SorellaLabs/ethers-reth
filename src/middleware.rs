@@ -404,7 +404,7 @@ mod tests {
         let rt = tokio::runtime::Runtime::new().unwrap();
         let handle = rt.handle();
 
-        let provider = spawn_http_provider(TEST_HTTP_URL).await.unwrap();
+        let provider = spawn_http_provider(TEST_IPC_PATH).await.unwrap();
         let middleware = RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle);
 
         let ens: NameOrAddress = "vanbeethoven.eth".parse().unwrap();
@@ -463,7 +463,7 @@ mod tests {
         let rt = tokio::runtime::Runtime::new().unwrap();
         let handle = rt.handle();
 
-        let provider = spawn_http_provider(TEST_HTTP_URL).await.unwrap();
+        let provider = spawn_http_provider(TEST_IPC_PATH).await.unwrap();
         let middleware = RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle);
         let address: NameOrAddress = "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap();
         let code = middleware.get_code(address, None).await.unwrap();
