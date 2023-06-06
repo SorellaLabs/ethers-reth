@@ -411,7 +411,6 @@ mod tests {
         let address = middleware.get_address(ens).await.unwrap();
         assert_eq!(address, "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap());
 
-        drop(middleware);
         rt.shutdown_timeout(Duration::from_secs(0));
     }
 
@@ -454,7 +453,6 @@ mod tests {
             panic!("Failed to parse expected factory address");
         }
 
-        drop(middleware);
         rt.shutdown_timeout(Duration::from_secs(0));
     }
 
@@ -472,7 +470,6 @@ mod tests {
         // Address contains no code
         assert_eq!(code.len(), 0);
 
-        drop(middleware);
         rt.shutdown_timeout(Duration::from_secs(0));
     }
 }
