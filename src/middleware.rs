@@ -397,6 +397,7 @@ mod tests {
     const TEST_IPC_PATH: &str = "/tmp/reth.ipc";
 
     #[tokio::test]
+    #[serial]
     async fn test_get_address() {
         // Create a runtime and handle here for the TaskManager
         let rt = tokio::runtime::Runtime::new().unwrap();
@@ -414,6 +415,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_get_storage_at() {
         // Create a runtime and handle here for the TaskManager
         let rt = tokio::runtime::Runtime::new().unwrap();
@@ -456,6 +458,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_get_code() {
         // Create a runtime and handle here for the TaskManager
         let rt = tokio::runtime::Runtime::new().unwrap();
