@@ -1,14 +1,15 @@
 use ethers::providers::{Http, Ipc, Provider, ProviderExt};
 use reth_db::{mdbx::{WriteMap, Env}, database::{DatabaseGAT, Database}, DatabaseError, transaction::DbTx};
+use eyre::Result;
 
 /// spawns a ipc provider
-pub async fn spawn_ipc_provider(ipc_path: &str) -> Provider<Ipc> {
-    Provider::connect_ipc(ipc_path).await.unwrap()
+pub async fn spawn_ipc_provider(ipc_path: &str) -> Result<Provider<Ipc>> {
+    Ok(Provider::connect_ipc(ipc_path).await?)
 }
 
 /// spawns a http provider
-pub async fn spawn_http_provider(url: &str) -> Provider<Http> {
-    Provider::connect(url).await
+pub async fn spawn_http_provider(url: &str) -> Result<Provider<Http>> {
+    Ok(Provider::connect(url).await)
 }
 
 /// re-implementation of 'view()'

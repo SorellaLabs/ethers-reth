@@ -402,14 +402,15 @@ mod tests {
         let rt = tokio::runtime::Runtime::new().unwrap();
         let handle = rt.handle();
 
-        let provider = spawn_http_provider(TEST_HTTP_URL).await;
+        let provider = spawn_http_provider(TEST_HTTP_URL).await.unwrap();
         let middleware = RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle);
 
         let ens: NameOrAddress = "vanbeethoven.eth".parse().unwrap();
         let address = middleware.get_address(ens).await.unwrap();
         assert_eq!(address, "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap());
 
-            rt.shutdown_timeout(Duration::from_secs(0));
+        drop(middleware);
+        rt.shutdown_timeout(Duration::from_secs(0));
     }
 
     #[tokio::test]
@@ -418,7 +419,7 @@ mod tests {
         let rt = tokio::runtime::Runtime::new().unwrap();
         let handle = rt.handle();
 
-        let provider = spawn_http_provider(TEST_HTTP_URL).await;
+        let provider = spawn_http_provider(TEST_HTTP_URL).await.unwrap();
         let middleware = RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle);
 
         let from: NameOrAddress = "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852".parse().unwrap();
@@ -450,6 +451,7 @@ mod tests {
             panic!("Failed to parse expected factory address");
         }
 
+        drop(middleware);
         rt.shutdown_timeout(Duration::from_secs(0));
     }
 
@@ -459,13 +461,14 @@ mod tests {
         let rt = tokio::runtime::Runtime::new().unwrap();
         let handle = rt.handle();
 
-        let provider = spawn_http_provider(TEST_HTTP_URL).await;
+        let provider = spawn_http_provider(TEST_HTTP_URL).await.unwrap();
         let middleware = RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle);
         let address: NameOrAddress = "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap();
         let code = middleware.get_code(address, None).await.unwrap();
         // Address contains no code
         assert_eq!(code.len(), 0);
 
+        drop(middleware);
         rt.shutdown_timeout(Duration::from_secs(0));
     }
 }
