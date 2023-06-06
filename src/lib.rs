@@ -90,7 +90,7 @@ where
     M: Middleware,
 {
     pub fn new(inner: M, db_path: &Path) -> Self {
-        let client = init_client(db_path);
+        let client = init_client(db_path).unwrap();
         // Create a runtime here and use Arc to share it across functions
         let rt = Arc::new(tokio::runtime::Runtime::new().unwrap());
 

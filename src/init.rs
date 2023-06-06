@@ -33,7 +33,7 @@ pub fn init_db<P: AsRef<Path>>(path: P) -> eyre::Result<Env<WriteMap>> {
 }
 
 // EthApi/Filter Client
-pub fn init_client(db_path: &Path) -> Ok(RethClient) {
+pub fn init_client(db_path: &Path) -> Result<RethClient, DatabaseError> {
     let chain = Arc::new(MAINNET.clone());
     //let open_db = Env::<WriteMap>::open(db_path.as_ref(), EnvKind::RW).unwrap();
     //open_db.create_tables().unwrap();
