@@ -409,6 +409,11 @@ mod tests {
         RethMiddleware::new(provider, Path::new(TEST_DB_PATH))
     }
 
+    fn test_open_db() {
+        
+        let re = init_client(Path::new(TEST_DB_PATH));
+    }
+
     #[tokio::test]
     async fn test_get_address() {
         let middleware = spawn_middleware_http().await;
