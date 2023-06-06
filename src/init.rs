@@ -23,7 +23,7 @@ use std::{path::Path, sync::Arc};
 // EthApi/Filter Client
 pub fn init_client(db_path: &Path) -> RethClient {
     let chain = Arc::new(MAINNET.clone());
-    let open_db = Env::<WriteMap>::open(db_path.as_ref(), EnvKind::RO).unwrap();
+    let open_db = Env::<WriteMap>::open(db_path.as_ref(), EnvKind::RW).unwrap();
     open_db.create_tables().unwrap();
     let db = Arc::new(open_db);
 
