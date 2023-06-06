@@ -411,7 +411,8 @@ mod tests {
 
     #[test]
     fn test_open_db() {
-        let re = init_client(Path::new(TEST_DB_PATH));
+        let re = init_client(Path::new(TEST_DB_PATH)).unwrap();
+        
     }
 
     #[tokio::test]

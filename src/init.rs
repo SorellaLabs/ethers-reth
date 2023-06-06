@@ -33,7 +33,7 @@ pub fn init_db<P: AsRef<Path>>(path: P) -> eyre::Result<Env<WriteMap>> {
 }
 
 // EthApi/Filter Client
-pub fn init_client(db_path: &Path) -> RethClient {
+pub fn init_client(db_path: &Path) -> Ok(RethClient) {
     let chain = Arc::new(MAINNET.clone());
     //let open_db = Env::<WriteMap>::open(db_path.as_ref(), EnvKind::RW).unwrap();
     //open_db.create_tables().unwrap();
@@ -57,11 +57,11 @@ pub fn init_client(db_path: &Path) -> RethClient {
             .unwrap(),
     );
 
-    BlockchainProvider::new(
+    Ok(BlockchainProvider::new(
         ShareableDatabase::new(Arc::clone(&db), Arc::clone(&chain)),
         blockchain_tree,
     )
-    .unwrap()
+    .unwrap())
 }
 
 /// EthApi
