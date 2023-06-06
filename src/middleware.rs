@@ -409,8 +409,8 @@ mod tests {
         RethMiddleware::new(provider, Path::new(TEST_DB_PATH))
     }
 
+    #[test]
     fn test_open_db() {
-        
         let re = init_client(Path::new(TEST_DB_PATH));
     }
 
