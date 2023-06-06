@@ -387,37 +387,24 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::*;
+    use crate::{provider::spawn_http_provider, *};
     use ethers::prelude::*;
     use reth_rpc_builder::constants::DEFAULT_IPC_ENDPOINT;
     use std::path::Path;
 
     const TEST_DB_PATH: &str = "/NVMe/data/reth/db";
-
-    async fn spawn_middleware() -> RethMiddleware<Provider<Ipc>> {
-        let provider =
-            Provider::connect_ipc("/NVMe/backup/reth_data2/db/tmp/reth.ipc").await.unwrap();
-        RethMiddleware::new(provider, Path::new(TEST_DB_PATH))
-    }
-
-    async fn spawn_middleware_http() -> RethMiddleware<Provider<Http>> {
-        let provider = Provider::connect(
-            "http://localhost:8489
-        ",
-        )
-        .await;
-        RethMiddleware::new(provider, Path::new(TEST_DB_PATH))
-    }
-
-    #[test]
-    fn test_open_db() {
-        let re = init_client(Path::new(TEST_DB_PATH)).unwrap();
-        
-    }
+    const TEST_HTTP_URL: &str = "http://localhost:9090";
+    const TEST_IPC_PATH: &str = "/tmp/reth.ipc";
 
     #[tokio::test]
     async fn test_get_address() {
-        let middleware = spawn_middleware_http().await;
+        // Create a runtime and handle here for the TaskManager
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        let handle = rt.handle();
+
+        let provider = spawn_http_provider(TEST_HTTP_URL).await;
+        let middleware = RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle);
+
         let ens: NameOrAddress = "vanbeethoven.eth".parse().unwrap();
         let address = middleware.get_address(ens).await.unwrap();
         assert_eq!(address, "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap());
@@ -425,7 +412,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_storage_at() {
-        let middleware = spawn_middleware_http().await;
+        // Create a runtime and handle here for the TaskManager
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        let handle = rt.handle();
+
+        let provider = spawn_http_provider(TEST_HTTP_URL).await;
+        let middleware = RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle);
+
         let from: NameOrAddress = "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852".parse().unwrap();
         let location = EthersH256::from_low_u64_be(5);
         let storage = middleware.get_storage_at(from, location, None).await.unwrap();
@@ -458,7 +451,12 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_code() {
-        let middleware = spawn_middleware_http().await;
+        // Create a runtime and handle here for the TaskManager
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        let handle = rt.handle();
+
+        let provider = spawn_http_provider(TEST_HTTP_URL).await;
+        let middleware = RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle);
         let address: NameOrAddress = "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap();
         let code = middleware.get_code(address, None).await.unwrap();
         // Address contains no code

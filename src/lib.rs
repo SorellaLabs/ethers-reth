@@ -12,6 +12,7 @@ use reth_network_api::test_utils::NoopNetwork;
 use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
 use reth_rpc::{eth::error::EthApiError, EthApi, EthFilter, TraceApi};
+use reth_tasks::TaskManager;
 use reth_transaction_pool::{CostOrdering, EthTransactionValidator, Pool, PooledTransaction};
 //Error
 use jsonrpsee::types::ErrorObjectOwned;
@@ -19,8 +20,10 @@ use thiserror::Error;
 // own modules
 pub mod init;
 pub mod middleware;
+pub mod provider;
 pub mod type_conversions;
 use init::{init_client, init_eth_api, init_eth_filter, init_trace};
+use tokio::runtime::Handle;
 
 pub type RethClient = BlockchainProvider<
     Arc<Env<WriteMap>>,
@@ -89,16 +92,14 @@ impl<M> RethMiddleware<M>
 where
     M: Middleware,
 {
-    pub fn new(inner: M, db_path: &Path) -> Self {
+    pub fn new(inner: M, db_path: &Path, handle: &Handle) -> Self {
         let client = init_client(db_path).unwrap();
-        // Create a runtime here and use Arc to share it across functions
-        let rt = Arc::new(tokio::runtime::Runtime::new().unwrap());
 
         // EthApi -> EthApi<Client, Pool, Network>
         let api = init_eth_api(client.clone());
         // EthFilter -> EthFilter<Client, Pool>
-        let filter = init_eth_filter(client.clone(), 1000, rt.clone());
-        let trace = init_trace(client, api.clone(), rt.clone(), 10);
+        let filter = init_eth_filter(client.clone(), 1000, TaskManager::new(handle.clone()));
+        let trace = init_trace(client, api.clone(), TaskManager::new(handle.clone()), 10);
 
         Self { inner, reth_api: api, reth_filter: filter, reth_trace: trace }
     }
