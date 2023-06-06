@@ -20,28 +20,11 @@ use reth_transaction_pool::EthTransactionValidator;
 use std::{path::Path, sync::Arc};
 
 
-pub fn create_tables_ro<E: EnvironmentKind>(env: &Env<E>) -> Result<(), DatabaseError> {
-    let tx = env.inner.begin_ro_txn().map_err(|e| DatabaseError::InitTransaction(e.into())).unwrap();
-
-    for (table_type, table) in TABLES {
-        let flags = match table_type {
-            TableType::Table => DatabaseFlags::default(),
-            TableType::DupSort => DatabaseFlags::DUP_SORT,
-        };
-
-        tx.create_db(Some(table), flags).map_err(|e| DatabaseError::TableCreation(e.into()))?;
-    }
-
-    tx.commit().map_err(|e| DatabaseError::Commit(e.into()))?;
-
-    Ok(())
-}
-
 // EthApi/Filter Client
 pub fn init_client(db_path: &Path) -> RethClient {
     let chain = Arc::new(MAINNET.clone());
     let open_db = Env::<WriteMap>::open(db_path.as_ref(), EnvKind::RO).unwrap();
-    create_tables_ro(&open_db).unwrap();
+    open_db.create_tables().unwrap();
     let db = Arc::new(open_db);
 
 
