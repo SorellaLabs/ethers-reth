@@ -387,7 +387,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{provider::spawn_http_provider, *};
+    use crate::{provider::{spawn_http_provider, spawn_ipc_provider}, *};
     use std::{path::Path, time::Duration};
     use serial_test::serial;
 
