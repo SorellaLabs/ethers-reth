@@ -393,7 +393,7 @@ mod tests {
     use std::path::Path;
 
     const TEST_DB_PATH: &str = "/NVMe/data/reth/db";
-    const TEST_HTTP_URL: &str = "http://localhost:9090";
+    const TEST_HTTP_URL: &str = "http://localhost:8489";
     const TEST_IPC_PATH: &str = "/tmp/reth.ipc";
 
     #[tokio::test]
