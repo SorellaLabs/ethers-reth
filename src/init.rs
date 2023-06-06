@@ -23,9 +23,16 @@ use std::{path::Path, sync::Arc};
 pub fn create_tables_ro<E: EnvironmentKind>(env: &Env<E>) -> Result<(), DatabaseError> {
     let tx = env.inner.begin_ro_txn().map_err(|e| DatabaseError::InitTransaction(e.into())).unwrap();
 
-    for (_, table) in TABLES {
-        tx.open_db(Some(table)).map_err(|e| DatabaseError::TableCreation(e.into())).unwrap();
+    for (table_type, table) in TABLES {
+        let flags = match table_type {
+            TableType::Table => DatabaseFlags::default(),
+            TableType::DupSort => DatabaseFlags::DUP_SORT,
+        };
+
+        tx.create_db(Some(table), flags).map_err(|e| DatabaseError::TableCreation(e.into()))?;
     }
+
+    tx.commit().map_err(|e| DatabaseError::Commit(e.into()))?;
 
     Ok(())
 }
