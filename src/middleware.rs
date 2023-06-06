@@ -390,7 +390,7 @@ mod tests {
     use crate::{provider::spawn_http_provider, *};
     use ethers::prelude::*;
     use reth_rpc_builder::constants::DEFAULT_IPC_ENDPOINT;
-    use std::path::Path;
+    use std::{path::Path, time::Duration};
 
     const TEST_DB_PATH: &str = "/NVMe/data/reth/db";
     const TEST_HTTP_URL: &str = "http://localhost:8489";
