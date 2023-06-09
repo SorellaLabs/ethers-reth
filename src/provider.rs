@@ -1,6 +1,11 @@
 use ethers::providers::{Http, Ipc, Provider, ProviderExt};
-use reth_db::{mdbx::{WriteMap, Env}, database::{DatabaseGAT, Database}, DatabaseError, transaction::DbTx};
 use eyre::Result;
+use reth_db::{
+    database::{Database, DatabaseGAT},
+    mdbx::{Env, WriteMap},
+    transaction::DbTx,
+    DatabaseError,
+};
 
 /// spawns a ipc provider
 pub async fn spawn_ipc_provider(ipc_path: &str) -> Result<Provider<Ipc>> {
@@ -9,7 +14,7 @@ pub async fn spawn_ipc_provider(ipc_path: &str) -> Result<Provider<Ipc>> {
 
 /// spawns a http provider
 pub async fn spawn_http_provider(url: &str) -> Result<Provider<Http>> {
-    Ok(Provider::connect(url).await)
+    Ok(Provider::<Http>::connect(url).await)
 }
 
 /// re-implementation of 'view()'
