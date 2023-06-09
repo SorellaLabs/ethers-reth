@@ -28,6 +28,7 @@ use std::{fmt::Debug, path::Path, sync::Arc};
 /// Opens up an existing database at the specified path.
 pub fn init_db<P: AsRef<Path> + Debug>(path: P) -> eyre::Result<Env<WriteMap>> {
     std::fs::create_dir_all(path.as_ref())?;
+    println!("{:?}", path);
     let db = reth_db::mdbx::Env::<reth_db::mdbx::WriteMap>::open(
         path.as_ref(),
         reth_db::mdbx::EnvKind::RO,
