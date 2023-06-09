@@ -5,20 +5,20 @@ edition = "2021"
 
 
 [dependencies]
-reth-tasks = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-tasks" }
-reth-rpc = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-rpc" }
-reth-rpc-api = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-rpc-api" }
-reth-rpc-builder = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-rpc-builder" }
-reth-rpc-types = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-rpc-types" }
-reth-provider = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-provider" }
-reth-transaction-pool = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-transaction-pool" }
-reth-network-api = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-network-api", features = ["test-utils"] }
-reth-primitives = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-primitives" }
-reth-db = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-db" }
-reth-blockchain-tree = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-blockchain-tree" }
-reth-beacon-consensus = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-beacon-consensus" }
-reth-revm = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-revm"}
-reth-interfaces = { git = "https://github.com/paradigmxyz/reth", rev = "c481b87", package = "reth-interfaces"}
+reth-tasks = { git = "https://github.com/paradigmxyz/reth", package = "reth-tasks" }
+reth-rpc = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc" }
+reth-rpc-api = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-api" }
+reth-rpc-builder = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-builder" }
+reth-rpc-types = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-types" }
+reth-provider = { git = "https://github.com/paradigmxyz/reth", package = "reth-provider" }
+reth-transaction-pool = { git = "https://github.com/paradigmxyz/reth", package = "reth-transaction-pool" }
+reth-network-api = { git = "https://github.com/paradigmxyz/reth", package = "reth-network-api", features = ["test-utils"] }
+reth-primitives = { git = "https://github.com/paradigmxyz/reth", package = "reth-primitives" }
+reth-db = { git = "https://github.com/paradigmxyz/reth", package = "reth-db" }
+reth-blockchain-tree = { git = "https://github.com/paradigmxyz/reth", package = "reth-blockchain-tree" }
+reth-beacon-consensus = { git = "https://github.com/paradigmxyz/reth", package = "reth-beacon-consensus" }
+reth-revm = { git = "https://github.com/paradigmxyz/reth", package = "reth-revm"}
+reth-interfaces = { git = "https://github.com/paradigmxyz/reth", package = "reth-interfaces"}
 
 # ethers
 ethers = { version = "2.0.7", default-features = false, features = ["ipc"] }
@@ -27,14 +27,17 @@ ethers = { version = "2.0.7", default-features = false, features = ["ipc"] }
 
 eyre = "0.6.8"
 tokio = "1.28.0"
+tokio-test = "*"
 jsonrpsee = { version = "0.18", features = ["server", "macros"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 async-trait = "0.1.68"
 thiserror = "1.0.40"
+serial_test = "2.0.0"
 
 
 
 [patch.crates-io]
 # patched for quantity U256 responses <https://github.com/recmo/uint/issues/224>
 ruint = { git = "https://github.com/paradigmxyz/uint" }
+

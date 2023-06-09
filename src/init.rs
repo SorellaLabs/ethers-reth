@@ -1,9 +1,14 @@
-use crate::{RethApi, RethClient, RethFilter, RethTrace, RethTxPool};
+use crate::{RethApi, RethClient, RethFilter, RethTrace, RethTxPool, provider::view};
+use eyre::Context;
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::{
     externals::TreeExternals, BlockchainTree, BlockchainTreeConfig, ShareableBlockchainTree,
 };
-use reth_db::mdbx::{Env, EnvKind, NoWriteMap};
+use reth_db::{
+    mdbx::{Env, WriteMap},
+    tables,
+    DatabaseError,
+};
 use reth_network_api::test_utils::NoopNetwork;
 use reth_primitives::MAINNET;
 use reth_provider::{providers::BlockchainProvider, ShareableDatabase};
@@ -17,17 +22,35 @@ use reth_rpc::{
 };
 use reth_tasks::{TaskManager, TaskSpawner};
 use reth_transaction_pool::EthTransactionValidator;
-use std::{path::Path, sync::Arc};
+use std::{fmt::Debug, path::Path, sync::Arc};
+
+
+/// Opens up an existing database at the specified path.
+pub fn init_db<P: AsRef<Path> + Debug>(path: P) -> eyre::Result<Env<WriteMap>> {
+    std::fs::create_dir_all(path.as_ref())?;
+    let db = reth_db::mdbx::Env::<reth_db::mdbx::WriteMap>::open(
+        path.as_ref(),
+        reth_db::mdbx::EnvKind::RO,
+    )?;
+
+    view(&db, |tx| {
+        for table in tables::TABLES.iter().map(|(_, name)| name) {
+            tx.inner.open_db(Some(table)).wrap_err("Could not open db.").unwrap();
+        }
+    })?;
+
+    Ok(db)
+}
 
 // EthApi/Filter Client
-pub fn init_client(db_path: &Path) -> RethClient {
+pub fn init_client(db_path: &Path) -> Result<RethClient, DatabaseError> {
     let chain = Arc::new(MAINNET.clone());
-    let db = Arc::new(Env::<NoWriteMap>::open(db_path, EnvKind::RO).unwrap());
+    let db = Arc::new(init_db(db_path).unwrap());
 
     let tree_externals = TreeExternals::new(
-        Arc::clone(&db),
+        db.clone(),
         Arc::new(BeaconConsensus::new(Arc::clone(&chain))),
-        Factory::new(Arc::clone(&chain)),
+        Factory::new(chain.clone()),
         Arc::clone(&chain),
     );
 
@@ -39,11 +62,11 @@ pub fn init_client(db_path: &Path) -> RethClient {
         BlockchainTree::new(tree_externals, canon_state_notification_sender, tree_config).unwrap(),
     );
 
-    BlockchainProvider::new(
+    Ok(BlockchainProvider::new(
         ShareableDatabase::new(Arc::clone(&db), Arc::clone(&chain)),
         blockchain_tree,
     )
-    .unwrap()
+    .unwrap())
 }
 
 /// EthApi
@@ -75,12 +98,11 @@ pub fn init_pool(client: RethClient) -> RethTxPool {
 pub fn init_trace(
     client: RethClient,
     eth_api: RethApi,
-    rt: Arc<tokio::runtime::Runtime>,
+    task_manager: TaskManager,
     max_tracing_requests: u32,
 ) -> RethTrace {
     let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
 
-    let task_manager = TaskManager::new(rt.handle().clone());
     let task_spawn_handle: Box<dyn TaskSpawner> = Box::new(task_manager.executor());
 
     let tracing_call_guard = TracingCallGuard::new(max_tracing_requests);
@@ -92,13 +114,12 @@ pub fn init_trace(
 pub fn init_eth_filter(
     client: RethClient,
     max_logs_per_response: usize,
-    rt: Arc<tokio::runtime::Runtime>,
+    task_manager: TaskManager,
 ) -> RethFilter {
     let tx_pool = init_pool(client.clone());
 
     let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
 
-    let task_manager = TaskManager::new(rt.handle().clone());
     let task_spawn_handle: Box<dyn TaskSpawner> = Box::new(task_manager.executor());
 
     EthFilter::new(client, tx_pool, state_cache, max_logs_per_response, task_spawn_handle)
