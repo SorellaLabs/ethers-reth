@@ -406,7 +406,8 @@ mod tests {
         let handle = rt.handle();
 
         let provider = spawn_ipc_provider(TEST_IPC_PATH).await.unwrap();
-        let middleware = RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle).unwrap();
+        let middleware =
+            RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle.clone()).unwrap();
 
         let ens: NameOrAddress = "vanbeethoven.eth".parse().unwrap();
         let address = middleware.get_address(ens).await.unwrap();
@@ -423,7 +424,8 @@ mod tests {
         let handle = rt.handle();
 
         let provider = spawn_http_provider(TEST_HTTP_URL).await.unwrap();
-        let middleware = RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle).unwrap();
+        let middleware =
+            RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle.clone()).unwrap();
 
         let from: NameOrAddress = "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852".parse().unwrap();
         let location = EthersH256::from_low_u64_be(5);
@@ -465,7 +467,8 @@ mod tests {
         let handle = rt.handle();
 
         let provider = spawn_ipc_provider(TEST_IPC_PATH).await.unwrap();
-        let middleware = RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle).unwrap();
+        let middleware =
+            RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle.clone()).unwrap();
         let address: NameOrAddress = "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap();
         let code = middleware.get_code(address, None).await.unwrap();
         // Address contains no code
