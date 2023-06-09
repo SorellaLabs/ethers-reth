@@ -1,6 +1,6 @@
 // std
-use std::{path::Path, sync::Arc};
 use eyre::Result;
+use std::{path::Path, sync::Arc};
 
 // ethers
 use ethers::providers::{Middleware, MiddlewareError};
@@ -102,7 +102,7 @@ where
         let filter = init_eth_filter(client.clone(), 1000, TaskManager::new(handle.clone()));
         let trace = init_trace(client, api.clone(), TaskManager::new(handle.clone()), 10);
 
-       Ok( Self { inner, reth_api: api, reth_filter: filter, reth_trace: trace } )
+        Ok(Self { inner, reth_api: api, reth_filter: filter, reth_trace: trace })
     }
 
     pub fn reth_api(&self) -> &RethApi {

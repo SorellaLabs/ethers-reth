@@ -387,9 +387,12 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{provider::{spawn_http_provider, spawn_ipc_provider}, *};
-    use std::{path::Path, time::Duration};
+    use crate::{
+        provider::{spawn_http_provider, spawn_ipc_provider},
+        *,
+    };
     use serial_test::serial;
+    use std::{path::Path, time::Duration};
 
     const TEST_DB_PATH: &str = "/NVMe/data/reth/db";
     const TEST_HTTP_URL: &str = "http://localhost:8489";

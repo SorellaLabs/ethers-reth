@@ -1,4 +1,4 @@
-use crate::{RethApi, RethClient, RethFilter, RethTrace, RethTxPool, provider::view};
+use crate::{provider::view, RethApi, RethClient, RethFilter, RethTrace, RethTxPool};
 use eyre::Context;
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::{
@@ -6,8 +6,7 @@ use reth_blockchain_tree::{
 };
 use reth_db::{
     mdbx::{Env, WriteMap},
-    tables,
-    DatabaseError,
+    tables, DatabaseError,
 };
 use reth_network_api::test_utils::NoopNetwork;
 use reth_primitives::MAINNET;
@@ -23,7 +22,6 @@ use reth_rpc::{
 use reth_tasks::{TaskManager, TaskSpawner};
 use reth_transaction_pool::EthTransactionValidator;
 use std::{fmt::Debug, path::Path, sync::Arc};
-
 
 /// Opens up an existing database at the specified path.
 pub fn init_db<P: AsRef<Path> + Debug>(path: P) -> eyre::Result<Env<WriteMap>> {
@@ -56,7 +54,7 @@ pub fn init_client(db_path: &Path) -> Result<RethClient, DatabaseError> {
 
     let tree_config = BlockchainTreeConfig::default();
     let (canon_state_notification_sender, _receiver) =
-        tokio::sync::broadcast::channel(tree_config.max_reorg_depth() as usize *2);
+        tokio::sync::broadcast::channel(tree_config.max_reorg_depth() as usize * 2);
 
     let blockchain_tree = ShareableBlockchainTree::new(
         BlockchainTree::new(tree_externals, canon_state_notification_sender, tree_config).unwrap(),
