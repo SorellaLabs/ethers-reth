@@ -14,9 +14,9 @@ Please note that Octane is currently in its early stages of development.
 - [x] Full trace functionality
 - [ ] Full debug functionality
 - [ ] Full tx pool functionality
-- [ ] Integration with Anvil: We plan to integrate with Anvil to offer super-fast simulation in fork mode
+- [x] Integration with Anvil: We plan to integrate with Anvil to offer super-fast simulation in fork mode
 - [x] Improved type conversions: The type conversion is terroristic at best, we'll clean that up soon
-- [ ] Tests, waiting on node sync
+
 
 ### Contact
 
