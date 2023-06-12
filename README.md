@@ -6,16 +6,16 @@ A ether-rs middleware for reth that bypasses JSON-RPC allowing for faster db que
 
 ## Work in Progress!
 
-Please note that Octane is currently in its early stages of development.
+Please note that Octane is currently in its early stages of development. 
 
 ## Todo:
 
 - [ ] Full log functionality
 - [x] Full trace functionality
 - [ ] Full debug functionality
-- [ ] Full tx pool functionality
-- [x] Integration with Anvil: We plan to integrate with Anvil to offer super-fast simulation in fork mode
-- [x] Improved type conversions: The type conversion is terroristic at best, we'll clean that up soon
+- [ ] Mock ethers-reth provider for testing purposes
+- [x] Integration with Anvil: We plan to integrate with Anvil to offer super-fast simulation in fork mode. See [fastfoundry](https://github.com/SorellaLabs/fastfoundry) & [anvil-benchmarks](https://github.com/SorellaLabs/anvil-benchmarks)
+
 
 
 ### Contact
