@@ -1,16 +1,21 @@
-use crate::{provider::view, RethApi, RethClient, RethFilter, RethTrace, RethTxPool};
+use crate::{RethApi, RethClient, RethFilter, RethTrace, RethTxPool};
 use eyre::Context;
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::{
     externals::TreeExternals, BlockchainTree, BlockchainTreeConfig, ShareableBlockchainTree,
 };
+
 use reth_db::{
+    database::{Database, DatabaseGAT},
     mdbx::{Env, WriteMap},
-    tables, DatabaseError,
+    tables::TABLES,
+    transaction::DbTx,
+    DatabaseError,
 };
+
 use reth_network_api::test_utils::NoopNetwork;
 use reth_primitives::MAINNET;
-use reth_provider::{providers::BlockchainProvider, ShareableDatabase};
+use reth_provider::{providers::BlockchainProvider, ProviderFactory};
 use reth_revm::Factory;
 use reth_rpc::{
     eth::{
@@ -23,6 +28,20 @@ use reth_tasks::{TaskManager, TaskSpawner};
 use reth_transaction_pool::EthTransactionValidator;
 use std::{fmt::Debug, path::Path, sync::Arc};
 
+/// re-implementation of 'view()'
+/// allows for a function to be passed in through a RO libmdbx transaction
+/// /reth/crates/storage/db/src/abstraction/database.rs
+pub fn view<F, T>(db: &Env<WriteMap>, f: F) -> Result<T, DatabaseError>
+where
+    F: FnOnce(&<Env<WriteMap> as DatabaseGAT<'_>>::TX) -> T,
+{
+    let tx = db.tx()?;
+    let res = f(&tx);
+    tx.commit()?;
+
+    Ok(res)
+}
+
 /// Opens up an existing database at the specified path.
 pub fn init_db<P: AsRef<Path> + Debug>(path: P) -> eyre::Result<Env<WriteMap>> {
     std::fs::create_dir_all(path.as_ref())?;
@@ -33,7 +52,7 @@ pub fn init_db<P: AsRef<Path> + Debug>(path: P) -> eyre::Result<Env<WriteMap>> {
     )?;
 
     view(&db, |tx| {
-        for table in tables::TABLES.iter().map(|(_, name)| name) {
+        for table in TABLES.iter().map(|(_, name)| name) {
             tx.inner.open_db(Some(table)).wrap_err("Could not open db.").unwrap();
         }
     })?;
@@ -43,7 +62,7 @@ pub fn init_db<P: AsRef<Path> + Debug>(path: P) -> eyre::Result<Env<WriteMap>> {
 
 // EthApi/Filter Client
 pub fn init_client(db_path: &Path) -> Result<RethClient, DatabaseError> {
-    let chain = Arc::new(MAINNET.clone());
+    let chain = MAINNET.clone();
     let db = Arc::new(init_db(db_path).unwrap());
 
     let tree_externals = TreeExternals::new(
@@ -62,7 +81,7 @@ pub fn init_client(db_path: &Path) -> Result<RethClient, DatabaseError> {
     );
 
     Ok(BlockchainProvider::new(
-        ShareableDatabase::new(Arc::clone(&db), Arc::clone(&chain)),
+        ProviderFactory::new(Arc::clone(&db), Arc::clone(&chain)),
         blockchain_tree,
     )
     .unwrap())
@@ -85,7 +104,7 @@ pub fn init_eth_api(client: RethClient) -> RethApi {
 
 // EthApi/Filter txPool
 pub fn init_pool(client: RethClient) -> RethTxPool {
-    let chain = Arc::new(MAINNET.clone());
+    let chain = MAINNET.clone();
 
     reth_transaction_pool::Pool::eth_pool(
         EthTransactionValidator::new(client, chain),
