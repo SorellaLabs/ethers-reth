@@ -37,6 +37,10 @@ serial_test = "2.0.0"
 
 
 
+[dev-dependencies]
+mockall = "0.11.4" 
+
+
 [patch.crates-io]
 # patched for quantity U256 responses <https://github.com/recmo/uint/issues/224>
 ruint = { git = "https://github.com/paradigmxyz/uint" }
