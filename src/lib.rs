@@ -21,7 +21,6 @@ use thiserror::Error;
 // own modules
 pub mod init;
 pub mod middleware;
-pub mod provider;
 pub mod type_conversions;
 use init::{init_client, init_eth_api, init_eth_filter, init_trace};
 use tokio::runtime::Handle;
