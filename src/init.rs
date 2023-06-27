@@ -138,11 +138,12 @@ pub fn init_eth_filter(
     max_logs_per_response: usize,
     task_manager: TaskManager,
 ) -> RethFilter {
+
+    let task_spawn_handle: Box<dyn TaskSpawner> = Box::new(task_manager.executor());
+
     let tx_pool = init_pool(client.clone(), task_manager);
 
     let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
-
-    let task_spawn_handle: Box<dyn TaskSpawner> = Box::new(task_manager.executor());
 
     EthFilter::new(client, tx_pool, state_cache, max_logs_per_response, task_spawn_handle)
 }
