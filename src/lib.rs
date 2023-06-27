@@ -14,7 +14,7 @@ use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
 use reth_rpc::{eth::error::EthApiError, EthApi, EthFilter, TraceApi};
 use reth_tasks::TaskManager;
-use reth_transaction_pool::{CostOrdering, EthTransactionValidator, Pool, PooledTransaction};
+use reth_transaction_pool::{GasCostOrdering, EthTransactionValidator, Pool, PooledTransaction};
 //Error
 use jsonrpsee::types::ErrorObjectOwned;
 use thiserror::Error;
@@ -31,7 +31,7 @@ pub type RethClient = BlockchainProvider<
 >;
 
 pub type RethTxPool =
-    Pool<EthTransactionValidator<RethClient, PooledTransaction>, CostOrdering<PooledTransaction>>;
+    Pool<EthTransactionValidator<RethClient, PooledTransaction>, GasCostOrdering<PooledTransaction>>;
 
 pub type RethApi = EthApi<RethClient, RethTxPool, NoopNetwork>;
 pub type RethFilter = EthFilter<RethClient, RethTxPool>;
@@ -96,7 +96,7 @@ where
         let client = init_client(db_path)?;
 
         // EthApi -> EthApi<Client, Pool, Network>
-        let api = init_eth_api(client.clone());
+        let api = init_eth_api(client.clone(), TaskManager::new(handle.clone()));
         // EthFilter -> EthFilter<Client, Pool>
         let filter = init_eth_filter(client.clone(), 1000, TaskManager::new(handle.clone()));
         let trace = init_trace(client, api.clone(), TaskManager::new(handle), 10);

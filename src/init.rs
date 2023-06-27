@@ -8,7 +8,7 @@ use reth_blockchain_tree::{
 use reth_db::{
     database::{Database, DatabaseGAT},
     mdbx::{Env, WriteMap},
-    tables::TABLES,
+    tables,
     transaction::DbTx,
     DatabaseError,
 };
@@ -52,7 +52,7 @@ pub fn init_db<P: AsRef<Path> + Debug>(path: P) -> eyre::Result<Env<WriteMap>> {
     )?;
 
     view(&db, |tx| {
-        for table in TABLES.iter().map(|(_, name)| name) {
+        for table in tables::Tables::ALL.iter().map(|table| table.name()) {
             tx.inner.open_db(Some(table)).wrap_err("Could not open db.").unwrap();
         }
     })?;
@@ -88,8 +88,11 @@ pub fn init_client(db_path: &Path) -> Result<RethClient, DatabaseError> {
 }
 
 /// EthApi
-pub fn init_eth_api(client: RethClient) -> RethApi {
-    let tx_pool = init_pool(client.clone());
+pub fn init_eth_api(client: RethClient, task_manager: TaskManager) -> RethApi {
+    let tx_pool = init_pool(
+        client.clone(),
+        task_manager,
+    );
 
     let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
 
@@ -103,11 +106,12 @@ pub fn init_eth_api(client: RethClient) -> RethApi {
 }
 
 // EthApi/Filter txPool
-pub fn init_pool(client: RethClient) -> RethTxPool {
+pub fn init_pool(client: RethClient, task_manager: TaskManager) -> RethTxPool {
     let chain = MAINNET.clone();
 
     reth_transaction_pool::Pool::eth_pool(
-        EthTransactionValidator::new(client, chain),
+        EthTransactionValidator::new(
+            client, chain, task_manager.executor(), 1),
         Default::default(),
     )
 }
@@ -134,7 +138,7 @@ pub fn init_eth_filter(
     max_logs_per_response: usize,
     task_manager: TaskManager,
 ) -> RethFilter {
-    let tx_pool = init_pool(client.clone());
+    let tx_pool = init_pool(client.clone(), task_manager);
 
     let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
 
