@@ -3,10 +3,10 @@ use std::{fmt::Debug, mem};
 
 use ethers::types::{
     Bloom as EthersBloom, Bytes as EthersBytes, H160 as EthersH160, H256 as EthersH256,
-    H64 as EthersH64, U256 as EthersU256, U64 as EthersU64,
+    H64 as EthersH64, U256 as EthersU256, U64 as EthersU64
 };
 use reth_primitives::{
-    serde_helper::JsonStorageKey, Bloom, Bytes, H160, H256, H64, U128, U256, U64, U8,
+    serde_helper::{num::U64HexOrNumber, JsonStorageKey}, Bloom, Bytes, H160, H256, H64, U128, U256, U64, U8
 };
 
 /// non-Uint numerical conversions
@@ -158,5 +158,20 @@ impl ToReth<JsonStorageKey> for EthersH256 {
 impl ToEthers<H256> for JsonStorageKey {
     fn into_ethers(self) -> H256 {
         self.0
+    }
+}
+
+/// JsonStorageKey (reth) -> H256 (ethers)
+impl ToReth<U64HexOrNumber> for EthersU256 {
+    fn into_reth(self) -> U64HexOrNumber {
+        let u: U64 = self.into_reth();
+        U64HexOrNumber::from(u)
+    }
+}
+
+/// JsonStorageKey (ethers) -> H256 (reth)
+impl ToEthers<EthersU256> for U64HexOrNumber {
+    fn into_ethers(self) -> EthersU256 {
+        U64::from(self).into_ethers()
     }
 }
