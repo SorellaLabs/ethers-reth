@@ -1,4 +1,4 @@
-use crate::{RethApi, RethClient, RethFilter, RethTrace, RethTxPool};
+use crate::{RethApi, RethClient, RethDebug, RethFilter, RethTrace, RethTxPool};
 use eyre::Context;
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::{
@@ -22,7 +22,7 @@ use reth_rpc::{
         cache::{EthStateCache, EthStateCacheConfig},
         gas_oracle::{GasPriceOracle, GasPriceOracleConfig},
     },
-    EthApi, EthFilter, TraceApi, TracingCallGuard,
+    DebugApi, EthApi, EthFilter, TraceApi, TracingCallGuard,
 };
 use reth_tasks::{TaskManager, TaskSpawner};
 use reth_transaction_pool::EthTransactionValidator;
@@ -89,10 +89,7 @@ pub fn init_client(db_path: &Path) -> Result<RethClient, DatabaseError> {
 
 /// EthApi
 pub fn init_eth_api(client: RethClient, task_manager: TaskManager) -> RethApi {
-    let tx_pool = init_pool(
-        client.clone(),
-        task_manager,
-    );
+    let tx_pool = init_pool(client.clone(), task_manager);
 
     let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
 
@@ -110,13 +107,12 @@ pub fn init_pool(client: RethClient, task_manager: TaskManager) -> RethTxPool {
     let chain = MAINNET.clone();
 
     reth_transaction_pool::Pool::eth_pool(
-        EthTransactionValidator::new(
-            client, chain, task_manager.executor(), 1),
+        EthTransactionValidator::new(client, chain, task_manager.executor(), 1),
         Default::default(),
     )
 }
 
-// RethTrace
+// Parity Traces
 pub fn init_trace(
     client: RethClient,
     eth_api: RethApi,
@@ -132,13 +128,26 @@ pub fn init_trace(
     TraceApi::new(client, eth_api, state_cache, task_spawn_handle, tracing_call_guard)
 }
 
+// Geth Debug Traces
+pub fn init_debug(
+    client: RethClient,
+    eth_api: RethApi,
+    task_manager: TaskManager,
+    max_tracing_requests: u32,
+) -> RethDebug {
+    let task_spawn_handle: Box<dyn TaskSpawner> = Box::new(task_manager.executor());
+
+    let tracing_call_guard = TracingCallGuard::new(max_tracing_requests);
+
+    DebugApi::new(client, eth_api, task_spawn_handle, tracing_call_guard)
+}
+
 // EthFilter
 pub fn init_eth_filter(
     client: RethClient,
     max_logs_per_response: usize,
     task_manager: TaskManager,
 ) -> RethFilter {
-
     let task_spawn_handle: Box<dyn TaskSpawner> = Box::new(task_manager.executor());
 
     let tx_pool = init_pool(client.clone(), task_manager);

@@ -3,10 +3,11 @@ use std::{fmt::Debug, mem};
 
 use ethers::types::{
     Bloom as EthersBloom, Bytes as EthersBytes, H160 as EthersH160, H256 as EthersH256,
-    H64 as EthersH64, U256 as EthersU256, U64 as EthersU64
+    H64 as EthersH64, U256 as EthersU256, U64 as EthersU64,
 };
 use reth_primitives::{
-    serde_helper::{num::U64HexOrNumber, JsonStorageKey}, Bloom, Bytes, H160, H256, H64, U128, U256, U64, U8
+    serde_helper::{num::U64HexOrNumber, JsonStorageKey},
+    Bloom, Bytes, H160, H256, H64, U128, U256, U64, U8,
 };
 
 /// non-Uint numerical conversions

@@ -68,7 +68,7 @@ mod tests {
             assert_eq!(decoded_addr, expected_addr);
         } else {
             panic!("Failed to parse expected factory address");
-        }0
+        }
 
         rt.shutdown_timeout(Duration::from_secs(0));
     }
@@ -91,7 +91,6 @@ mod tests {
         rt.shutdown_timeout(Duration::from_secs(0));
     }
 }
-
 
 //TODO:
 
@@ -118,4 +117,3 @@ pub struct RethMiddleware<M> {
     reth_filter: RethFilter,
     reth_trace: RethTrace,
 } */
-
