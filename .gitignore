@@ -22,6 +22,9 @@ testdata/micro/db
 # Generated data for stage benchmarks
 crates/stages/testdata
 
+# Generated data for ethers-reth middleware tests
+testdata/db
+
 # prometheus data dir
 data/
 

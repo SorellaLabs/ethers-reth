@@ -61,7 +61,7 @@ pub fn init_db<P: AsRef<Path> + Debug>(path: P) -> eyre::Result<Env<WriteMap>> {
 }
 
 // EthApi/Filter Client
-pub fn init_client(db_path: &Path) -> Result<RethClient, DatabaseError> {
+pub fn init_client<P: AsRef<Path> + Debug>(db_path: P) -> Result<RethClient, DatabaseError> {
     let chain = MAINNET.clone();
     let db = Arc::new(init_db(db_path).unwrap());
 
