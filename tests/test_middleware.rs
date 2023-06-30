@@ -1,10 +1,15 @@
 #[cfg(test)]
+mod test_utils;
+
 mod tests {
+    use crate::test_utils::{spawn_http_provider, spawn_ipc_provider};
+
     use super::*;
-    use crate::{
-        provider::{spawn_http_provider, spawn_ipc_provider},
-        *,
+    use ethers::{
+        providers::Middleware,
+        types::{Address as EthersAddress, NameOrAddress, H256 as EthersH256},
     };
+    use ethers_reth::RethMiddleware;
     use serial_test::serial;
     use std::{path::Path, time::Duration};
 
@@ -68,7 +73,7 @@ mod tests {
             assert_eq!(decoded_addr, expected_addr);
         } else {
             panic!("Failed to parse expected factory address");
-        }
+        };
 
         rt.shutdown_timeout(Duration::from_secs(0));
     }
