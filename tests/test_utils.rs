@@ -1,13 +1,9 @@
 use ethers::{
-    etherscan::contract,
     prelude::{
         rand::{rngs::StdRng, Rng, SeedableRng},
-        Lazy,
     },
     providers::{Http, Ipc, Provider, ProviderExt},
-    types::{NameOrAddress, H256 as EthersH256},
 };
-use ethers_reth::RethMiddleware;
 use eyre::Result;
 use itertools::concat;
 use reth_db::{
@@ -25,7 +21,7 @@ use reth_db::{
     DatabaseError as DbError,
 };
 use reth_interfaces::test_utils::generators::{
-    random_block_range, random_eoa_account, random_eoa_account_range, random_transition_range, rng,
+    random_block_range, random_eoa_account, random_eoa_account_range, random_transition_range,
 };
 use reth_primitives::{
     bytes::Bytes, keccak256, Account, Address, BlockNumber, Bytecode, SealedBlock, SealedHeader,
@@ -33,14 +29,13 @@ use reth_primitives::{
 };
 use reth_provider::{DatabaseProviderRO, DatabaseProviderRW, ProviderFactory};
 use reth_trie::StateRoot;
-use serial_test::serial;
 use std::{
     collections::BTreeMap,
     path::{Path, PathBuf},
     sync::Arc,
-    time::Duration,
 };
 
+#[allow(dead_code)]
 /// spawns a ipc provider
 pub async fn spawn_ipc_provider(ipc_path: &str) -> Result<Provider<Ipc>> {
     Ok(Provider::connect_ipc(ipc_path).await?)
@@ -75,6 +70,7 @@ impl Default for TestTransaction {
     }
 }
 
+#[allow(dead_code)]
 impl TestTransaction {
     pub fn new(path: &Path) -> Self {
         let tx = Arc::new(create_test_db_with_path::<WriteMap>(EnvKind::RW, path));
@@ -330,7 +326,7 @@ impl TestTransaction {
                     cursor.upsert(address, entry)?;
 
                     let mut cursor = tx.cursor_dup_write::<tables::HashedStorage>()?;
-                    if let Some(e) = cursor
+                    if let Some(_e) = cursor
                         .seek_by_key_subkey(hashed_address, hashed_entry.key)?
                         .filter(|e| e.key == hashed_entry.key)
                     {
@@ -441,10 +437,12 @@ pub fn init_testdata() -> TestDb {
     println!("EOAs: {:?}", eoas.len());
     println!("Contracts: {:?}", contracts.len());
 
-    let accounts: BTreeMap<Address, Account> =
-        concat([eoas, contracts.iter().map(|(addr, acc, _)| (addr.clone(), acc.clone())).collect()])
-            .into_iter()
-            .collect();
+    let accounts: BTreeMap<Address, Account> = concat([
+        eoas,
+        contracts.iter().map(|(addr, acc, _)| (addr.clone(), acc.clone())).collect(),
+    ])
+    .into_iter()
+    .collect();
     let bytecodes: BTreeMap<Address, Bytecode> =
         contracts.iter().map(|(addr, _, code)| (addr.clone(), code.clone())).collect();
 

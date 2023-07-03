@@ -2,32 +2,22 @@
 mod test_utils;
 
 mod tests {
-    use crate::test_utils::{init_testdata, spawn_http_provider, spawn_ipc_provider, TestDb};
+    use crate::test_utils::{init_testdata, spawn_http_provider, TestDb};
 
     use ethers::{
         prelude::Lazy,
         providers::Middleware,
-        types::{
-            Address as EthersAddress, NameOrAddress, H160, H256 as EthersH256, U256 as EthersU256, Bytes as EthersBytes,
-        },
+        types::{Bytes as EthersBytes, NameOrAddress, H256 as EthersH256},
     };
-    use ethers_reth::{
-        type_conversions::{ToEthers, ToReth},
-        RethMiddleware,
-    };
-    use reth_primitives::{H256, U256};
+    use ethers_reth::{type_conversions::ToEthers, RethMiddleware};
     use serial_test::serial;
-    use std::{
-        path::{Path, PathBuf},
-        str::FromStr,
-        time::Duration,
-    };
 
     // const TEST_HTTP_URL: &str = "https://reth.sorella-beechit.com:8485";
     const TEST_HTTP_URL: &str = "http://45.250.253.77:8545";
+    #[allow(dead_code)]
     const TEST_IPC_PATH: &str = "/tmp/reth.ipc";
 
-    static test_db: Lazy<TestDb> = Lazy::new(|| init_testdata());
+    static TEST_DB: Lazy<TestDb> = Lazy::new(|| init_testdata());
 
     #[tokio::test]
     #[serial]
@@ -42,7 +32,7 @@ mod tests {
             .await
             .expect(format!("Failed to spawn HTTP provider from path {}", TEST_HTTP_URL).as_str());
 
-        let middleware = RethMiddleware::new(provider, &test_db.path, handle.clone()).unwrap();
+        let middleware = RethMiddleware::new(provider, &TEST_DB.path, handle.clone()).unwrap();
 
         let ens: NameOrAddress = "vanbeethoven.eth".parse().unwrap();
         let address = middleware.get_address(ens).await.unwrap();
@@ -59,9 +49,9 @@ mod tests {
         let handle = rt.handle();
 
         let provider = spawn_http_provider(TEST_HTTP_URL).await.unwrap();
-        let middleware = RethMiddleware::new(provider, &test_db.path, handle.clone()).unwrap();
+        let middleware = RethMiddleware::new(provider, &TEST_DB.path, handle.clone()).unwrap();
 
-        for (addr, (account, storages)) in test_db.state.iter() {
+        for (addr, (_account, storages)) in TEST_DB.state.iter() {
             for entry in storages.iter() {
                 let storage = middleware
                     .get_storage_at(
@@ -71,8 +61,8 @@ mod tests {
                     )
                     .await
                     .unwrap();
-                let expected_storage: U256 = entry.value;
-                let expected_storage: EthersH256 =
+                let expected_storage = entry.value;
+                let expected_storage =
                     EthersH256::from_slice(&expected_storage.to_be_bytes::<32>());
                 assert_eq!(storage, expected_storage);
             }
@@ -89,9 +79,9 @@ mod tests {
         let handle = rt.handle();
 
         let provider = spawn_http_provider(TEST_HTTP_URL).await.unwrap();
-        let middleware = RethMiddleware::new(provider, &test_db.path, handle.clone()).unwrap();
+        let middleware = RethMiddleware::new(provider, &TEST_DB.path, handle.clone()).unwrap();
 
-        for (addr, bytecode) in &test_db.bytecodes {
+        for (addr, bytecode) in &TEST_DB.bytecodes {
             let code: EthersBytes =
                 middleware.get_code(NameOrAddress::Address((*addr).into()), None).await.unwrap();
             let expected_code: EthersBytes = bytecode.bytecode.to_vec().into();
