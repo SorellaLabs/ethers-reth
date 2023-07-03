@@ -1,6 +1,6 @@
 // std
 use eyre::Result;
-use std::{path::Path, sync::Arc};
+use std::{fmt::Debug, path::Path, sync::Arc};
 
 // ethers
 use ethers::providers::{Middleware, MiddlewareError};
@@ -96,7 +96,7 @@ impl<M> RethMiddleware<M>
 where
     M: Middleware,
 {
-    pub fn new(inner: M, db_path: &Path, handle: Handle) -> Result<Self> {
+    pub fn new<P: AsRef<Path>>(inner: M, db_path: P, handle: Handle) -> Result<Self> {
         let client = init_client(db_path)?;
 
         // EthApi -> EthApi<Client, Pool, Network>

@@ -32,7 +32,7 @@ impl<M> RethMiddleware<M>
 where
     M: Middleware,
 {
-    async fn get_address<T: Into<NameOrAddress>>(
+    pub async fn get_address<T: Into<NameOrAddress>>(
         &self,
         who: T,
     ) -> Result<EthersAddress, RethMiddlewareError<M>> {

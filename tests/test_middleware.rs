@@ -1,16 +1,23 @@
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::{
-        provider::{spawn_http_provider, spawn_ipc_provider},
-        *,
-    };
-    use serial_test::serial;
-    use std::{path::Path, time::Duration};
+mod test_utils;
 
-    const TEST_DB_PATH: &str = "/NVMe/data/reth/db";
-    const TEST_HTTP_URL: &str = "http://localhost:8489";
+mod tests {
+    use crate::test_utils::{init_testdata, spawn_http_provider, TestDb};
+
+    use ethers::{
+        prelude::Lazy,
+        providers::Middleware,
+        types::{Bytes as EthersBytes, NameOrAddress, H256 as EthersH256},
+    };
+    use ethers_reth::{type_conversions::ToEthers, RethMiddleware};
+    use serial_test::serial;
+
+    // const TEST_HTTP_URL: &str = "https://reth.sorella-beechit.com:8485";
+    const TEST_HTTP_URL: &str = "http://45.250.253.77:8545";
+    #[allow(dead_code)]
     const TEST_IPC_PATH: &str = "/tmp/reth.ipc";
+
+    static TEST_DB: Lazy<TestDb> = Lazy::new(|| init_testdata());
 
     #[tokio::test]
     #[serial]
@@ -19,15 +26,19 @@ mod tests {
         let rt = tokio::runtime::Runtime::new().unwrap();
         let handle = rt.handle();
 
-        let provider = spawn_ipc_provider(TEST_IPC_PATH).await.unwrap();
-        let middleware =
-            RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle.clone()).unwrap();
+        // let provider = spawn_ipc_provider(TEST_IPC_PATH).await.expect(format!("Failed to spawn
+        // IPC provider from path {}", TEST_IPC_PATH).as_str());
+        let provider = spawn_http_provider(TEST_HTTP_URL)
+            .await
+            .expect(format!("Failed to spawn HTTP provider from path {}", TEST_HTTP_URL).as_str());
+
+        let middleware = RethMiddleware::new(provider, &TEST_DB.path, handle.clone()).unwrap();
 
         let ens: NameOrAddress = "vanbeethoven.eth".parse().unwrap();
         let address = middleware.get_address(ens).await.unwrap();
         assert_eq!(address, "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap());
 
-        rt.shutdown_timeout(Duration::from_secs(0));
+        rt.shutdown_background();
     }
 
     #[tokio::test]
@@ -38,39 +49,26 @@ mod tests {
         let handle = rt.handle();
 
         let provider = spawn_http_provider(TEST_HTTP_URL).await.unwrap();
-        let middleware =
-            RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle.clone()).unwrap();
+        let middleware = RethMiddleware::new(provider, &TEST_DB.path, handle.clone()).unwrap();
 
-        let from: NameOrAddress = "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852".parse().unwrap();
-        let location = EthersH256::from_low_u64_be(5);
-        let storage = middleware.get_storage_at(from, location, None).await.unwrap();
-
-        // ----------------------------------------------------------- //
-        //             Storage slots of UniV2Pair contract             //
-        // =========================================================== //
-        // storage[5] = factory: address                               //
-        // storage[6] = token0: address                                //
-        // storage[7] = token1: address                                //
-        // storage[8] = (res0, res1, ts): (uint112, uint112, uint32)   //
-        // storage[9] = price0CumulativeLast: uint256                  //
-        // storage[10] = price1CumulativeLast: uint256                 //
-        // storage[11] = kLast: uint256                                //
-        // =========================================================== //
-
-        // convert the H256 value to bytes, then take the last 20 bytes and create an address from
-        // it
-        let decoded_addr = EthersAddress::from_slice(&storage.as_bytes()[12..]);
-
-        let factory_address: NameOrAddress =
-            "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f".parse().unwrap();
-
-        if let NameOrAddress::Address(expected_addr) = factory_address {
-            assert_eq!(decoded_addr, expected_addr);
-        } else {
-            panic!("Failed to parse expected factory address");
+        for (addr, (_account, storages)) in TEST_DB.state.iter() {
+            for entry in storages.iter() {
+                let storage = middleware
+                    .get_storage_at(
+                        NameOrAddress::Address((*addr).into()),
+                        entry.key.into_ethers(),
+                        None,
+                    )
+                    .await
+                    .unwrap();
+                let expected_storage = entry.value;
+                let expected_storage =
+                    EthersH256::from_slice(&expected_storage.to_be_bytes::<32>());
+                assert_eq!(storage, expected_storage);
+            }
         }
 
-        rt.shutdown_timeout(Duration::from_secs(0));
+        rt.shutdown_background();
     }
 
     #[tokio::test]
@@ -80,15 +78,17 @@ mod tests {
         let rt = tokio::runtime::Runtime::new().unwrap();
         let handle = rt.handle();
 
-        let provider = spawn_ipc_provider(TEST_IPC_PATH).await.unwrap();
-        let middleware =
-            RethMiddleware::new(provider, Path::new(TEST_DB_PATH), handle.clone()).unwrap();
-        let address: NameOrAddress = "0x0e3FfF21A1Cef4f29F7D8cecff3cE4Dfa7703fBc".parse().unwrap();
-        let code = middleware.get_code(address, None).await.unwrap();
-        // Address contains no code
-        assert_eq!(code.len(), 0);
+        let provider = spawn_http_provider(TEST_HTTP_URL).await.unwrap();
+        let middleware = RethMiddleware::new(provider, &TEST_DB.path, handle.clone()).unwrap();
 
-        rt.shutdown_timeout(Duration::from_secs(0));
+        for (addr, bytecode) in &TEST_DB.bytecodes {
+            let code: EthersBytes =
+                middleware.get_code(NameOrAddress::Address((*addr).into()), None).await.unwrap();
+            let expected_code: EthersBytes = bytecode.bytecode.to_vec().into();
+            assert_eq!(expected_code, code);
+        }
+
+        rt.shutdown_background();
     }
 }
 
