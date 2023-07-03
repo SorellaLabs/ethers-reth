@@ -1,7 +1,10 @@
 use ethers::{
     etherscan::contract,
-    prelude::Lazy,
-    providers::{Http, Ipc, Middleware, Provider, ProviderExt},
+    prelude::{
+        rand::{rngs::StdRng, Rng, SeedableRng},
+        Lazy,
+    },
+    providers::{Http, Ipc, Provider, ProviderExt},
     types::{NameOrAddress, H256 as EthersH256},
 };
 use ethers_reth::RethMiddleware;
@@ -22,12 +25,11 @@ use reth_db::{
     DatabaseError as DbError,
 };
 use reth_interfaces::test_utils::generators::{
-    random_block_range, random_contract_account_range, random_eoa_account_range,
-    random_transition_range, rng,
+    random_block_range, random_eoa_account, random_eoa_account_range, random_transition_range, rng,
 };
 use reth_primitives::{
-    keccak256, Account, Address, BlockNumber, SealedBlock, SealedHeader, StorageEntry, H160, H256,
-    MAINNET, U256,
+    bytes::Bytes, keccak256, Account, Address, BlockNumber, Bytecode, SealedBlock, SealedHeader,
+    StorageEntry, H160, H256, MAINNET, U256,
 };
 use reth_provider::{DatabaseProviderRO, DatabaseProviderRW, ProviderFactory};
 use reth_trie::StateRoot;
@@ -224,6 +226,19 @@ impl TestTransaction {
         })
     }
 
+    fn insert_bytecode(tx: &Tx<'_, RW, WriteMap>, bytecode: &Bytecode) -> Result<(), DbError> {
+        tx.put::<tables::Bytecodes>(bytecode.hash(), bytecode.clone())
+    }
+
+    pub fn insert_bytecodes<'a, I>(&self, bytecodes: I) -> Result<(), DbError>
+    where
+        I: Iterator<Item = &'a Bytecode>,
+    {
+        self.commit(|tx| {
+            bytecodes.into_iter().try_for_each(|bytecode| Self::insert_bytecode(tx, bytecode))
+        })
+    }
+
     /// Inserts a single [SealedHeader] into the corresponding tables of the headers stage.
     fn insert_header(tx: &Tx<'_, RW, WriteMap>, header: &SealedHeader) -> Result<(), DbError> {
         tx.put::<tables::CanonicalHeaders>(header.number, header.hash())?;
@@ -365,50 +380,75 @@ impl TestTransaction {
 pub struct TestDb {
     pub path: PathBuf,
     pub state: BTreeMap<H160, (Account, Vec<StorageEntry>)>,
+    pub bytecodes: BTreeMap<H160, Bytecode>,
 }
 
-pub fn txs_testdata(num_blocks: u64) -> TestDb {
+/// Generate random Contract Accounts
+pub fn random_contract_account_range<R: Rng>(
+    rng: &mut R,
+    acc_range: &mut std::ops::Range<u64>,
+) -> Vec<(Address, Account, Bytecode)> {
+    let mut accounts = Vec::with_capacity(acc_range.end.saturating_sub(acc_range.start) as usize);
+    for _ in acc_range {
+        let (address, eoa_account) = random_eoa_account(rng);
+        let random_bytes: [u8; 32] = rng.gen();
+        let bytes: Bytes = random_bytes.to_vec().into();
+        let code = Bytecode::new_raw(bytes);
+        let account: Account = Account { bytecode_hash: Some(code.hash()), ..eoa_account };
+        accounts.push((address, account, code))
+    }
+    accounts
+}
+
+// copied and modified from reth_stages::setup::txs_testdata()
+pub fn init_testdata() -> TestDb {
     let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("testdata").join("db");
-    println!("Path: {:?}", path);
+
     let txs_range = 1..10;
 
+    // number of blocks
+    let n_blocks = 10;
+
     // number of storage changes per transition
-    let n_changes = 1..2;
+    let n_changes = 1..3;
 
     // range of possible values for a storage key
     let key_range = 1..300;
 
     // number of accounts
-    let n_eoa = 5;
-    let n_contract = 3;
+    let n_eoa = 10;
+    let n_contract = 5;
 
     // rng
-    let seed = [
-        1, 0, 0, 0, 23, 0, 0, 0, 200, 1, 0, 0, 210, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0,
-    ];
-    let mut rng = rng();
+    let seed = 42u64;
+    let mut rng = StdRng::seed_from_u64(seed);
 
     if path.exists() {
-        // delete the folder
+        // Initiate a clean db
         println!("Deleting {:?}", path.display());
         std::fs::remove_dir_all(&path).unwrap();
     }
 
-    // create the dirs
+    // Create the dirs
     std::fs::create_dir_all(&path).unwrap();
     println!("Transactions testdata not found, generating to {:?}", path.display());
     let tx = TestTransaction::new(&path);
 
-    let eoas = random_eoa_account_range(&mut rng, 0..n_eoa);
-    let contracts = random_contract_account_range(&mut rng, &mut (0..n_contract));
+    let eoas: Vec<(Address, Account)> = random_eoa_account_range(&mut rng, 0..n_eoa);
+    let contracts: Vec<(Address, Account, Bytecode)> =
+        random_contract_account_range(&mut rng, &mut (0..n_contract));
 
-    println!("EOAs: {:?}", eoas);
-    println!("Contracts: {:?}", contracts);
+    println!("EOAs: {:?}", eoas.len());
+    println!("Contracts: {:?}", contracts.len());
 
-    let accounts: BTreeMap<Address, Account> = concat([eoas, contracts]).into_iter().collect();
+    let accounts: BTreeMap<Address, Account> =
+        concat([eoas, contracts.iter().map(|(addr, acc, _)| (addr.clone(), acc.clone())).collect()])
+            .into_iter()
+            .collect();
+    let bytecodes: BTreeMap<Address, Bytecode> =
+        contracts.iter().map(|(addr, _, code)| (addr.clone(), code.clone())).collect();
 
-    let mut blocks = random_block_range(&mut rng, 0..=num_blocks, H256::zero(), txs_range);
+    let mut blocks = random_block_range(&mut rng, 0..=n_blocks, H256::zero(), txs_range);
 
     let (transitions, start_state) = random_transition_range(
         &mut rng,
@@ -423,6 +463,7 @@ pub fn txs_testdata(num_blocks: u64) -> TestDb {
         start_state.iter().map(|(addr, (_, storages))| (addr, storages)).collect::<Vec<_>>()
     );
 
+    tx.insert_bytecodes(bytecodes.values()).unwrap();
     tx.insert_accounts_and_storages(start_state.clone()).unwrap();
 
     // make first block after genesis have valid state root
@@ -468,5 +509,7 @@ pub fn txs_testdata(num_blocks: u64) -> TestDb {
     })
     .unwrap();
 
-    TestDb { path, state: final_state }
+    println!("Testdata generated to {:?}", path.display());
+
+    TestDb { path, state: final_state, bytecodes }
 }

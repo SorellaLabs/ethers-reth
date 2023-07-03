@@ -26,7 +26,7 @@ use reth_rpc::{
 };
 use reth_tasks::{TaskManager, TaskSpawner};
 use reth_transaction_pool::EthTransactionValidator;
-use std::{fmt::Debug, path::Path, sync::Arc};
+use std::{path::Path, sync::Arc};
 
 /// re-implementation of 'view()'
 /// allows for a function to be passed in through a RO libmdbx transaction
@@ -43,9 +43,9 @@ where
 }
 
 /// Opens up an existing database at the specified path.
-pub fn init_db<P: AsRef<Path> + Debug>(path: P) -> eyre::Result<Env<WriteMap>> {
+pub fn init_db<P: AsRef<Path>>(path: P) -> eyre::Result<Env<WriteMap>> {
     std::fs::create_dir_all(path.as_ref())?;
-    println!("{:?}", path);
+    println!("Initiating db at {}", path.as_ref().display());
     let db = reth_db::mdbx::Env::<reth_db::mdbx::WriteMap>::open(
         path.as_ref(),
         reth_db::mdbx::EnvKind::RO,
@@ -61,7 +61,7 @@ pub fn init_db<P: AsRef<Path> + Debug>(path: P) -> eyre::Result<Env<WriteMap>> {
 }
 
 // EthApi/Filter Client
-pub fn init_client<P: AsRef<Path> + Debug>(db_path: P) -> Result<RethClient, DatabaseError> {
+pub fn init_client<P: AsRef<Path>>(db_path: P) -> Result<RethClient, DatabaseError> {
     let chain = MAINNET.clone();
     let db = Arc::new(init_db(db_path).unwrap());
 

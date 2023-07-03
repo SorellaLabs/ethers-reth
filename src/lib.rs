@@ -96,7 +96,7 @@ impl<M> RethMiddleware<M>
 where
     M: Middleware,
 {
-    pub fn new<P: AsRef<Path> + Debug>(inner: M, db_path:P, handle: Handle) -> Result<Self> {
+    pub fn new<P: AsRef<Path>>(inner: M, db_path:P, handle: Handle) -> Result<Self> {
         let client = init_client(db_path)?;
 
         // EthApi -> EthApi<Client, Pool, Network>
