@@ -11,8 +11,7 @@ Please note that Octane is currently in its early stages of development.
 ## Todo:
 
 - [ ] Full log functionality
-- [x] Full trace functionality
-- [ ] Full debug functionality
+- [ ] Full parity & geth trace functionality, not currently functional hope to fix this week
 - [ ] Mock ethers-reth client for github CI testing
 - [x] Integration with Anvil: We plan to integrate with Anvil to offer super-fast simulation in fork mode. See [fastfoundry](https://github.com/SorellaLabs/fastfoundry) & [anvil-benchmarks](https://github.com/SorellaLabs/anvil-benchmarks)
 
