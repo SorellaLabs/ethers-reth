@@ -4,7 +4,6 @@ use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::{
     externals::TreeExternals, BlockchainTree, BlockchainTreeConfig, ShareableBlockchainTree,
 };
-use reth_interfaces::db::LogLevel;
 use reth_db::{
     database::{Database, DatabaseGAT},
     mdbx::{Env, WriteMap},
@@ -12,6 +11,7 @@ use reth_db::{
     transaction::DbTx,
     DatabaseError,
 };
+use reth_interfaces::db::LogLevel;
 
 use reth_network_api::test_utils::NoopNetwork;
 use reth_primitives::MAINNET;

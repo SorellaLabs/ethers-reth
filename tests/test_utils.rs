@@ -1,7 +1,5 @@
 use ethers::{
-    prelude::{
-        rand::{rngs::StdRng, Rng, SeedableRng},
-    },
+    prelude::rand::{rngs::StdRng, Rng, SeedableRng},
     providers::{Http, Ipc, Provider, ProviderExt},
 };
 use eyre::Result;

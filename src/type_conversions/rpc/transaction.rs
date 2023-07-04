@@ -1,8 +1,7 @@
 use crate::type_conversions::{ToEthers, ToReth};
 
 use ethers::types::{
-    transaction::eip2930::{AccessList as EthersAccessList, AccessListItem as EthersAccessListItem}, OtherFields,
-    Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
+    OtherFields, Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
 };
 use reth_primitives::AccessList;
 use reth_revm::primitives::ruint::Uint;
@@ -58,7 +57,7 @@ impl ToEthers<EthersTransaction> for Transaction {
             r: r.into_ethers(),
             s: s.into_ethers(),
             transaction_type: self.transaction_type,
-            access_list: self.access_list.map(|acc| AccessList{0: acc}.into_ethers()),
+            access_list: self.access_list.map(|acc| AccessList { 0: acc }.into_ethers()),
             max_priority_fee_per_gas: self.max_priority_fee_per_gas.into_ethers(),
             max_fee_per_gas: self.max_fee_per_gas.into_ethers(),
             chain_id: self.chain_id.into_ethers(),
