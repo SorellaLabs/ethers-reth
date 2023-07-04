@@ -385,8 +385,9 @@ where
     }
 
     async fn debug_trace_block(
-        trace_options: EthersDebugTracingOptions,
+        &self,
         block_id: EthersBlockId,
+        trace_options: EthersDebugTracingOptions,
     ) -> Result<GethTrace, Self::Error> {
 
         self.reth_debug
@@ -396,9 +397,10 @@ where
     }
 
     async fn debug_trace_call<T: Into<TypedTransaction> + Send + Sync>(
-        trace_options: EthersDebugTracingOptions,
+        &self,
         call: T,
         block_id: Option<EthersBlockId>,
+        trace_options: EthersDebugTracingOptions,
     ) -> Result<GethTrace, Self::Error> {
 
         self.reth_debug
@@ -408,6 +410,7 @@ where
     }
 
     async fn debug_trace_raw_block(
+        &self,
         rlp_block: EthersBytes,
         trace_options: EthersDebugTracingOptions,
     ) -> Result<GethTrace, Self::Error> {
