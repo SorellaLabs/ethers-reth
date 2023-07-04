@@ -19,9 +19,10 @@ use ethers::{
         Filter as EthersFilter, Log as EthersLog, NameOrAddress, Trace as EthersTrace,
         TraceType as EthersTraceType, Transaction as EthersTransaction,
         TransactionReceipt as EthersTransactionReceipt, TxHash as EthersTxHash, H256 as EthersH256,
-        U256 as EthersU256, U64 as EthersU64,
+        U256 as EthersU256, U64 as EthersU64, GethDebugTracingOptions as EthersDebugTracingOptions,
     },
 };
+
 
 // Reth Types
 use reth_primitives::BlockId;
@@ -366,6 +367,21 @@ where
         let block_id = block.into_reth();
         let trace_opt = self.reth_trace.trace_block(BlockId::Number(block_id)).await?;
         Ok(trace_opt.ok_or(RethMiddlewareError::MissingTrace)?.into_ethers())
+    }
+
+    //TODO: Implement trace transaction by importing the necessary types from ethers (aliasing them as done in the imports above)
+    //TODO: then creating the necessary type conversions to convert from the geth debug types from reth & ethers-rs
+    //TODO: I need you to do this for all the debug functionality in the middleware trait that is supported by reth's DebugApi, thanks!
+    async fn debug_trace_transaction(
+        &self,
+        tx_hash: EthersTxHash,
+        trace_options: EthersDebugTracingOptions,
+    ) -> Result<GethTrace, Self::Error> {
+
+        self.reth_debug
+            .debug_trace_transaction(tx_hash, trace_options)
+            .await
+            .map_err(MiddlewareError::from_err)
     }
 
     // TODO: Implement trace_filter when implemented in reth
