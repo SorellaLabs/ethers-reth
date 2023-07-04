@@ -57,7 +57,7 @@ impl ToEthers<EthersTransaction> for Transaction {
             r: r.into_ethers(),
             s: s.into_ethers(),
             transaction_type: self.transaction_type,
-            access_list: self.access_list.map(|acc| AccessList (acc).into_ethers()),
+            access_list: self.access_list.map(|acc| AccessList(acc).into_ethers()),
             max_priority_fee_per_gas: self.max_priority_fee_per_gas.into_ethers(),
             max_fee_per_gas: self.max_fee_per_gas.into_ethers(),
             chain_id: self.chain_id.into_ethers(),
