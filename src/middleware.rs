@@ -379,7 +379,7 @@ where
         trace_options: EthersDebugTracingOptions,
     ) -> Result<GethTrace, Self::Error> {
         self.reth_debug
-            .debug_trace_transaction(tx_hash.into(), trace_options)
+            .debug_trace_transaction(tx_hash.into(), trace_options.into_reth())
             .await
             .map_err(MiddlewareError::from_err)
     }
@@ -390,7 +390,7 @@ where
         trace_options: EthersDebugTracingOptions,
     ) -> Result<GethTrace, Self::Error> {
         self.reth_debug
-            .debug_trace_block(block_id.into_reth(), trace_options)
+            .debug_trace_block(block_id.into_reth(), trace_options.into_reth())
             .await
             .map_err(MiddlewareError::from_err)
     }
@@ -402,7 +402,7 @@ where
         trace_options: EthersDebugTracingOptions,
     ) -> Result<GethTrace, Self::Error> {
         self.reth_debug
-            .debug_trace_call(call.into_reth(), block_id.into_reth(), trace_options)
+            .debug_trace_call(call.into_reth(), block_id.into_reth(), trace_options.into_reth())
             .await
             .map_err(MiddlewareError::from_err)
     }
@@ -413,7 +413,7 @@ where
         trace_options: EthersDebugTracingOptions,
     ) -> Result<GethTrace, Self::Error> {
         self.reth_debug
-            .debug_trace_raw_block(rlp_block.into_reth(), trace_options)
+            .debug_trace_raw_block(rlp_block.into_reth(), trace_options.into_reth())
             .await
             .map_err(MiddlewareError::from_err)
     }
