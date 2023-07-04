@@ -238,11 +238,11 @@ where
         &self,
         block_hash_or_number: T,
     ) -> Result<Option<EthersBlock<EthersH256>>, Self::Error> {
-        let block_id: BlockNumberOrTag = block_hash_or_number.into_reth();
+        let block_id: EthersBlockId = block_hash_or_number.into();
 
         let block = match block_id {
             EthersBlockId::Hash(hash) => self.reth_api.block_by_hash(hash.into(), false).await?,
-            EthersBlockId::Number(num) => self.reth_api.block_by_number(num, false).await?,
+            EthersBlockId::Number(num) => self.reth_api.block_by_number(num.into_reth(), false).await?,
         };
 
         Ok(block.into_ethers())
@@ -263,7 +263,7 @@ where
             }
             EthersBlockId::Number(num) => {
                 self.reth_api
-                    .uncle_by_block_number_and_index(num.into(), idx.as_usize().into())
+                    .uncle_by_block_number_and_index(num.into_reth(), idx.as_usize().into())
                     .await?
             }
         };
@@ -279,7 +279,7 @@ where
 
         let block = match block_id {
             EthersBlockId::Hash(hash) => self.reth_api.block_by_hash(hash.into(), true).await?,
-            EthersBlockId::Number(num) => self.reth_api.block_by_number(num.into(), true).await?,
+            EthersBlockId::Number(num) => self.reth_api.block_by_number(num.into_reth(), true).await?,
         };
 
         Ok(block.into_ethers())
@@ -353,7 +353,7 @@ where
     ) -> Result<Vec<EthersBlockTrace>, Self::Error> {
         let res = self
             .reth_trace
-            .replay_block_transactions(BlockId::Number(block.into()), trace_type.into_reth())
+            .replay_block_transactions(BlockId::Number(block.into_reth()), trace_type.into_reth())
             .await?;
         Ok(res.unwrap().into_ethers())
     }
