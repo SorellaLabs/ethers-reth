@@ -384,6 +384,40 @@ where
             .map_err(MiddlewareError::from_err)
     }
 
+    async fn debug_trace_block(
+        trace_options: EthersDebugTracingOptions,
+        block_id: EthersBlockId,
+    ) -> Result<GethTrace, Self::Error> {
+
+        self.reth_debug
+            .debug_trace_block(block_id, trace_options)
+            .await
+            .map_err(MiddlewareError::from_err)
+    }
+
+    async fn debug_trace_call<T: Into<TypedTransaction> + Send + Sync>(
+        trace_options: EthersDebugTracingOptions,
+        call: T,
+        block_id: Option<EthersBlockId>,
+    ) -> Result<GethTrace, Self::Error> {
+
+        self.reth_debug
+            .debug_trace_call(call, block_id, trace_options)
+            .await
+            .map_err(MiddlewareError::from_err)
+    }
+
+    async fn debug_trace_raw_block(
+        rlp_block: EthersBytes,
+        trace_options: EthersDebugTracingOptions,
+    ) -> Result<GethTrace, Self::Error> {
+
+        self.reth_debug
+            .debug_trace_raw_block(rlp_block, trace_options)
+            .await
+            .map_err(MiddlewareError::from_err)
+    }
+
     // TODO: Implement trace_filter when implemented in reth
 
     async fn trace_get<T: Into<EthersU64> + Send + Sync>(
