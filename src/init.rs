@@ -4,7 +4,7 @@ use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::{
     externals::TreeExternals, BlockchainTree, BlockchainTreeConfig, ShareableBlockchainTree,
 };
-
+use reth_interfaces::db::LogLevel;
 use reth_db::{
     database::{Database, DatabaseGAT},
     mdbx::{Env, WriteMap},
@@ -49,6 +49,7 @@ pub fn init_db<P: AsRef<Path>>(path: P) -> eyre::Result<Env<WriteMap>> {
     let db = reth_db::mdbx::Env::<reth_db::mdbx::WriteMap>::open(
         path.as_ref(),
         reth_db::mdbx::EnvKind::RO,
+        Some(LogLevel::Debug),
     )?;
 
     view(&db, |tx| {

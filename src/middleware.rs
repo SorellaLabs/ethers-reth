@@ -24,7 +24,7 @@ use ethers::{
 };
 
 // Reth Types
-use reth_primitives::BlockId;
+use reth_primitives::{BlockId, BlockNumberOrTag};
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
 use reth_rpc_types::Filter;
 
@@ -238,11 +238,11 @@ where
         &self,
         block_hash_or_number: T,
     ) -> Result<Option<EthersBlock<EthersH256>>, Self::Error> {
-        let block_id = block_hash_or_number.into();
+        let block_id: BlockNumberOrTag = block_hash_or_number.into_reth();
 
         let block = match block_id {
             EthersBlockId::Hash(hash) => self.reth_api.block_by_hash(hash.into(), false).await?,
-            EthersBlockId::Number(num) => self.reth_api.block_by_number(num.into(), false).await?,
+            EthersBlockId::Number(num) => self.reth_api.block_by_number(num, false).await?,
         };
 
         Ok(block.into_ethers())
