@@ -394,10 +394,10 @@ where
             .await?;
 
         debug_trace.iter_mut().for_each(|x| {
-            match x {
+            x = match x {
                 TraceResult::Success { result: val } => *val,
                 TraceResult::Error { error: _ } => GethTrace::Default(DefaultFrame::default()),
-            }
+            };
         });
 
         Ok(debug_trace.into_ethers())
