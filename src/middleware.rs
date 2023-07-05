@@ -384,7 +384,7 @@ where
         &self,
         block: EthersH256,
         trace_options: EthersDebugTracingOptions,
-    ) ->  Result<Vec<EthersGethTrace, std::alloc::Global>, Self::Error> { 
+    ) ->  Result<Vec<EthersGethTrace>, Self::Error> { 
         let debug_trace = self.reth_debug
             .debug_trace_block(BlockId::from(block), trace_options.into_reth()) 
             .await?;
