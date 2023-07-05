@@ -393,14 +393,16 @@ where
             .debug_trace_block(BlockId::from(block.into_reth()), trace_options.into_reth()) 
             .await?;
 
+        let mut trace = vec![];
+
         debug_trace.iter_mut().for_each(|x| {
-            x = match x {
+            trace.push(match x {
                 TraceResult::Success { result: val } => *val,
                 TraceResult::Error { error: _ } => GethTrace::Default(DefaultFrame::default()),
-            };
+            });
         });
 
-        Ok(debug_trace.into_ethers())
+        Ok(trace.into_ethers())
     }
 
     async fn debug_trace_call<T: Into<TypedTransaction> + Send + Sync>(
