@@ -374,27 +374,27 @@ where
     // convert from the geth debug types from reth & ethers-rs TODO: I need you to do this for
     // all the debug functionality in the middleware trait that is supported by reth's DebugApi,
     // thanks!
-    async fn debug_trace_transaction(
-        &self,
-        tx_hash: EthersTxHash,
-        trace_options: EthersDebugTracingOptions,
-    ) -> Result<EthersGethTrace, Self::Error> {
-        self.reth_debug
-            .debug_trace_transaction(tx_hash.into(), trace_options.into_reth())
-            .await
-            .map_err(MiddlewareError::from_err)
-    }
+    // async fn debug_trace_transaction(
+    //     &self,
+    //     tx_hash: EthersTxHash,
+    //     trace_options: EthersDebugTracingOptions,
+    // ) -> Result<EthersGethTrace, Self::Error> {
+    //     self.reth_debug
+    //         .debug_trace_transaction(tx_hash.into(), trace_options.into_reth())
+    //         .await
+    //         .map_err(MiddlewareError::from_err)
+    // }
 
-    async fn debug_trace_block(
-        &self,
-        block_id: EthersBlockId,
-        trace_options: EthersDebugTracingOptions,
-    ) -> Result<EthersGethTrace, Self::Error> {
-        self.reth_debug
-            .debug_trace_block(block_id.into_reth(), trace_options.into_reth())
-            .await
-            .map_err(MiddlewareError::from_err)
-    }
+    // async fn debug_trace_block(
+    //     &self,
+    //     block_id: EthersBlockId,
+    //     trace_options: EthersDebugTracingCallOptions,
+    // ) -> Result<EthersGethTrace, Self::Error> {
+    //     self.reth_debug
+    //         .debug_trace_block(block_id.into_reth(), trace_options.into_reth())
+    //         .await
+    //         .map_err(MiddlewareError::from_err)
+    // }
 
     async fn debug_trace_call<T: Into<TypedTransaction> + Send + Sync>(
         &self,
@@ -408,16 +408,16 @@ where
             .map_err(MiddlewareError::from_err)
     }
 
-    async fn debug_trace_raw_block(
-        &self,
-        rlp_block: EthersBytes,
-        trace_options: EthersDebugTracingOptions,
-    ) -> Result<EthersGethTrace, Self::Error> {
-        self.reth_debug
-            .debug_trace_raw_block(rlp_block.into_reth(), trace_options.into_reth())
-            .await
-            .map_err(MiddlewareError::from_err)
-    }
+    // async fn debug_trace_raw_block(
+    //     &self,
+    //     rlp_block: EthersBytes,
+    //     trace_options: EthersDebugTracingOptions,
+    // ) -> Result<EthersGethTrace, Self::Error> {
+    //     self.reth_debug
+    //         .debug_trace_raw_block(rlp_block.into_reth(), trace_options.into_reth())
+    //         .await
+    //         .map_err(MiddlewareError::from_err)
+    // }
 
     // TODO: Implement trace_filter when implemented in reth
 
