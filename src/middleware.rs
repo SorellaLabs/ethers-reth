@@ -420,7 +420,7 @@ where
             .debug_trace_call(call.into().into_reth(), block_id.into_reth(), trace_options.into_reth())
             .await?;
 
-        Ok(debug_trace)
+        Ok(debug_trace.into_ethers())
     }
 
     // async fn debug_trace_raw_block(
