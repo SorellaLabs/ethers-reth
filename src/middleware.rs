@@ -16,7 +16,7 @@ use ethers::{
         BlockNumber as EthersBlocKNumber, BlockNumber as EthersBlockNumber,
         BlockTrace as EthersBlockTrace, Bytes as EthersBytes,
         EIP1186ProofResponse as EthersEIP1186ProofResponse, FeeHistory as EthersFeeHistory,
-        Filter as EthersFilter, GethDebugTracingOptions as EthersDebugTracingOptions, GethCallDebugTracingOptions as EthersCallDebugTracingOptions,
+        Filter as EthersFilter, GethDebugTracingOptions as EthersDebugTracingOptions, GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
         Log as EthersLog, NameOrAddress, Trace as EthersTrace, TraceType as EthersTraceType,
         Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
         TxHash as EthersTxHash, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
@@ -400,7 +400,7 @@ where
         &self,
         call: T,
         block_id: Option<EthersBlockId>,
-        trace_options: EthersDebugCallTracingOptions,
+        trace_options: EthersDebugTracingCallOptions,
     ) -> Result<EthersGethTrace, Self::Error> {
         self.reth_debug
             .debug_trace_call(call.into_reth(), block_id.into_reth(), trace_options.into_reth())
