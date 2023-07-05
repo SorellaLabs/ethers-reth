@@ -11,7 +11,7 @@ use reth_rpc_types::trace::geth::GethDebugTracingCallOptions;
 impl ToReth<GethDebugTracingCallOptions> for EthersDebugTracingCallOptions {
     fn into_reth(self) -> GethDebugTracingCallOptions {
         GethDebugTracingCallOptions {
-            tracing_options: self.tracing_options,
+            tracing_options: self.tracing_options.into_ethers(),
             state_overrides: None,
             block_overrides: None,
         }
