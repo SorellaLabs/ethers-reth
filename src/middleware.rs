@@ -397,7 +397,7 @@ where
 
         debug_trace.iter_mut().for_each(|x| {
             trace.push(match x {
-                TraceResult::Success { result: val } => *val.clone(),
+                TraceResult::Success { result: val } => val.clone(),
                 TraceResult::Error { error: _ } => GethTrace::Default(DefaultFrame::default()),
             });
         });
