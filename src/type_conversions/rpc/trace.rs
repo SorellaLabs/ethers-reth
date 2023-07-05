@@ -30,7 +30,6 @@ use ethers::types::{
     FourByteFrame, GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
     GethDebugTracingOptions as EthersDebugTracingOptions, GethTrace as EthersGethTrace,
     GethTraceFrame as EthersGethTraceFrame, NoopFrame, PreStateFrame, PreStateMode,
-    H256 as EthersH256,
 };
 
 /// GethDebugTracingCallOptions (ethers) -> (reth)

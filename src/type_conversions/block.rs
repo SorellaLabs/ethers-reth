@@ -2,6 +2,7 @@ use super::{ToEthers, ToReth};
 
 use ethers::types::{
     BlockId as EthersBlockId, BlockNumber as EthersBlockNumber
+    H256 as EthersH256,
 };
 use reth_primitives::{BlockId, BlockNumberOrTag, H256};
 
