@@ -5,6 +5,7 @@ use ethers::types::{
     FourByteFrame, GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
     GethTrace as EthersGethTrace, GethTraceFrame as EthersGethTraceFrame, NoopFrame, PreStateFrame,
     PreStateMode, H256 as EthersH256,
+    DebugTracingOptions as EthersDebugTracingOptions,
 };
 use reth_primitives::{BlockId, BlockNumberOrTag, H256};
 use reth_rpc_types::trace::geth::{
