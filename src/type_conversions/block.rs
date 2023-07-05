@@ -8,7 +8,7 @@ use ethers::types::{
 };
 use reth_primitives::{BlockId, BlockNumberOrTag, H256};
 use reth_rpc_types::trace::geth::{
-    GethDebugTracingCallOptions, GethDebugTracingOptions, GethTrace,
+    GethDebugTracingCallOptions, GethDebugTracingOptions, GethTrace, GethDefaultTracingOptions, GethDebugTracerConfig
 };
 
 /// GethDebugTracingCallOptions (ethers) -> (reth)
@@ -18,6 +18,18 @@ impl ToReth<GethDebugTracingCallOptions> for EthersDebugTracingCallOptions {
             tracing_options: GethDebugTracingOptions::default(),
             state_overrides: None,
             block_overrides: None,
+        }
+    }
+}
+
+/// GethDebugTracingOptions (ethers) -> (reth)
+impl ToReth<GethDebugTracingOptions> for EthersDebugTracingOptions {
+    fn into_reth(self) -> GethDebugTracingCallOptions {
+        GethDebugTracingCallOptions {
+            config: GethDefaultTracingOptions::default(),
+            tracer: None,
+            tracer_config: GethDebugTracerConfig::default(),
+            timeout: None,
         }
     }
 }
