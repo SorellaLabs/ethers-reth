@@ -16,7 +16,7 @@ use ethers::{
         BlockNumber as EthersBlocKNumber, BlockNumber as EthersBlockNumber,
         BlockTrace as EthersBlockTrace, Bytes as EthersBytes,
         EIP1186ProofResponse as EthersEIP1186ProofResponse, FeeHistory as EthersFeeHistory,
-        Filter as EthersFilter, GethDebugTracingOptions as EthersDebugTracingOptions,
+        Filter as EthersFilter, GethDebugTracingOptions as EthersDebugTracingOptions, GethCallDebugTracingOptions as EthersCallDebugTracingOptions,
         Log as EthersLog, NameOrAddress, Trace as EthersTrace, TraceType as EthersTraceType,
         Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
         TxHash as EthersTxHash, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
