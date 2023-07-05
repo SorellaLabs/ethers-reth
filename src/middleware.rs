@@ -380,14 +380,17 @@ where
         Ok(debug_trace.into_ethers())
     }
 
-    // async fn debug_trace_block(
-    //     &self,
-    //     block_id: EthersBlockId,
-    //     trace_options: EthersDebugTracingCallOptions,
-    // ) -> Result<EthersGethTrace, Self::Error> { self.reth_debug
-    //   .debug_trace_block(block_id.into_reth(), trace_options.into_reth()) .await
-    //   .map_err(MiddlewareError::from_err)
-    // }
+    async fn debug_trace_block_by_hash(
+        &self,
+        block: H256,
+        trace_options: EthersDebugTracingOptions,
+    ) -> Result<EthersGethTrace, Self::Error> { 
+        let debug_trace = self.reth_debug
+            .debug_trace_block(BlockId::from(block), trace_options.into_reth()) 
+            .await?;
+
+        Ok(debug_trace.into_ethers())
+    }
 
     async fn debug_trace_call<T: Into<TypedTransaction> + Send + Sync>(
         &self,
