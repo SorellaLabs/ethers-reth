@@ -393,12 +393,12 @@ where
             .debug_trace_block(BlockId::from(block.into_reth()), trace_options.into_reth()) 
             .await?;
 
-        debug_trace.iter_mut().map(|x| {
+        debug_trace.iter_mut().for_each(|x| {
             match x {
                 TraceResult::Success { result: val } => *val,
                 TraceResult::Error { error: _ } => GethTrace::Default(DefaultFrame::default()),
             }
-        }).collect();
+        });
 
         Ok(debug_trace.into_ethers())
     }
