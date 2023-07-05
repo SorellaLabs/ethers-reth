@@ -393,8 +393,8 @@ where
 
         debug_trace.iter().map(|x| {
             match x {
-                TraceResult::Success(val) => val,
-                TraceResult::Error(_) => (),
+                TraceResult::Success(result: val) => val,
+                TraceResult::Error(error: _) => (),
             }
         }).collect();
 
