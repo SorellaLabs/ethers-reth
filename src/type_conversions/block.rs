@@ -1,11 +1,7 @@
 use super::{ToEthers, ToReth};
 
 use ethers::types::{
-    BlockId as EthersBlockId, BlockNumber as EthersBlockNumber, CallFrame, DefaultFrame,
-    FourByteFrame, GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
-    GethDebugTracingOptions as EthersDebugTracingOptions, GethTrace as EthersGethTrace,
-    GethTraceFrame as EthersGethTraceFrame, NoopFrame, PreStateFrame, PreStateMode,
-    H256 as EthersH256,
+    BlockId as EthersBlockId, BlockNumber as EthersBlockNumber
 };
 use reth_primitives::{BlockId, BlockNumberOrTag, H256};
 
