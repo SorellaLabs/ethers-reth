@@ -384,10 +384,17 @@ where
         &self,
         block: EthersH256,
         trace_options: EthersDebugTracingOptions,
-    ) ->  Result<Vec<EthersGethTrace>, Self::Error> { 
+    ) -> Result<Vec<EthersGethTrace>, Self::Error> { 
         let debug_trace = self.reth_debug
             .debug_trace_block(BlockId::from(block.into_reth()), trace_options.into_reth()) 
             .await?;
+
+        debug_trace.iter().map(|x| {
+            match x {
+                TraceResult::Success(val) => val,
+                TraceResult::Error(_) => (),
+            }
+        }).collect();
 
         Ok(debug_trace.into_ethers())
     }
