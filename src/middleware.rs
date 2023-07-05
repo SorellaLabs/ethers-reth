@@ -369,19 +369,16 @@ where
         Ok(trace_opt.ok_or(RethMiddlewareError::MissingTrace)?.into_ethers())
     }
 
-    //TODO: Implement trace transaction by importing the necessary types from ethers (aliasing them
-    // as done in the imports above) TODO: then creating the necessary type conversions to
-    // convert from the geth debug types from reth & ethers-rs TODO: I need you to do this for
-    // all the debug functionality in the middleware trait that is supported by reth's DebugApi,
-    // thanks!
-    // async fn debug_trace_transaction(
-    //     &self,
-    //     tx_hash: EthersTxHash,
-    //     trace_options: EthersDebugTracingOptions,
-    // ) -> Result<EthersGethTrace, Self::Error> { self.reth_debug
-    //   .debug_trace_transaction(tx_hash.into(), trace_options.into_reth()) .await
-    //   .map_err(MiddlewareError::from_err)
-    // }
+    async fn debug_trace_transaction(
+        &self,
+        tx_hash: EthersTxHash,
+        trace_options: EthersDebugTracingOptions,
+    ) -> Result<EthersGethTrace, Self::Error> { 
+        let debug_trace = self.reth_debug
+            .debug_trace_transaction(tx_hash.into(), trace_options.into_reth()).await?;
+
+        Ok(debug_trace.into_ethers())
+    }
 
     // async fn debug_trace_block(
     //     &self,
@@ -390,16 +387,6 @@ where
     // ) -> Result<EthersGethTrace, Self::Error> { self.reth_debug
     //   .debug_trace_block(block_id.into_reth(), trace_options.into_reth()) .await
     //   .map_err(MiddlewareError::from_err)
-    // }
-
-    // async fn trace_call<T: Into<TypedTransaction> + Send + Sync>(
-    //     &self,
-    //     req: T,
-    //     trace_type: Vec<EthersTraceType>,
-    //     block: Option<EthersBlockNumber>,
-    // ) -> Result<EthersBlockTrace, Self::Error> { let tx = req.into(); let trace = self
-    //   .reth_trace .trace_call(tx.into_reth(), trace_type.into_reth(), block.into_reth(), None,
-    //   None) .await?; Ok(trace.into_ethers())
     // }
 
     async fn debug_trace_call<T: Into<TypedTransaction> + Send + Sync>(
