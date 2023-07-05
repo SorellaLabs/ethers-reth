@@ -396,6 +396,20 @@ where
     //         .map_err(MiddlewareError::from_err)
     // }
 
+    // async fn trace_call<T: Into<TypedTransaction> + Send + Sync>(
+    //     &self,
+    //     req: T,
+    //     trace_type: Vec<EthersTraceType>,
+    //     block: Option<EthersBlockNumber>,
+    // ) -> Result<EthersBlockTrace, Self::Error> {
+    //     let tx = req.into();
+    //     let trace = self
+    //         .reth_trace
+    //         .trace_call(tx.into_reth(), trace_type.into_reth(), block.into_reth(), None, None)
+    //         .await?;
+    //     Ok(trace.into_ethers())
+    // }
+
     async fn debug_trace_call<T: Into<TypedTransaction> + Send + Sync>(
         &self,
         call: T,
@@ -403,7 +417,7 @@ where
         trace_options: EthersDebugTracingCallOptions,
     ) -> Result<EthersGethTrace, Self::Error> {
         self.reth_debug
-            .debug_trace_call(call.into().into_reth(), block_id.into(), trace_options.into())
+            .debug_trace_call(call.into().into_reth(), block_id.into_reth(), trace_options.into())
             .await
             .map_err(MiddlewareError::from_err)
     }
