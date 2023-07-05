@@ -382,7 +382,7 @@ where
 
     async fn debug_trace_block_by_hash(
         &self,
-        block: H256,
+        block: EthersH256,
         trace_options: EthersDebugTracingOptions,
     ) -> Result<EthersGethTrace, Self::Error> { 
         let debug_trace = self.reth_debug
