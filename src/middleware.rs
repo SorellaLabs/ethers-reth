@@ -376,7 +376,7 @@ where
         Ok(trace_opt.ok_or(RethMiddlewareError::MissingTrace)?.into_ethers())
     }
 
-   async fn debug_trace_transaction(
+    async fn debug_trace_transaction(
         &self,
         tx_hash: EthersTxHash,
         trace_options: EthersDebugTracingOptions,
@@ -435,10 +435,6 @@ where
 
         Ok(trace.into_ethers())
     }
-        self.reth_debug
-            .debug_trace_transaction(tx_hash, trace_options)
-            .await
-            .map_err(MiddlewareError::from_err)
 
     async fn debug_trace_call<T: Into<TypedTransaction> + Send + Sync>(
         &self,
