@@ -26,8 +26,8 @@ use reth_rpc_types::trace::geth::{
 };
 
 use ethers::types::{
-    CallFrame, DefaultFrame,
-    FourByteFrame, GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
+    CallFrame, DefaultFrame, FourByteFrame,
+    GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
     GethDebugTracingOptions as EthersDebugTracingOptions, GethTrace as EthersGethTrace,
     GethTraceFrame as EthersGethTraceFrame, NoopFrame, PreStateFrame, PreStateMode,
 };
