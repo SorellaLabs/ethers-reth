@@ -20,6 +20,7 @@ use ethers::{
         Log as EthersLog, NameOrAddress, Trace as EthersTrace, TraceType as EthersTraceType,
         Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
         TxHash as EthersTxHash, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
+        GethTrace as EthersGethTrace,
     },
 };
 
