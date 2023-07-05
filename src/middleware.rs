@@ -417,7 +417,7 @@ where
         trace_options: EthersDebugTracingCallOptions,
     ) -> Result<EthersGethTrace, Self::Error> {
         self.reth_debug
-            .debug_trace_call(call.into().into_reth(), block_id.into_reth(), trace_options.into())
+            .debug_trace_call(call.into().into_reth(), block_id.into_reth(), trace_options.into_reth())
             .await
             .map_err(MiddlewareError::from_err)
     }
