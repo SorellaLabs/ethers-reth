@@ -4,6 +4,7 @@ use ethers::types::{
     BlockId as EthersBlockId, BlockNumber as EthersBlockNumber, H256 as EthersH256,
     GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
     GethTrace as EthersGethTrace,
+    GethTraceFrame as EthersGethTraceFrame,
     DefaultFrame,
     NoopFrame,
     FourByteFrame,
@@ -29,12 +30,12 @@ impl ToReth<GethDebugTracingCallOptions> for EthersDebugTracingCallOptions {
 impl ToEthers<EthersGethTrace> for GethTrace {
     fn into_ethers(self) -> EthersGethTrace {
         match self {
-            GethTrace::Default(default_frame) => EthersGethTrace::Default(DefaultFrame::default()),
-            GethTrace::CallTracer(call_frame) => EthersGethTrace::CallTracer(CallFrame::default()),
-            GethTrace::FourByteTracer(four_byte_frame) => EthersGethTrace::FourByteTracer(FourByteFrame::default()),
-            GethTrace::PreStateTracer(pre_state_frame) => EthersGethTrace::PreStateTracer(PreStateFrame::default()),
-            GethTrace::NoopTracer(noop_frame) => EthersGethTrace::NoopTracer(NoopFrame::default()),
-            GethTrace::JS(value) => EthersGethTrace::Default(DefaultFrame::default()),
+            GethTrace::Default(default_frame) => EthersGethTrace::Known(Default(DefaultFrame::default())),
+            GethTrace::CallTracer(call_frame) => EthersGethTrace::Known(EthersGethTraceFrame::CallTracer(CallFrame::default())),
+            GethTrace::FourByteTracer(four_byte_frame) => EthersGethTrace::Known(EthersGethTraceFrame::FourByteTracer(FourByteFrame::default())),
+            GethTrace::PreStateTracer(pre_state_frame) => EthersGethTrace::Known(EthersGethTraceFrame::PreStateTracer(PreStateFrame::default())),
+            GethTrace::NoopTracer(noop_frame) => EthersGethTrace::Known(EthersGethTraceFrame::NoopTracer(NoopFrame::default())),
+            GethTrace::JS(value) => EthersGethTrace::Unknown(EthersGethTraceFrame::Unknown(value))),
         }
     }
 }
