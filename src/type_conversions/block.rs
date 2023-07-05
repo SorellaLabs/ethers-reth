@@ -38,20 +38,6 @@ impl ToReth<GethDebugTracingOptions> for EthersDebugTracingOptions {
     }
 }
 
-/// BlockNumber (ethers) -> (reth)
-impl ToReth<BlockNumberOrTag> for BlockNumber {
-    fn into_reth(self) -> GethDebugTracingOptions {
-        match self {
-            BlockNumberOrTag::Latest => BlockNumber::Latest,
-            BlockNumberOrTag::Finalized => BlockNumber::Finalized,
-            BlockNumberOrTag::Safe => BlockNumber::Safe,
-            BlockNumberOrTag::Earliest => BlockNumber::Earliest,
-            BlockNumberOrTag::Pending => BlockNumber::Pending,
-            BlockNumberOrTag::Number(val) => BlockNumber::Number(val),
-        }
-    }
-}
-
 /// GethTrace (reth) -> (ethers)
 impl ToEthers<EthersGethTrace> for GethTrace {
     fn into_ethers(self) -> EthersGethTrace {
