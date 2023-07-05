@@ -31,7 +31,7 @@ impl ToReth<GethDebugTracingCallOptions> for EthersDebugTracingCallOptions {
 impl ToEthers<EthersGethTrace> for GethTrace {
     fn into_ethers(self) -> EthersGethTrace {
         match self {
-            GethTrace::Default(default_frame) => EthersGethTrace::Known(EthersGethTraceFrame::DefaultFrame::default()),
+            GethTrace::Default(default_frame) => EthersGethTrace::Known(EthersGethTraceFrame::Default(DefaultFrame::default())),
             GethTrace::CallTracer(call_frame) => EthersGethTrace::Known(EthersGethTraceFrame::CallTracer(CallFrame::default())),
             GethTrace::FourByteTracer(four_byte_frame) => EthersGethTrace::Known(EthersGethTraceFrame::FourByteTracer(FourByteFrame::default())),
             GethTrace::PreStateTracer(pre_state_frame) => EthersGethTrace::Known(EthersGethTraceFrame::PreStateTracer(PreStateFrame::Default(PreStateMode::default()))),
