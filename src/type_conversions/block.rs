@@ -12,6 +12,9 @@ use reth_rpc_types::trace::geth::{
     GethDebugTracingCallOptions, GethDebugTracingOptions, GethTrace, GethDefaultTracingOptions, GethDebugTracerConfig
 };
 
+use reth_primitives::BlockNumberOrTag;
+use ethers::types::BlockNumber;
+
 /// GethDebugTracingCallOptions (ethers) -> (reth)
 impl ToReth<GethDebugTracingCallOptions> for EthersDebugTracingCallOptions {
     fn into_reth(self) -> GethDebugTracingCallOptions {
@@ -31,6 +34,20 @@ impl ToReth<GethDebugTracingOptions> for EthersDebugTracingOptions {
             tracer: None,
             tracer_config: GethDebugTracerConfig::default(),
             timeout: None,
+        }
+    }
+}
+
+/// BlockNumber (ethers) -> (reth)
+impl ToReth<BlockNumberOrTag> for BlockNumber {
+    fn into_reth(self) -> GethDebugTracingOptions {
+        match self {
+            BlockNumberOrTag::Latest => BlockNumber::Latest,
+            BlockNumberOrTag::Finalized => BlockNumber::Finalized,
+            BlockNumberOrTag::Safe => BlockNumber::Safe,
+            BlockNumberOrTag::Earliest => BlockNumber::Earliest,
+            BlockNumberOrTag::Pending => BlockNumber::Pending,
+            BlockNumberOrTag::Number(val) => BlockNumber::Number(val),
         }
     }
 }

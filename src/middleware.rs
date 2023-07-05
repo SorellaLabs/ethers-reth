@@ -405,6 +405,27 @@ where
         Ok(trace.into_ethers())
     }
 
+    async fn debug_trace_block_by_number(
+        &self,
+        block: Option<ethers::types::BlockNumber>,
+        trace_options: EthersDebugTracingOptions,
+    ) -> Result<Vec<EthersGethTrace>, Self::Error> { 
+        let mut debug_trace = self.reth_debug
+            .debug_trace_block(block.into_reth(), trace_options.into_reth()) 
+            .await?;
+
+        let mut trace = vec![];
+
+        debug_trace.iter_mut().for_each(|x| {
+            trace.push(match x {
+                TraceResult::Success { result: val } => val.clone(),
+                TraceResult::Error { error: _ } => GethTrace::Default(DefaultFrame::default()),
+            });
+        });
+
+        Ok(trace.into_ethers())
+    }
+
     async fn debug_trace_call<T: Into<TypedTransaction> + Send + Sync>(
         &self,
         call: T,
@@ -422,17 +443,6 @@ where
 
         Ok(debug_trace.into_ethers())
     }
-
-    // async fn debug_trace_raw_block(
-    //     &self,
-    //     rlp_block: EthersBytes,
-    //     trace_options: EthersDebugTracingOptions,
-    // ) -> Result<EthersGethTrace, Self::Error> { self.reth_debug
-    //   .debug_trace_raw_block(rlp_block.into_reth(), trace_options.into_reth()) .await
-    //   .map_err(MiddlewareError::from_err)
-    // }
-
-    // TODO: Implement trace_filter when implemented in reth
 
     async fn trace_get<T: Into<EthersU64> + Send + Sync>(
         &self,
