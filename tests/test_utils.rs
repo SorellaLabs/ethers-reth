@@ -8,10 +8,10 @@ use reth_db::{
     common::KeyValue,
     cursor::{DbCursorRO, DbCursorRW, DbDupCursorRO},
     mdbx::{
-        test_utils::{create_test_db, create_test_db_with_path},
         tx::Tx,
         Env, EnvKind, WriteMap, RO, RW,
     },
+    test_utils::{create_test_db, create_test_db_with_path},
     models::{AccountBeforeTx, StoredBlockBodyIndices},
     table::Table,
     tables,
