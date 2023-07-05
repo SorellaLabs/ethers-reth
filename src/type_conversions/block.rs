@@ -3,15 +3,15 @@ use super::{ToEthers, ToReth};
 use ethers::types::{
     BlockId as EthersBlockId, BlockNumber as EthersBlockNumber, CallFrame, DefaultFrame,
     FourByteFrame, GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
-    GethTrace as EthersGethTrace, GethTraceFrame as EthersGethTraceFrame, NoopFrame, PreStateFrame,
-    PreStateMode, H256 as EthersH256,
-    GethDebugTracingOptions as EthersDebugTracingOptions,
+    GethDebugTracingOptions as EthersDebugTracingOptions, GethTrace as EthersGethTrace,
+    GethTraceFrame as EthersGethTraceFrame, NoopFrame, PreStateFrame, PreStateMode,
+    H256 as EthersH256,
 };
 use reth_primitives::{BlockId, BlockNumberOrTag, H256};
 use reth_rpc_types::trace::geth::{
-    GethDebugTracingCallOptions, GethDebugTracingOptions, GethTrace, GethDefaultTracingOptions, GethDebugTracerConfig
+    GethDebugTracerConfig, GethDebugTracingCallOptions, GethDebugTracingOptions,
+    GethDefaultTracingOptions, GethTrace,
 };
-
 
 /// GethDebugTracingCallOptions (ethers) -> (reth)
 impl ToReth<GethDebugTracingCallOptions> for EthersDebugTracingCallOptions {

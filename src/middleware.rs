@@ -28,10 +28,13 @@ use ethers::{
 use reth_primitives::BlockId;
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
 // use reth_rpc_types::trace::geth::TraceResult;
-use reth_rpc_types::trace::common::TraceResult;
-use reth_rpc_types::trace::geth::GethTrace;
-use reth_rpc_types::trace::geth::DefaultFrame;
-use reth_rpc_types::Filter;
+use reth_rpc_types::{
+    trace::{
+        common::TraceResult,
+        geth::{DefaultFrame, GethTrace},
+    },
+    Filter,
+};
 
 impl<M> RethMiddleware<M>
 where
@@ -377,9 +380,11 @@ where
         &self,
         tx_hash: EthersTxHash,
         trace_options: EthersDebugTracingOptions,
-    ) -> Result<EthersGethTrace, Self::Error> { 
-        let debug_trace = self.reth_debug
-            .debug_trace_transaction(tx_hash.into(), trace_options.into_reth()).await?;
+    ) -> Result<EthersGethTrace, Self::Error> {
+        let debug_trace = self
+            .reth_debug
+            .debug_trace_transaction(tx_hash.into(), trace_options.into_reth())
+            .await?;
 
         Ok(debug_trace.into_ethers())
     }
@@ -388,9 +393,13 @@ where
         &self,
         block: EthersH256,
         trace_options: EthersDebugTracingOptions,
-    ) -> Result<Vec<EthersGethTrace>, Self::Error> { 
-        let mut debug_trace = self.reth_debug
-            .debug_trace_block(BlockId::from(reth_primitives::H256(block.0)), trace_options.into_reth()) 
+    ) -> Result<Vec<EthersGethTrace>, Self::Error> {
+        let mut debug_trace = self
+            .reth_debug
+            .debug_trace_block(
+                BlockId::from(reth_primitives::H256(block.0)),
+                trace_options.into_reth(),
+            )
             .await?;
 
         let mut trace = vec![];
@@ -409,9 +418,10 @@ where
         &self,
         block: Option<ethers::types::BlockNumber>,
         trace_options: EthersDebugTracingOptions,
-    ) -> Result<Vec<EthersGethTrace>, Self::Error> { 
-        let mut debug_trace = self.reth_debug
-            .debug_trace_block(block.unwrap().into_reth(), trace_options.into_reth()) 
+    ) -> Result<Vec<EthersGethTrace>, Self::Error> {
+        let mut debug_trace = self
+            .reth_debug
+            .debug_trace_block(block.unwrap().into_reth(), trace_options.into_reth())
             .await?;
 
         let mut trace = vec![];
