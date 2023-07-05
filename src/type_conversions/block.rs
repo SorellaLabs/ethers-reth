@@ -24,8 +24,8 @@ impl ToReth<GethDebugTracingCallOptions> for EthersDebugTracingCallOptions {
 
 /// GethDebugTracingOptions (ethers) -> (reth)
 impl ToReth<GethDebugTracingOptions> for EthersDebugTracingOptions {
-    fn into_reth(self) -> GethDebugTracingCallOptions {
-        GethDebugTracingCallOptions {
+    fn into_reth(self) -> GethDebugTracingOptions {
+        GethDebugTracingOptions {
             config: GethDefaultTracingOptions::default(),
             tracer: None,
             tracer_config: GethDebugTracerConfig::default(),
