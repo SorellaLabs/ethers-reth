@@ -26,7 +26,7 @@ use ethers::{
 
 // Reth Types
 use reth_primitives::BlockId;
-use reth_rpc_api::{EthApiServer, EthFilterApiServer};
+use reth_rpc_api::{EthApiServer, EthFilterApiServer, TraceResult};
 use reth_rpc_types::Filter;
 
 impl<M> RethMiddleware<M>
