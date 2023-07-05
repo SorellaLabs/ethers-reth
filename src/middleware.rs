@@ -400,7 +400,7 @@ where
         &self,
         call: T,
         block_id: Option<EthersBlockId>,
-        trace_options: EthersDebugTracingOptions,
+        trace_options: EthersDebugCallTracingOptions,
     ) -> Result<EthersGethTrace, Self::Error> {
         self.reth_debug
             .debug_trace_call(call.into_reth(), block_id.into_reth(), trace_options.into_reth())
