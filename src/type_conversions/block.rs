@@ -6,6 +6,7 @@ use ethers::types::{
     GethTrace as EthersGethTrace,
     GethTraceFrame as EthersGethTraceFrame,
     DefaultFrame,
+    PreStateMode,
     NoopFrame,
     FourByteFrame,
     CallFrame,
@@ -33,9 +34,9 @@ impl ToEthers<EthersGethTrace> for GethTrace {
             GethTrace::Default(default_frame) => EthersGethTrace::Known(Default(DefaultFrame::default())),
             GethTrace::CallTracer(call_frame) => EthersGethTrace::Known(EthersGethTraceFrame::CallTracer(CallFrame::default())),
             GethTrace::FourByteTracer(four_byte_frame) => EthersGethTrace::Known(EthersGethTraceFrame::FourByteTracer(FourByteFrame::default())),
-            GethTrace::PreStateTracer(pre_state_frame) => EthersGethTrace::Known(EthersGethTraceFrame::PreStateTracer(PreStateFrame::default())),
+            GethTrace::PreStateTracer(pre_state_frame) => EthersGethTrace::Known(EthersGethTraceFrame::PreStateTracer(PreStateFrame::Default(PreStateMode::default()))),
             GethTrace::NoopTracer(noop_frame) => EthersGethTrace::Known(EthersGethTraceFrame::NoopTracer(NoopFrame::default())),
-            GethTrace::JS(value) => EthersGethTrace::Unknown(EthersGethTraceFrame::Unknown(value)),
+            GethTrace::JS(value) => EthersGethTrace::Unknown(value),
         }
     }
 }
