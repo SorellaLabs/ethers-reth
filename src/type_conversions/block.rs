@@ -2,8 +2,17 @@ use super::{ToEthers, ToReth};
 
 use ethers::types::{
     BlockId as EthersBlockId, BlockNumber as EthersBlockNumber, H256 as EthersH256,
+    GethDebugTracingCallOptions as EthersDebugTracingCallOptions
 };
 use reth_primitives::{BlockId, BlockNumberOrTag, H256};
+use reth_rpc_types::trace::geth::GethDebugTracingCallOptions;
+
+/// BlockId (ethers) -> (reth)
+impl ToReth<GethDebugTracingCallOptions> for EthersDebugTracingCallOptions {
+    fn into_reth(self) -> GethDebugTracingCallOptions {
+        self.0
+    }
+}
 
 /// BlockId (ethers) -> (reth)
 impl ToReth<BlockId> for EthersBlockId {
