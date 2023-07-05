@@ -1,20 +1,15 @@
 use super::{ToEthers, ToReth};
 
 use ethers::types::{
-    BlockId as EthersBlockId, BlockNumber as EthersBlockNumber, H256 as EthersH256,
-    GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
-    GethTrace as EthersGethTrace,
-    GethTraceFrame as EthersGethTraceFrame,
-    DefaultFrame,
-    PreStateMode,
-    NoopFrame,
-    FourByteFrame,
-    CallFrame,
-    PreStateFrame,
+    BlockId as EthersBlockId, BlockNumber as EthersBlockNumber, CallFrame, DefaultFrame,
+    FourByteFrame, GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
+    GethTrace as EthersGethTrace, GethTraceFrame as EthersGethTraceFrame, NoopFrame, PreStateFrame,
+    PreStateMode, H256 as EthersH256,
 };
 use reth_primitives::{BlockId, BlockNumberOrTag, H256};
-use reth_rpc_types::trace::geth::{GethDebugTracingCallOptions, GethDebugTracingOptions, GethTrace};
-
+use reth_rpc_types::trace::geth::{
+    GethDebugTracingCallOptions, GethDebugTracingOptions, GethTrace,
+};
 
 /// GethDebugTracingCallOptions (ethers) -> (reth)
 impl ToReth<GethDebugTracingCallOptions> for EthersDebugTracingCallOptions {
@@ -31,11 +26,23 @@ impl ToReth<GethDebugTracingCallOptions> for EthersDebugTracingCallOptions {
 impl ToEthers<EthersGethTrace> for GethTrace {
     fn into_ethers(self) -> EthersGethTrace {
         match self {
-            GethTrace::Default(default_frame) => EthersGethTrace::Known(EthersGethTraceFrame::Default(DefaultFrame::default())),
-            GethTrace::CallTracer(call_frame) => EthersGethTrace::Known(EthersGethTraceFrame::CallTracer(CallFrame::default())),
-            GethTrace::FourByteTracer(four_byte_frame) => EthersGethTrace::Known(EthersGethTraceFrame::FourByteTracer(FourByteFrame::default())),
-            GethTrace::PreStateTracer(pre_state_frame) => EthersGethTrace::Known(EthersGethTraceFrame::PreStateTracer(PreStateFrame::Default(PreStateMode::default()))),
-            GethTrace::NoopTracer(noop_frame) => EthersGethTrace::Known(EthersGethTraceFrame::NoopTracer(NoopFrame::default())),
+            GethTrace::Default(_) => {
+                EthersGethTrace::Known(EthersGethTraceFrame::Default(DefaultFrame::default()))
+            }
+            GethTrace::CallTracer(_) => {
+                EthersGethTrace::Known(EthersGethTraceFrame::CallTracer(CallFrame::default()))
+            }
+            GethTrace::FourByteTracer(_) => EthersGethTrace::Known(
+                EthersGethTraceFrame::FourByteTracer(FourByteFrame::default()),
+            ),
+            GethTrace::PreStateTracer(_) => {
+                EthersGethTrace::Known(EthersGethTraceFrame::PreStateTracer(
+                    PreStateFrame::Default(PreStateMode::default()),
+                ))
+            }
+            GethTrace::NoopTracer(_) => {
+                EthersGethTrace::Known(EthersGethTraceFrame::NoopTracer(NoopFrame::default()))
+            }
             GethTrace::JS(value) => EthersGethTrace::Unknown(value),
         }
     }

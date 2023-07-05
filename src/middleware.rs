@@ -16,11 +16,11 @@ use ethers::{
         BlockNumber as EthersBlocKNumber, BlockNumber as EthersBlockNumber,
         BlockTrace as EthersBlockTrace, Bytes as EthersBytes,
         EIP1186ProofResponse as EthersEIP1186ProofResponse, FeeHistory as EthersFeeHistory,
-        Filter as EthersFilter, GethDebugTracingOptions as EthersDebugTracingOptions, GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
+        Filter as EthersFilter, GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
+        GethDebugTracingOptions as EthersDebugTracingOptions, GethTrace as EthersGethTrace,
         Log as EthersLog, NameOrAddress, Trace as EthersTrace, TraceType as EthersTraceType,
         Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
         TxHash as EthersTxHash, H256 as EthersH256, U256 as EthersU256, U64 as EthersU64,
-        GethTrace as EthersGethTrace,
     },
 };
 
@@ -378,22 +378,18 @@ where
     //     &self,
     //     tx_hash: EthersTxHash,
     //     trace_options: EthersDebugTracingOptions,
-    // ) -> Result<EthersGethTrace, Self::Error> {
-    //     self.reth_debug
-    //         .debug_trace_transaction(tx_hash.into(), trace_options.into_reth())
-    //         .await
-    //         .map_err(MiddlewareError::from_err)
+    // ) -> Result<EthersGethTrace, Self::Error> { self.reth_debug
+    //   .debug_trace_transaction(tx_hash.into(), trace_options.into_reth()) .await
+    //   .map_err(MiddlewareError::from_err)
     // }
 
     // async fn debug_trace_block(
     //     &self,
     //     block_id: EthersBlockId,
     //     trace_options: EthersDebugTracingCallOptions,
-    // ) -> Result<EthersGethTrace, Self::Error> {
-    //     self.reth_debug
-    //         .debug_trace_block(block_id.into_reth(), trace_options.into_reth())
-    //         .await
-    //         .map_err(MiddlewareError::from_err)
+    // ) -> Result<EthersGethTrace, Self::Error> { self.reth_debug
+    //   .debug_trace_block(block_id.into_reth(), trace_options.into_reth()) .await
+    //   .map_err(MiddlewareError::from_err)
     // }
 
     // async fn trace_call<T: Into<TypedTransaction> + Send + Sync>(
@@ -401,13 +397,9 @@ where
     //     req: T,
     //     trace_type: Vec<EthersTraceType>,
     //     block: Option<EthersBlockNumber>,
-    // ) -> Result<EthersBlockTrace, Self::Error> {
-    //     let tx = req.into();
-    //     let trace = self
-    //         .reth_trace
-    //         .trace_call(tx.into_reth(), trace_type.into_reth(), block.into_reth(), None, None)
-    //         .await?;
-    //     Ok(trace.into_ethers())
+    // ) -> Result<EthersBlockTrace, Self::Error> { let tx = req.into(); let trace = self
+    //   .reth_trace .trace_call(tx.into_reth(), trace_type.into_reth(), block.into_reth(), None,
+    //   None) .await?; Ok(trace.into_ethers())
     // }
 
     async fn debug_trace_call<T: Into<TypedTransaction> + Send + Sync>(
@@ -416,8 +408,13 @@ where
         block_id: Option<EthersBlockId>,
         trace_options: EthersDebugTracingCallOptions,
     ) -> Result<EthersGethTrace, Self::Error> {
-        let debug_trace = self.reth_debug
-            .debug_trace_call(call.into().into_reth(), block_id.into_reth(), trace_options.into_reth())
+        let debug_trace = self
+            .reth_debug
+            .debug_trace_call(
+                call.into().into_reth(),
+                block_id.into_reth(),
+                trace_options.into_reth(),
+            )
             .await?;
 
         Ok(debug_trace.into_ethers())
@@ -427,11 +424,9 @@ where
     //     &self,
     //     rlp_block: EthersBytes,
     //     trace_options: EthersDebugTracingOptions,
-    // ) -> Result<EthersGethTrace, Self::Error> {
-    //     self.reth_debug
-    //         .debug_trace_raw_block(rlp_block.into_reth(), trace_options.into_reth())
-    //         .await
-    //         .map_err(MiddlewareError::from_err)
+    // ) -> Result<EthersGethTrace, Self::Error> { self.reth_debug
+    //   .debug_trace_raw_block(rlp_block.into_reth(), trace_options.into_reth()) .await
+    //   .map_err(MiddlewareError::from_err)
     // }
 
     // TODO: Implement trace_filter when implemented in reth
