@@ -20,6 +20,67 @@ use reth_rpc_types::trace::parity::{
     VmInstruction, VmTrace,
 };
 
+use reth_rpc_types::trace::geth::{
+    GethDebugTracerConfig, GethDebugTracingCallOptions, GethDebugTracingOptions,
+    GethDefaultTracingOptions, GethTrace,
+};
+
+use ethers::types::{
+    CallFrame, DefaultFrame, FourByteFrame,
+    GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
+    GethDebugTracingOptions as EthersDebugTracingOptions, GethTrace as EthersGethTrace,
+    GethTraceFrame as EthersGethTraceFrame, NoopFrame, PreStateFrame, PreStateMode,
+};
+
+/// GethDebugTracingCallOptions (ethers) -> (reth)
+impl ToReth<GethDebugTracingCallOptions> for EthersDebugTracingCallOptions {
+    fn into_reth(self) -> GethDebugTracingCallOptions {
+        GethDebugTracingCallOptions {
+            tracing_options: GethDebugTracingOptions::default(),
+            state_overrides: None,
+            block_overrides: None,
+        }
+    }
+}
+
+/// GethDebugTracingOptions (ethers) -> (reth)
+impl ToReth<GethDebugTracingOptions> for EthersDebugTracingOptions {
+    fn into_reth(self) -> GethDebugTracingOptions {
+        GethDebugTracingOptions {
+            config: GethDefaultTracingOptions::default(),
+            tracer: None,
+            tracer_config: GethDebugTracerConfig::default(),
+            timeout: None,
+        }
+    }
+}
+
+/// GethTrace (reth) -> (ethers)
+impl ToEthers<EthersGethTrace> for GethTrace {
+    fn into_ethers(self) -> EthersGethTrace {
+        match self {
+            GethTrace::Default(_) => {
+                EthersGethTrace::Known(EthersGethTraceFrame::Default(DefaultFrame::default()))
+            }
+            GethTrace::CallTracer(_) => {
+                EthersGethTrace::Known(EthersGethTraceFrame::CallTracer(CallFrame::default()))
+            }
+            GethTrace::FourByteTracer(_) => EthersGethTrace::Known(
+                EthersGethTraceFrame::FourByteTracer(FourByteFrame::default()),
+            ),
+            GethTrace::PreStateTracer(_) => {
+                EthersGethTrace::Known(EthersGethTraceFrame::PreStateTracer(
+                    PreStateFrame::Default(PreStateMode::default()),
+                ))
+            }
+            GethTrace::NoopTracer(_) => {
+                EthersGethTrace::Known(EthersGethTraceFrame::NoopTracer(NoopFrame::default()))
+            }
+            GethTrace::JS(value) => EthersGethTrace::Unknown(value),
+        }
+    }
+}
+
 /// Action (ethers) -> (reth)
 impl ToReth<Action> for EthersAction {
     fn into_reth(self) -> Action {
