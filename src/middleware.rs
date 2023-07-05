@@ -393,8 +393,8 @@ where
 
         debug_trace.iter().map(|x| {
             match x {
-                TraceResult::Success { result: val }=> val,
-                TraceResult::Error { error: _ } => (),
+                TraceResult::Success { result: val } => *val,
+                TraceResult::Error { error: _ } => EthersGethTraceFrame::Default(DefaultFrame::default()),
             }
         }).collect();
 
