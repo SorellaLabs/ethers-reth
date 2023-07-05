@@ -12,8 +12,6 @@ use reth_rpc_types::trace::geth::{
     GethDebugTracingCallOptions, GethDebugTracingOptions, GethTrace, GethDefaultTracingOptions, GethDebugTracerConfig
 };
 
-use reth_primitives::BlockNumberOrTag;
-use ethers::types::BlockNumber;
 
 /// GethDebugTracingCallOptions (ethers) -> (reth)
 impl ToReth<GethDebugTracingCallOptions> for EthersDebugTracingCallOptions {
