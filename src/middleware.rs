@@ -389,11 +389,11 @@ where
         block: EthersH256,
         trace_options: EthersDebugTracingOptions,
     ) -> Result<Vec<EthersGethTrace>, Self::Error> { 
-        let debug_trace = self.reth_debug
+        let mut debug_trace = self.reth_debug
             .debug_trace_block(BlockId::from(block.into_reth()), trace_options.into_reth()) 
             .await?;
 
-        debug_trace.iter().map(|x| {
+        debug_trace.iter_mut().map(|x| {
             match x {
                 TraceResult::Success { result: val } => *val,
                 TraceResult::Error { error: _ } => GethTrace::Default(DefaultFrame::default()),
