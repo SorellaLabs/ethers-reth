@@ -396,7 +396,7 @@ where
         debug_trace.iter().map(|x| {
             match x {
                 TraceResult::Success { result: val } => *val,
-                TraceResult::Error { error: _ } => GethTraceFrame::Default(DefaultFrame::default()),
+                TraceResult::Error { error: _ } => GethTrace::Default(DefaultFrame::default()),
             }
         }).collect();
 
