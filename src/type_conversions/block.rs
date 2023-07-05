@@ -29,12 +29,12 @@ impl ToReth<GethDebugTracingCallOptions> for EthersDebugTracingCallOptions {
 impl ToEthers<EthersGethTrace> for GethTrace {
     fn into_ethers(self) -> EthersGethTrace {
         match self {
-            Default(default_frame) => EthersGethTrace::Default(DefaultFrame::default()),
-            CallTracer(call_frame) => EthersGethTrace::CallTracer(CallFrame::default()),
-            FourByteTracer(four_byte_frame) => EthersGethTrace::FourByteTracer(FourByteFrame::default()),
-            PreStateTracer(pre_state_frame) => EthersGethTrace::PreStateTracer(PreStateFrame::default()),
-            NoopTracer(noop_frame) => EthersGethTrace::NoopTracer(NoopFrame::default()),
-            JS(value) => EthersGethTrace::Default(DefaultFrame::default()),
+            GethTrace::Default(default_frame) => EthersGethTrace::Default(DefaultFrame::default()),
+            GethTrace::CallTracer(call_frame) => EthersGethTrace::CallTracer(CallFrame::default()),
+            GethTrace::FourByteTracer(four_byte_frame) => EthersGethTrace::FourByteTracer(FourByteFrame::default()),
+            GethTrace::PreStateTracer(pre_state_frame) => EthersGethTrace::PreStateTracer(PreStateFrame::default()),
+            GethTrace::NoopTracer(noop_frame) => EthersGethTrace::NoopTracer(NoopFrame::default()),
+            GethTrace::JS(value) => EthersGethTrace::Default(DefaultFrame::default()),
         }
     }
 }
