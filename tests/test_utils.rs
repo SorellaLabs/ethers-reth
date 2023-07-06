@@ -1,20 +1,17 @@
 use ethers::{
     prelude::rand::{rngs::StdRng, Rng, SeedableRng},
-    providers::{Http, Ipc, Provider, ProviderExt},
+    providers::{Http, Ipc, Middleware, Provider, ProviderExt},
 };
 use eyre::Result;
 use itertools::concat;
 use reth_db::{
     common::KeyValue,
     cursor::{DbCursorRO, DbCursorRW, DbDupCursorRO},
-    mdbx::{
-        test_utils::{create_test_db, create_test_db_with_path},
-        tx::Tx,
-        Env, EnvKind, WriteMap, RO, RW,
-    },
+    mdbx::{tx::Tx, Env, EnvKind, EnvironmentKind, WriteMap, RO, RW},
     models::{AccountBeforeTx, StoredBlockBodyIndices},
     table::Table,
     tables,
+    test_utils::{ERROR_DB_CREATION, ERROR_TABLE_CREATION},
     transaction::{DbTx, DbTxMut},
     DatabaseError as DbError,
 };
@@ -44,6 +41,13 @@ pub async fn spawn_http_provider(url: &str) -> Result<Provider<Http>> {
     Ok(Provider::<Http>::connect(url).await)
 }
 
+/// Create database for testing with specified path
+fn create_test_db_with_path<E: EnvironmentKind>(kind: EnvKind, path: &Path) -> Env<E> {
+    let env = Env::<E>::open(path, kind, None).expect(ERROR_DB_CREATION);
+    env.create_tables().expect(ERROR_TABLE_CREATION);
+    env
+}
+
 /// The [TestTransaction] is used as an internal
 /// database for testing stage implementation.
 ///
@@ -58,14 +62,6 @@ pub struct TestTransaction {
     pub tx: Arc<Env<WriteMap>>,
     pub path: Option<PathBuf>,
     pub factory: ProviderFactory<Arc<Env<WriteMap>>>,
-}
-
-impl Default for TestTransaction {
-    /// Create a new instance of [TestTransaction]
-    fn default() -> Self {
-        let tx = create_test_db::<WriteMap>(EnvKind::RW);
-        Self { tx: tx.clone(), path: None, factory: ProviderFactory::new(tx, MAINNET.clone()) }
-    }
 }
 
 #[allow(dead_code)]
