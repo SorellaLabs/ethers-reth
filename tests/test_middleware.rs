@@ -6,7 +6,7 @@ mod tests {
 
     use ethers::{
         prelude::Lazy,
-        providers::Middleware,
+        providers::{Http, Middleware, Provider},
         types::{Bytes as EthersBytes, NameOrAddress, H256 as EthersH256},
     };
     use ethers_reth::{type_conversions::ToEthers, RethMiddleware};
@@ -14,6 +14,7 @@ mod tests {
 
     // const TEST_HTTP_URL: &str = "https://reth.sorella-beechit.com:8485";
     const TEST_HTTP_URL: &str = "http://45.250.253.77:8545";
+    // const TEST_HTTP_URL: &str = "https://eth.llamarpc.com";
     #[allow(dead_code)]
     const TEST_IPC_PATH: &str = "/tmp/reth.ipc";
 
@@ -31,6 +32,9 @@ mod tests {
         let provider = spawn_http_provider(TEST_HTTP_URL)
             .await
             .expect(format!("Failed to spawn HTTP provider from path {}", TEST_HTTP_URL).as_str());
+
+        let block_number = provider.get_block_number().await.unwrap();
+        println!("block_number: {:?}", block_number);
 
         let middleware = RethMiddleware::new(provider, &TEST_DB.path, handle.clone()).unwrap();
 
