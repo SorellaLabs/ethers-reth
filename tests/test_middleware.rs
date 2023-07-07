@@ -95,29 +95,3 @@ mod tests {
         rt.shutdown_background();
     }
 }
-
-//TODO:
-
-// Create DB integration tests using the reth test db
-// Create the reth middleware & understand how to create stub components of each
-// During re-read through of the code I should keep an eye out for:
-// - db test env
-/* - pub type RethClient = BlockchainProvider<
-    Arc<Env<WriteMap>>,
-    ShareableBlockchainTree<Arc<Env<WriteMap>>, Arc<BeaconConsensus>, Factory>,
->;
-
-pub type RethTxPool =
-    Pool<EthTransactionValidator<RethClient, PooledTransaction>, CostOrdering<PooledTransaction>>;
-
-pub type RethApi = EthApi<RethClient, RethTxPool, NoopNetwork>;
-pub type RethFilter = EthFilter<RethClient, RethTxPool>;
-pub type RethTrace = TraceApi<RethClient, RethApi>;
-
-#[derive(Clone)]
-pub struct RethMiddleware<M> {
-    inner: M,
-    reth_api: RethApi,
-    reth_filter: RethFilter,
-    reth_trace: RethTrace,
-} */
