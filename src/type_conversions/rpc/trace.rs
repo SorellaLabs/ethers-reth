@@ -295,54 +295,6 @@ impl ToEthers<EthersRes> for TraceOutput {
 
 // -----------------------------------------------
 
-// /// EthersTrace (ethers) -> LocalizedTransactionTrace (reth)
-// impl ToReth<TraceResult> for EthersRes {
-//     fn into_reth(self) -> TraceResult {
-//         match self {
-//             EthersRes::Call(EthersCallResult { gas_used, output }) => {
-//                 TraceResult::Success(TraceOutput::Call(CallOutput {
-//                     gas_used: gas_used.into_reth(),
-//                     output: output.into_reth(),
-//                 }))
-//             }
-//             EthersRes::Create(EthersCreateResult { gas_used, code, address }) => {
-//                 TraceResult::Success(TraceOutput::Create(CreateOutput {
-//                     gas_used: gas_used.into_reth(),
-//                     code: code.into_reth(),
-//                     address: address.into_reth(),
-//                 }))
-//             }
-//             EthersRes::None => TraceResult::Error { error: "Error".to_string() },
-//         }
-//     }
-// }
-
-// /// LocalizedTransactionTrace (reth) -> EthersTrace (ethers)
-// impl ToEthers<EthersRes> for TraceResult {
-//     fn into_ethers(self) -> EthersRes {
-//         match self {
-//             TraceResult::Success { result } => match result {
-//                 TraceOutput::Call(CallOutput { gas_used, output }) => {
-//                     EthersRes::Call(EthersCallResult {
-//                         gas_used: gas_used.into_ethers(),
-//                         output: output.into_ethers(),
-//                     })
-//                 }
-//                 TraceOutput::Create(CreateOutput { gas_used, code, address }) => {
-//                     EthersRes::Create(EthersCreateResult {
-//                         gas_used: gas_used.into_ethers(),
-//                         code: code.into_ethers(),
-//                         address: address.into_ethers(),
-//                     })
-//                 }
-//             },
-//             TraceResult::Error { error: _ } => EthersRes::None,
-//         }
-//     }
-// }
-
-// -----------------------------------------------
-
 /// TraceType (ethers) -> (reth)
 impl ToReth<TraceType> for EthersTraceType {
     fn into_reth(self) -> TraceType {
