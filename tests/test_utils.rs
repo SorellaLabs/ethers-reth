@@ -1,6 +1,6 @@
 use ethers::{
     prelude::rand::{rngs::StdRng, Rng, SeedableRng},
-    providers::{Http, Ipc, Middleware, Provider, ProviderExt},
+    providers::{Http, Ipc, Provider, ProviderExt},
 };
 use eyre::Result;
 use itertools::concat;

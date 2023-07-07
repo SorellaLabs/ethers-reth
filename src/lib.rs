@@ -9,7 +9,7 @@ use ethers::providers::{Middleware, MiddlewareError};
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::ShareableBlockchainTree;
 use reth_db::mdbx::{Env, WriteMap};
-use reth_network_api::test_utils::NoopNetwork;
+use reth_network_api::noop::NoopNetwork;
 use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
 use reth_rpc::{eth::error::EthApiError, DebugApi, EthApi, EthFilter, TraceApi};

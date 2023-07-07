@@ -13,7 +13,7 @@ use reth_db::{
 };
 use reth_interfaces::db::LogLevel;
 
-use reth_network_api::test_utils::NoopNetwork;
+use reth_network_api::noop::NoopNetwork;
 use reth_primitives::MAINNET;
 use reth_provider::{providers::BlockchainProvider, ProviderFactory};
 use reth_revm::Factory;
@@ -97,7 +97,7 @@ pub fn init_eth_api(client: RethClient, task_manager: TaskManager) -> RethApi {
     EthApi::new(
         client.clone(),
         tx_pool,
-        NoopNetwork,
+        NoopNetwork::default(),
         state_cache.clone(),
         GasPriceOracle::new(client, GasPriceOracleConfig::default(), state_cache),
     )
@@ -108,7 +108,7 @@ pub fn init_pool(client: RethClient, task_manager: TaskManager) -> RethTxPool {
     let chain = MAINNET.clone();
 
     reth_transaction_pool::Pool::eth_pool(
-        EthTransactionValidator::new(client, chain, task_manager.executor(), 1),
+        EthTransactionValidator::new(client, chain, task_manager.executor()),
         Default::default(),
     )
 }

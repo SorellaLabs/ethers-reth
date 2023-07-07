@@ -15,9 +15,8 @@ use reth_revm::primitives::bitvec::macros::internal::funty::Fundamental;
 use reth_rpc_types::trace::parity::{
     AccountDiff, Action, CallAction, CallOutput, CallType, ChangedType, CreateAction, CreateOutput,
     Delta, LocalizedTransactionTrace, MemoryDelta, RewardAction, RewardType, SelfdestructAction,
-    StateDiff, StorageDelta, TraceOutput, TraceResult, TraceResults,
-    TraceResultsWithTransactionHash, TraceType, TransactionTrace, VmExecutedOperation,
-    VmInstruction, VmTrace,
+    StateDiff, StorageDelta, TraceOutput, TraceResults, TraceResultsWithTransactionHash, TraceType,
+    TransactionTrace, VmExecutedOperation, VmInstruction, VmTrace,
 };
 
 use reth_rpc_types::trace::geth::{
@@ -184,11 +183,21 @@ impl ToEthers<EthersCallType> for CallType {
 /// EthersTrace (ethers) -> TransactionTrace (reth)
 impl ToReth<TransactionTrace> for EthersTrace {
     fn into_reth(self) -> TransactionTrace {
-        TransactionTrace {
-            trace_address: self.trace_address,
-            subtraces: self.subtraces,
-            action: self.action.into_reth(),
-            result: self.result.into_reth(),
+        match self.result {
+            Some(result) => TransactionTrace {
+                trace_address: self.trace_address,
+                subtraces: self.subtraces,
+                action: self.action.into_reth(),
+                result: result.into_reth(),
+                error: self.error,
+            },
+            None => TransactionTrace {
+                trace_address: self.trace_address,
+                subtraces: self.subtraces,
+                action: self.action.into_reth(),
+                result: None,
+                error: self.error,
+            },
         }
     }
 }
@@ -225,61 +234,118 @@ impl ToEthers<EthersTrace> for LocalizedTransactionTrace {
                 EthersAction::Suicide(_) => EthersActionType::Suicide,
                 EthersAction::Reward(_) => EthersActionType::Reward,
             },
-            error: match self.trace.result {
-                Some(TraceResult::Error { error }) => Some(error),
-                _ => None,
-            },
+            error: self.trace.error,
         }
     }
 }
 
 // -----------------------------------------------
 
-/// EthersTrace (ethers) -> LocalizedTransactionTrace (reth)
-impl ToReth<TraceResult> for EthersRes {
-    fn into_reth(self) -> TraceResult {
-        match self {
-            EthersRes::Call(EthersCallResult { gas_used, output }) => {
-                TraceResult::parity_success(TraceOutput::Call(CallOutput {
-                    gas_used: gas_used.into_reth(),
-                    output: output.into_reth(),
-                }))
-            }
-            EthersRes::Create(EthersCreateResult { gas_used, code, address }) => {
-                TraceResult::parity_success(TraceOutput::Create(CreateOutput {
-                    gas_used: gas_used.into_reth(),
-                    code: code.into_reth(),
-                    address: address.into_reth(),
-                }))
-            }
-            EthersRes::None => TraceResult::Error { error: "Error".to_string() },
+impl ToReth<CallOutput> for EthersCallResult {
+    fn into_reth(self) -> CallOutput {
+        CallOutput { gas_used: self.gas_used.into_reth(), output: self.output.into_reth() }
+    }
+}
+
+impl ToEthers<EthersCallResult> for CallOutput {
+    fn into_ethers(self) -> EthersCallResult {
+        EthersCallResult {
+            gas_used: self.gas_used.into_ethers(),
+            output: self.output.into_ethers(),
         }
     }
 }
 
-/// LocalizedTransactionTrace (reth) -> EthersTrace (ethers)
-impl ToEthers<EthersRes> for TraceResult {
-    fn into_ethers(self) -> EthersRes {
-        match self {
-            TraceResult::Success { result } => match result {
-                TraceOutput::Call(CallOutput { gas_used, output }) => {
-                    EthersRes::Call(EthersCallResult {
-                        gas_used: gas_used.into_ethers(),
-                        output: output.into_ethers(),
-                    })
-                }
-                TraceOutput::Create(CreateOutput { gas_used, code, address }) => {
-                    EthersRes::Create(EthersCreateResult {
-                        gas_used: gas_used.into_ethers(),
-                        code: code.into_ethers(),
-                        address: address.into_ethers(),
-                    })
-                }
-            },
-            TraceResult::Error { error: _ } => EthersRes::None,
+// -----------------------------------------------
+
+impl ToReth<CreateOutput> for EthersCreateResult {
+    fn into_reth(self) -> CreateOutput {
+        CreateOutput {
+            gas_used: self.gas_used.into_reth(),
+            code: self.code.into_reth(),
+            address: self.address.into_reth(),
         }
     }
 }
+
+impl ToEthers<EthersCreateResult> for CreateOutput {
+    fn into_ethers(self) -> EthersCreateResult {
+        EthersCreateResult {
+            gas_used: self.gas_used.into_ethers(),
+            code: self.code.into_ethers(),
+            address: self.address.into_ethers(),
+        }
+    }
+}
+
+// -----------------------------------------------
+
+impl ToReth<Option<TraceOutput>> for EthersRes {
+    fn into_reth(self) -> Option<TraceOutput> {
+        match self {
+            EthersRes::Call(result) => Some(TraceOutput::Call(result.into_reth())),
+            EthersRes::Create(result) => Some(TraceOutput::Create(result.into_reth())),
+            EthersRes::None => None,
+        }
+    }
+}
+
+impl ToEthers<EthersRes> for TraceOutput {
+    fn into_ethers(self) -> EthersRes {
+        match self {
+            TraceOutput::Call(result) => EthersRes::Call(result.into_ethers()),
+            TraceOutput::Create(result) => EthersRes::Create(result.into_ethers()),
+        }
+    }
+}
+
+// -----------------------------------------------
+
+// /// EthersTrace (ethers) -> LocalizedTransactionTrace (reth)
+// impl ToReth<TraceResult> for EthersRes {
+//     fn into_reth(self) -> TraceResult {
+//         match self {
+//             EthersRes::Call(EthersCallResult { gas_used, output }) => {
+//                 TraceResult::Success(TraceOutput::Call(CallOutput {
+//                     gas_used: gas_used.into_reth(),
+//                     output: output.into_reth(),
+//                 }))
+//             }
+//             EthersRes::Create(EthersCreateResult { gas_used, code, address }) => {
+//                 TraceResult::Success(TraceOutput::Create(CreateOutput {
+//                     gas_used: gas_used.into_reth(),
+//                     code: code.into_reth(),
+//                     address: address.into_reth(),
+//                 }))
+//             }
+//             EthersRes::None => TraceResult::Error { error: "Error".to_string() },
+//         }
+//     }
+// }
+
+// /// LocalizedTransactionTrace (reth) -> EthersTrace (ethers)
+// impl ToEthers<EthersRes> for TraceResult {
+//     fn into_ethers(self) -> EthersRes {
+//         match self {
+//             TraceResult::Success { result } => match result {
+//                 TraceOutput::Call(CallOutput { gas_used, output }) => {
+//                     EthersRes::Call(EthersCallResult {
+//                         gas_used: gas_used.into_ethers(),
+//                         output: output.into_ethers(),
+//                     })
+//                 }
+//                 TraceOutput::Create(CreateOutput { gas_used, code, address }) => {
+//                     EthersRes::Create(EthersCreateResult {
+//                         gas_used: gas_used.into_ethers(),
+//                         code: code.into_ethers(),
+//                         address: address.into_ethers(),
+//                     })
+//                 }
+//             },
+//             TraceResult::Error { error: _ } => EthersRes::None,
+//         }
+//     }
+// }
 
 // -----------------------------------------------
 
@@ -362,11 +428,21 @@ impl ToEthers<EthersBlockTrace> for TraceResultsWithTransactionHash {
 /// TransactionTrace (ethers) -> (reth)
 impl ToReth<TransactionTrace> for EthersTransactionTrace {
     fn into_reth(self) -> TransactionTrace {
-        TransactionTrace {
-            trace_address: self.trace_address,
-            subtraces: self.subtraces,
-            action: self.action.into_reth(),
-            result: self.result.into_reth(),
+        match self.result {
+            Some(result) => TransactionTrace {
+                trace_address: self.trace_address,
+                subtraces: self.subtraces,
+                action: self.action.into_reth(),
+                result: result.into_reth(),
+                error: self.error,
+            },
+            None => TransactionTrace {
+                trace_address: self.trace_address,
+                subtraces: self.subtraces,
+                action: self.action.into_reth(),
+                result: None,
+                error: self.error,
+            },
         }
     }
 }
@@ -385,10 +461,7 @@ impl ToEthers<EthersTransactionTrace> for TransactionTrace {
                 EthersAction::Suicide(_) => EthersActionType::Suicide,
                 EthersAction::Reward(_) => EthersActionType::Reward,
             },
-            error: match self.result {
-                Some(TraceResult::Error { error }) => Some(error),
-                _ => None,
-            },
+            error: self.error,
         }
     }
 }
