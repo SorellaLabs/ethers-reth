@@ -183,21 +183,15 @@ impl ToEthers<EthersCallType> for CallType {
 /// EthersTrace (ethers) -> TransactionTrace (reth)
 impl ToReth<TransactionTrace> for EthersTrace {
     fn into_reth(self) -> TransactionTrace {
-        match self.result {
-            Some(result) => TransactionTrace {
-                trace_address: self.trace_address,
-                subtraces: self.subtraces,
-                action: self.action.into_reth(),
-                result: result.into_reth(),
-                error: self.error,
+        TransactionTrace {
+            trace_address: self.trace_address,
+            subtraces: self.subtraces,
+            action: self.action.into_reth(),
+            result: match self.result.into_reth() {
+                Some(Some(result)) => Some(result),
+                _ => None,
             },
-            None => TransactionTrace {
-                trace_address: self.trace_address,
-                subtraces: self.subtraces,
-                action: self.action.into_reth(),
-                result: None,
-                error: self.error,
-            },
+            error: self.error,
         }
     }
 }
@@ -428,21 +422,15 @@ impl ToEthers<EthersBlockTrace> for TraceResultsWithTransactionHash {
 /// TransactionTrace (ethers) -> (reth)
 impl ToReth<TransactionTrace> for EthersTransactionTrace {
     fn into_reth(self) -> TransactionTrace {
-        match self.result {
-            Some(result) => TransactionTrace {
-                trace_address: self.trace_address,
-                subtraces: self.subtraces,
-                action: self.action.into_reth(),
-                result: result.into_reth(),
-                error: self.error,
+        TransactionTrace {
+            trace_address: self.trace_address,
+            subtraces: self.subtraces,
+            action: self.action.into_reth(),
+            result: match self.result.into_reth() {
+                Some(Some(result)) => Some(result),
+                _ => None,
             },
-            None => TransactionTrace {
-                trace_address: self.trace_address,
-                subtraces: self.subtraces,
-                action: self.action.into_reth(),
-                result: None,
-                error: self.error,
-            },
+            error: self.error,
         }
     }
 }
