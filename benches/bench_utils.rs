@@ -31,6 +31,6 @@ pub async fn spawn_bench_reth_middleware(
     let rt = Runtime::new().unwrap();
     let handle = rt.handle().clone();
     let provider = Provider::connect_ipc(TEST_IPC_PATH).await.unwrap();
-    let middleware = RethMiddleware::new(provider, TEST_DB_PATH.as_ref(), handle)?;
+    let middleware = spawn_reth_middleware(provider, Path::new(TEST_DB_PATH)).await?;
     Ok(middleware)
 }

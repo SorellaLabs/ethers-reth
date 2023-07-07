@@ -6,7 +6,7 @@ mod tests {
 
     use ethers::{
         prelude::Lazy,
-        providers::{Http, Middleware, Provider},
+        providers::Middleware,
         types::{Bytes as EthersBytes, NameOrAddress, H256 as EthersH256},
     };
     use ethers_reth::{type_conversions::ToEthers, RethMiddleware};
