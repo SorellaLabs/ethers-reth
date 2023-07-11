@@ -13,16 +13,14 @@ use reth_network_api::noop::NoopNetwork;
 use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
 use reth_rpc::{eth::error::EthApiError, DebugApi, EthApi, EthFilter, TraceApi};
-use reth_tasks::TaskManager;
 use reth_transaction_pool::{EthTransactionValidator, GasCostOrdering, Pool, PooledTransaction};
 //Error
 use jsonrpsee::types::ErrorObjectOwned;
 use thiserror::Error;
-// own modules
+
 pub mod init;
 pub mod middleware;
 pub mod type_conversions;
-use init::{init_client, init_debug, init_eth_api, init_eth_filter, init_trace};
 use tokio::runtime::Handle;
 
 pub type RethClient = BlockchainProvider<
@@ -97,16 +95,9 @@ where
     M: Middleware,
 {
     pub fn new<P: AsRef<Path>>(inner: M, db_path: P, handle: Handle) -> Result<Self> {
-        let client = init_client(db_path)?;
-
-        // EthApi -> EthApi<Client, Pool, Network>
-        let api = init_eth_api(client.clone(), TaskManager::new(handle.clone()));
-        // EthFilter -> EthFilter<Client, Pool>
-        let filter = init_eth_filter(client.clone(), 1000, TaskManager::new(handle.clone()));
-        let trace = init_trace(client.clone(), api.clone(), TaskManager::new(handle.clone()), 10);
-        let debug = init_debug(client, api.clone(), TaskManager::new(handle), 10);
-
-        Ok(Self { inner, reth_api: api, reth_filter: filter, reth_trace: trace, reth_debug: debug })
+        let (reth_api, reth_filter, reth_trace, reth_debug) =
+            Self::try_new(db_path.as_ref(), handle)?;
+        Ok(Self { inner, reth_api, reth_filter, reth_trace, reth_debug })
     }
 
     pub fn reth_api(&self) -> &RethApi {
