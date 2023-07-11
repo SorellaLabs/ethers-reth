@@ -1,9 +1,12 @@
-use crate::{RethApi, RethClient, RethDebug, RethFilter, RethTrace, RethTxPool};
 use eyre::Context;
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::{
     externals::TreeExternals, BlockchainTree, BlockchainTreeConfig, ShareableBlockchainTree,
 };
+
+use crate::{RethApi, RethDebug, RethFilter, RethMiddleware, RethTrace};
+use ethers::providers::Middleware;
+// Reth
 use reth_db::{
     database::{Database, DatabaseGAT},
     mdbx::{Env, WriteMap},
@@ -11,8 +14,6 @@ use reth_db::{
     transaction::DbTx,
     DatabaseError,
 };
-use reth_interfaces::db::LogLevel;
-
 use reth_network_api::noop::NoopNetwork;
 use reth_primitives::MAINNET;
 use reth_provider::{providers::BlockchainProvider, ProviderFactory};
@@ -24,9 +25,101 @@ use reth_rpc::{
     },
     DebugApi, EthApi, EthFilter, TraceApi, TracingCallGuard,
 };
-use reth_tasks::{TaskManager, TaskSpawner};
-use reth_transaction_pool::EthTransactionValidator;
-use std::{path::Path, sync::Arc};
+use reth_tasks::TaskManager;
+use reth_transaction_pool::{EthTransactionValidator, GasCostOrdering, Pool, PooledTransaction};
+// Std
+use std::{fmt::Debug, path::Path, sync::Arc};
+use tokio::runtime::Handle;
+
+pub type Provider = BlockchainProvider<
+    Arc<Env<WriteMap>>,
+    ShareableBlockchainTree<Arc<Env<WriteMap>>, Arc<BeaconConsensus>, Factory>,
+>;
+
+pub type RethTxPool =
+    Pool<EthTransactionValidator<Provider, PooledTransaction>, GasCostOrdering<PooledTransaction>>;
+
+impl<M> RethMiddleware<M>
+where
+    M: Middleware,
+{
+    pub fn try_new(
+        db_path: &Path,
+        handle: Handle,
+    ) -> Result<(RethApi, RethFilter, RethTrace, RethDebug), DatabaseError> {
+        let task_manager = TaskManager::new(handle);
+        let task_executor = task_manager.executor();
+
+        tokio::task::spawn(task_manager);
+
+        let chain = MAINNET.clone();
+        let db = Arc::new(init_db(db_path).unwrap());
+
+        let tree_externals = TreeExternals::new(
+            db.clone(),
+            Arc::new(BeaconConsensus::new(Arc::clone(&chain))),
+            Factory::new(chain.clone()),
+            Arc::clone(&chain),
+        );
+
+        let tree_config = BlockchainTreeConfig::default();
+
+        let (canon_state_notification_sender, _receiver) =
+            tokio::sync::broadcast::channel(tree_config.max_reorg_depth() as usize * 2);
+
+        let blockchain_tree = ShareableBlockchainTree::new(
+            BlockchainTree::new(tree_externals, canon_state_notification_sender, tree_config)
+                .unwrap(),
+        );
+
+        let provider = BlockchainProvider::new(
+            ProviderFactory::new(Arc::clone(&db), Arc::clone(&chain)),
+            blockchain_tree,
+        )
+        .unwrap();
+
+        let state_cache = EthStateCache::spawn(provider.clone(), EthStateCacheConfig::default());
+
+        let tx_pool = reth_transaction_pool::Pool::eth_pool(
+            EthTransactionValidator::new(provider.clone(), chain, task_executor.clone()),
+            Default::default(),
+        );
+
+        let reth_api = EthApi::new(
+            provider.clone(),
+            tx_pool.clone(),
+            NoopNetwork::default(),
+            state_cache.clone(),
+            GasPriceOracle::new(
+                provider.clone(),
+                GasPriceOracleConfig::default(),
+                state_cache.clone(),
+            ),
+        );
+
+        let tracing_call_guard = TracingCallGuard::new(10);
+
+        let reth_trace = TraceApi::new(
+            provider.clone(),
+            reth_api.clone(),
+            state_cache.clone(),
+            Box::new(task_executor.clone()),
+            tracing_call_guard.clone(),
+        );
+
+        let reth_debug = DebugApi::new(
+            provider.clone(),
+            reth_api.clone(),
+            Box::new(task_executor.clone()),
+            tracing_call_guard,
+        );
+
+        let reth_filter =
+            EthFilter::new(provider, tx_pool, state_cache, 1000, Box::new(task_executor));
+
+        Ok((reth_api, reth_filter, reth_trace, reth_debug))
+    }
+}
 
 /// re-implementation of 'view()'
 /// allows for a function to be passed in through a RO libmdbx transaction
@@ -43,13 +136,12 @@ where
 }
 
 /// Opens up an existing database at the specified path.
-pub fn init_db<P: AsRef<Path>>(path: P) -> eyre::Result<Env<WriteMap>> {
-    std::fs::create_dir_all(path.as_ref())?;
-    println!("Initiating db at {}", path.as_ref().display());
+pub fn init_db<P: AsRef<Path> + Debug>(path: P) -> eyre::Result<Env<WriteMap>> {
+    let _ = std::fs::create_dir_all(path.as_ref());
     let db = reth_db::mdbx::Env::<reth_db::mdbx::WriteMap>::open(
         path.as_ref(),
         reth_db::mdbx::EnvKind::RO,
-        Some(LogLevel::Debug),
+        None,
     )?;
 
     view(&db, |tx| {
@@ -59,101 +151,4 @@ pub fn init_db<P: AsRef<Path>>(path: P) -> eyre::Result<Env<WriteMap>> {
     })?;
 
     Ok(db)
-}
-
-// EthApi/Filter Client
-pub fn init_client<P: AsRef<Path>>(db_path: P) -> Result<RethClient, DatabaseError> {
-    let chain = MAINNET.clone();
-    let db = Arc::new(init_db(db_path).unwrap());
-
-    let tree_externals = TreeExternals::new(
-        db.clone(),
-        Arc::new(BeaconConsensus::new(Arc::clone(&chain))),
-        Factory::new(chain.clone()),
-        Arc::clone(&chain),
-    );
-
-    let tree_config = BlockchainTreeConfig::default();
-    let (canon_state_notification_sender, _receiver) =
-        tokio::sync::broadcast::channel(tree_config.max_reorg_depth() as usize * 2);
-
-    let blockchain_tree = ShareableBlockchainTree::new(
-        BlockchainTree::new(tree_externals, canon_state_notification_sender, tree_config).unwrap(),
-    );
-
-    Ok(BlockchainProvider::new(
-        ProviderFactory::new(Arc::clone(&db), Arc::clone(&chain)),
-        blockchain_tree,
-    )
-    .unwrap())
-}
-
-/// EthApi
-pub fn init_eth_api(client: RethClient, task_manager: TaskManager) -> RethApi {
-    let tx_pool = init_pool(client.clone(), task_manager);
-
-    let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
-
-    EthApi::new(
-        client.clone(),
-        tx_pool,
-        NoopNetwork::default(),
-        state_cache.clone(),
-        GasPriceOracle::new(client, GasPriceOracleConfig::default(), state_cache),
-    )
-}
-
-// EthApi/Filter txPool
-pub fn init_pool(client: RethClient, task_manager: TaskManager) -> RethTxPool {
-    let chain = MAINNET.clone();
-
-    reth_transaction_pool::Pool::eth_pool(
-        EthTransactionValidator::new(client, chain, task_manager.executor()),
-        Default::default(),
-    )
-}
-
-// Parity Traces
-pub fn init_trace(
-    client: RethClient,
-    eth_api: RethApi,
-    task_manager: TaskManager,
-    max_tracing_requests: u32,
-) -> RethTrace {
-    let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
-
-    let task_spawn_handle: Box<dyn TaskSpawner> = Box::new(task_manager.executor());
-
-    let tracing_call_guard = TracingCallGuard::new(max_tracing_requests);
-
-    TraceApi::new(client, eth_api, state_cache, task_spawn_handle, tracing_call_guard)
-}
-
-// Geth Debug Traces
-pub fn init_debug(
-    client: RethClient,
-    eth_api: RethApi,
-    task_manager: TaskManager,
-    max_tracing_requests: u32,
-) -> RethDebug {
-    let task_spawn_handle: Box<dyn TaskSpawner> = Box::new(task_manager.executor());
-
-    let tracing_call_guard = TracingCallGuard::new(max_tracing_requests);
-
-    DebugApi::new(client, eth_api, task_spawn_handle, tracing_call_guard)
-}
-
-// EthFilter
-pub fn init_eth_filter(
-    client: RethClient,
-    max_logs_per_response: usize,
-    task_manager: TaskManager,
-) -> RethFilter {
-    let task_spawn_handle: Box<dyn TaskSpawner> = Box::new(task_manager.executor());
-
-    let tx_pool = init_pool(client.clone(), task_manager);
-
-    let state_cache = EthStateCache::spawn(client.clone(), EthStateCacheConfig::default());
-
-    EthFilter::new(client, tx_pool, state_cache, max_logs_per_response, task_spawn_handle)
 }
