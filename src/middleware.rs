@@ -26,6 +26,7 @@ use ethers::{
 
 // Reth Types
 use reth_primitives::BlockId;
+use reth_rpc::eth::revm_utils::EvmOverrides;
 use reth_rpc_api::{EthApiServer, EthFilterApiServer};
 // use reth_rpc_types::trace::geth::TraceResult;
 use reth_rpc_types::{
@@ -75,7 +76,7 @@ where
         let call_request = tx.into_reth();
         let block_id = block.into_reth();
 
-        Ok(self.reth_api.call(call_request, block_id, None, None).await?.into_ethers())
+        Ok(self.reth_api.call(call_request, block_id, EvmOverrides::default()).await?.into_ethers())
     }
 
     async fn estimate_gas(
