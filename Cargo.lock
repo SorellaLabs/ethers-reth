@@ -1413,7 +1413,7 @@ dependencies = [
  "async-trait",
  "ethers",
  "eyre",
- "itertools 0.11.0",
+ "itertools 0.10.5",
  "jsonrpsee",
  "reth-beacon-consensus",
  "reth-blockchain-tree",
