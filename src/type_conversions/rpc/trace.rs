@@ -324,7 +324,8 @@ impl ToReth<TraceResults> for EthersBlockTrace {
     fn into_reth(self) -> TraceResults {
         TraceResults {
             output: self.output.into_reth(),
-            trace: self.trace.into_reth(),
+            // Ethers represents missing traces as Options, Reth uses empty vectors
+            trace: self.trace.into_reth().unwrap_or_default(),
             vm_trace: self.vm_trace.into_reth(),
             state_diff: self.state_diff.into_reth(),
         }
@@ -336,7 +337,10 @@ impl ToEthers<EthersBlockTrace> for TraceResults {
     fn into_ethers(self) -> EthersBlockTrace {
         EthersBlockTrace {
             output: self.output.into_ethers(),
-            trace: self.trace.into_ethers(),
+            trace: match self.trace.len() {
+                0 => None,
+                _ => Some(self.trace.into_ethers()),
+            },
             vm_trace: self.vm_trace.into_ethers(),
             state_diff: self.state_diff.into_ethers(),
             transaction_hash: None,
@@ -361,7 +365,10 @@ impl ToEthers<EthersBlockTrace> for TraceResultsWithTransactionHash {
     fn into_ethers(self) -> EthersBlockTrace {
         EthersBlockTrace {
             output: self.full_trace.output.into_ethers(),
-            trace: self.full_trace.trace.into_ethers(),
+            trace: match self.full_trace.trace.len() {
+                0 => None,
+                _ => Some(self.full_trace.trace.into_ethers()),
+            },
             vm_trace: self.full_trace.vm_trace.into_ethers(),
             state_diff: self.full_trace.state_diff.into_ethers(),
             transaction_hash: Some(self.transaction_hash.into_ethers()),
