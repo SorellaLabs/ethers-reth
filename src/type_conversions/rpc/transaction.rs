@@ -12,8 +12,8 @@ impl ToReth<Transaction> for EthersTransaction {
     fn into_reth(self) -> Transaction {
         let primitive_tx_type = match self.transaction_type.map(|t| t.as_u64()) {
             None => PrimitiveTxType::Legacy,
-            Some(0) => PrimitiveTxType::EIP2930,
-            Some(1) => PrimitiveTxType::EIP1559,
+            Some(1) => PrimitiveTxType::EIP2930,
+            Some(2) => PrimitiveTxType::EIP1559,
             _ => {
                 unimplemented!("Missing tx type");
             }
