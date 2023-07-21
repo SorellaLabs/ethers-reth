@@ -21,8 +21,8 @@ impl ToReth<Transaction> for EthersTransaction {
 
         let v = self.v.as_u64();
         let normalized_v = if v > 1 {
-            v - self.chain_id.expect("Should not have unnormalized v without chain id").as_u64() * 2
-                - 35
+            v - self.chain_id.expect("Should not have unnormalized v without chain id").as_u64() * 2 -
+                35
         } else {
             v
         };
