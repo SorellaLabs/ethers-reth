@@ -15,7 +15,7 @@ use reth_db::{
     DatabaseError,
 };
 use reth_network_api::noop::NoopNetwork;
-use reth_primitives::MAINNET;
+use reth_primitives::{constants::ETHEREUM_BLOCK_GAS_LIMIT, MAINNET};
 use reth_provider::{providers::BlockchainProvider, ProviderFactory};
 use reth_revm::Factory;
 use reth_rpc::{
@@ -95,6 +95,7 @@ where
                 GasPriceOracleConfig::default(),
                 state_cache.clone(),
             ),
+            ETHEREUM_BLOCK_GAS_LIMIT,
         );
 
         let tracing_call_guard = TracingCallGuard::new(10);

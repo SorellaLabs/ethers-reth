@@ -3,13 +3,38 @@ use crate::type_conversions::{ToEthers, ToReth};
 use ethers::types::{
     OtherFields, Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
 };
-use reth_primitives::AccessList;
+use reth_primitives::{AccessList, Signature as PrimitiveSignature, TxType as PrimitiveTxType};
 use reth_revm::primitives::ruint::Uint;
 use reth_rpc_types::{Signature, Transaction, TransactionReceipt};
 
 /// Transaction (ethers) -> (reth)
 impl ToReth<Transaction> for EthersTransaction {
     fn into_reth(self) -> Transaction {
+        let primitive_tx_type = match self.transaction_type.map(|t| t.as_u64()) {
+            None => PrimitiveTxType::Legacy,
+            Some(1) => PrimitiveTxType::EIP2930,
+            Some(2) => PrimitiveTxType::EIP1559,
+            _ => {
+                unimplemented!("Missing tx type");
+            }
+        };
+
+        let v = self.v.as_u64();
+        let normalized_v = if v > 1 {
+            v - self.chain_id.expect("Should not have unnormalized v without chain id").as_u64() * 2
+                - 35
+        } else {
+            v
+        };
+
+        assert!((v == 0) | (v == 1));
+
+        let primitive_signature = PrimitiveSignature {
+            r: self.r.into_reth(),
+            s: self.s.into_reth(),
+            odd_y_parity: normalized_v == 1,
+        };
+
         Transaction {
             hash: self.hash.into_reth(),
             nonce: self.nonce.into_reth(),
@@ -24,11 +49,11 @@ impl ToReth<Transaction> for EthersTransaction {
             max_fee_per_gas: self.max_fee_per_gas.into_reth(),
             max_priority_fee_per_gas: self.max_priority_fee_per_gas.into_reth(),
             input: self.input.into_reth(),
-            signature: Some(Signature {
-                r: self.r.into_reth(),
-                s: self.s.into_reth(),
-                v: self.v.into_reth(),
-            }),
+            signature: Some(Signature::from_primitive_signature(
+                primitive_signature,
+                primitive_tx_type,
+                self.chain_id.map(|t| t.as_u64()),
+            )),
             chain_id: self.chain_id.into_reth(),
             access_list: self.access_list.map(|a| a.into_reth().0),
             transaction_type: self.transaction_type,
