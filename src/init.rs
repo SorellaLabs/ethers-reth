@@ -101,11 +101,8 @@ where
 
         let tracing_call_guard = TracingCallGuard::new(10);
 
-        let reth_trace = TraceApi::new(
-            provider.clone(),
-            reth_api.clone(),
-            tracing_call_guard.clone(),
-        );
+        let reth_trace =
+            TraceApi::new(provider.clone(), reth_api.clone(), tracing_call_guard.clone());
 
         let reth_debug = DebugApi::new(
             provider.clone(),
