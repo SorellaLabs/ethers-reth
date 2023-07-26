@@ -23,7 +23,7 @@ use reth_rpc::{
         cache::{EthStateCache, EthStateCacheConfig},
         gas_oracle::{GasPriceOracle, GasPriceOracleConfig},
     },
-    DebugApi, EthApi, EthFilter, TraceApi, TracingCallGuard,
+    DebugApi, EthApi, EthFilter, TraceApi, TracingCallGuard, TracingCallPool,
 };
 use reth_tasks::TaskManager;
 use reth_transaction_pool::{EthTransactionValidator, GasCostOrdering, Pool, PooledTransaction};
@@ -96,6 +96,7 @@ where
                 state_cache.clone(),
             ),
             ETHEREUM_BLOCK_GAS_LIMIT,
+            TracingCallPool::build().unwrap(),
         );
 
         let tracing_call_guard = TracingCallGuard::new(10);
@@ -103,8 +104,6 @@ where
         let reth_trace = TraceApi::new(
             provider.clone(),
             reth_api.clone(),
-            state_cache.clone(),
-            Box::new(task_executor.clone()),
             tracing_call_guard.clone(),
         );
 

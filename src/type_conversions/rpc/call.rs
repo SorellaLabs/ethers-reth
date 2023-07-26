@@ -21,7 +21,7 @@ impl ToReth<CallRequest> for EthersTypedTransaction {
                 .unwrap(),
             gas: self.gas().into_reth(),
             value: self.value().into_reth(),
-            data: self.data().into_reth(),
+            input: self.data().into_reth().into(),
             nonce: self.nonce().into_reth(),
             chain_id: self.chain_id().into_reth(),
             access_list: self.access_list().into_reth(),
