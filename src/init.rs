@@ -26,7 +26,7 @@ use reth_rpc::{
     DebugApi, EthApi, EthFilter, TraceApi, TracingCallGuard, TracingCallPool,
 };
 use reth_tasks::TaskManager;
-use reth_transaction_pool::{EthTransactionValidator, GasCostOrdering, Pool, PooledTransaction};
+use reth_transaction_pool::{EthTransactionValidator, CoinbaseTipOrdering, Pool, PooledTransaction};
 // Std
 use std::{fmt::Debug, path::Path, sync::Arc};
 use tokio::runtime::Handle;
@@ -37,7 +37,7 @@ pub type Provider = BlockchainProvider<
 >;
 
 pub type RethTxPool =
-    Pool<EthTransactionValidator<Provider, PooledTransaction>, GasCostOrdering<PooledTransaction>>;
+    Pool<EthTransactionValidator<Provider, PooledTransaction>, CoinbaseTipOrdering<PooledTransaction>>;
 
 impl<M> RethMiddleware<M>
 where

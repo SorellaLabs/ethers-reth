@@ -63,27 +63,3 @@ where
         }
     }
 }
-
-// -----------------------------------------------
-
-/// Filter (ethers) + (reth)
-impl ToReth<Filter> for EthersFilter {
-    fn into_reth(self) -> Filter {
-        Filter {
-            block_option: self.block_option.into_reth(),
-            address: self.address.into_reth(),
-            topics: self.topics.into_reth(),
-        }
-    }
-}
-
-/// Filter (reth) -> (ethers)
-impl ToEthers<EthersFilter> for Filter {
-    fn into_ethers(self) -> EthersFilter {
-        EthersFilter {
-            block_option: self.block_option.into_ethers(),
-            address: self.address.into_ethers(),
-            topics: self.topics.into_ethers(),
-        }
-    }
-}
