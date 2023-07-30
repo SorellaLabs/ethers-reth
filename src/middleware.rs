@@ -300,12 +300,6 @@ where
 
     // Logs
 
-    async fn get_logs(&self, filter: &EthersFilter) -> Result<Vec<EthersLog>, Self::Error> {
-        let to_reth_filter: Filter = filter.into_reth();
-        let reth_logs = self.reth_filter.logs(to_reth_filter).await?;
-        Ok(reth_logs.into_ethers())
-    }
-
     //TODO: Implement get_logs_paginated
     //TODO: Implement stream event logs (watch)
     //TODO: Watch pending tx
