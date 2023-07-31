@@ -1,0 +1,1864 @@
+{
+  "failed": true,
+  "gas": "0x5ec3",
+  "returnValue": "0x",
+  "structLogs": [
+    {
+      "depth": 1,
+      "gas": 978356,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 0,
+      "stack": []
+    },
+    {
+      "depth": 1,
+      "gas": 978353,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 2,
+      "stack": [
+        "0x60"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978350,
+      "gasCost": 12,
+      "op": "MSTORE",
+      "pc": 4,
+      "stack": [
+        "0x60",
+        "0x40"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978338,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 5,
+      "stack": []
+    },
+    {
+      "depth": 1,
+      "gas": 978335,
+      "gasCost": 2,
+      "op": "CALLDATASIZE",
+      "pc": 7,
+      "stack": [
+        "0x4"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978333,
+      "gasCost": 3,
+      "op": "LT",
+      "pc": 8,
+      "stack": [
+        "0x4",
+        "0x44"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978330,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 9,
+      "stack": [
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978327,
+      "gasCost": 10,
+      "op": "JUMPI",
+      "pc": 12,
+      "stack": [
+        "0x0",
+        "0xaf"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978317,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 13,
+      "stack": []
+    },
+    {
+      "depth": 1,
+      "gas": 978314,
+      "gasCost": 3,
+      "op": "CALLDATALOAD",
+      "pc": 15,
+      "stack": [
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978311,
+      "gasCost": 3,
+      "op": "PUSH29",
+      "pc": 16,
+      "stack": [
+        "0xa9059cbb0000000000000000000000006000eca38b8b5bba64986182fe2a69c5"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978308,
+      "gasCost": 3,
+      "op": "SWAP1",
+      "pc": 46,
+      "stack": [
+        "0xa9059cbb0000000000000000000000006000eca38b8b5bba64986182fe2a69c5",
+        "0x100000000000000000000000000000000000000000000000000000000"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978305,
+      "gasCost": 5,
+      "op": "DIV",
+      "pc": 47,
+      "stack": [
+        "0x100000000000000000000000000000000000000000000000000000000",
+        "0xa9059cbb0000000000000000000000006000eca38b8b5bba64986182fe2a69c5"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978300,
+      "gasCost": 3,
+      "op": "PUSH4",
+      "pc": 48,
+      "stack": [
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978297,
+      "gasCost": 3,
+      "op": "AND",
+      "pc": 53,
+      "stack": [
+        "0xa9059cbb",
+        "0xffffffff"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978294,
+      "gasCost": 3,
+      "op": "DUP1",
+      "pc": 54,
+      "stack": [
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978291,
+      "gasCost": 3,
+      "op": "PUSH4",
+      "pc": 55,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978288,
+      "gasCost": 3,
+      "op": "EQ",
+      "pc": 60,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb",
+        "0x6fdde03"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978285,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 61,
+      "stack": [
+        "0xa9059cbb",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978282,
+      "gasCost": 10,
+      "op": "JUMPI",
+      "pc": 64,
+      "stack": [
+        "0xa9059cbb",
+        "0x0",
+        "0xb9"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978272,
+      "gasCost": 3,
+      "op": "DUP1",
+      "pc": 65,
+      "stack": [
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978269,
+      "gasCost": 3,
+      "op": "PUSH4",
+      "pc": 66,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978266,
+      "gasCost": 3,
+      "op": "EQ",
+      "pc": 71,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb",
+        "0x95ea7b3"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978263,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 72,
+      "stack": [
+        "0xa9059cbb",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978260,
+      "gasCost": 10,
+      "op": "JUMPI",
+      "pc": 75,
+      "stack": [
+        "0xa9059cbb",
+        "0x0",
+        "0x147"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978250,
+      "gasCost": 3,
+      "op": "DUP1",
+      "pc": 76,
+      "stack": [
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978247,
+      "gasCost": 3,
+      "op": "PUSH4",
+      "pc": 77,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978244,
+      "gasCost": 3,
+      "op": "EQ",
+      "pc": 82,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb",
+        "0x18160ddd"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978241,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 83,
+      "stack": [
+        "0xa9059cbb",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978238,
+      "gasCost": 10,
+      "op": "JUMPI",
+      "pc": 86,
+      "stack": [
+        "0xa9059cbb",
+        "0x0",
+        "0x1a1"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978228,
+      "gasCost": 3,
+      "op": "DUP1",
+      "pc": 87,
+      "stack": [
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978225,
+      "gasCost": 3,
+      "op": "PUSH4",
+      "pc": 88,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978222,
+      "gasCost": 3,
+      "op": "EQ",
+      "pc": 93,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb",
+        "0x23b872dd"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978219,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 94,
+      "stack": [
+        "0xa9059cbb",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978216,
+      "gasCost": 10,
+      "op": "JUMPI",
+      "pc": 97,
+      "stack": [
+        "0xa9059cbb",
+        "0x0",
+        "0x1ca"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978206,
+      "gasCost": 3,
+      "op": "DUP1",
+      "pc": 98,
+      "stack": [
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978203,
+      "gasCost": 3,
+      "op": "PUSH4",
+      "pc": 99,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978200,
+      "gasCost": 3,
+      "op": "EQ",
+      "pc": 104,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb",
+        "0x2e1a7d4d"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978197,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 105,
+      "stack": [
+        "0xa9059cbb",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978194,
+      "gasCost": 10,
+      "op": "JUMPI",
+      "pc": 108,
+      "stack": [
+        "0xa9059cbb",
+        "0x0",
+        "0x243"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978184,
+      "gasCost": 3,
+      "op": "DUP1",
+      "pc": 109,
+      "stack": [
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978181,
+      "gasCost": 3,
+      "op": "PUSH4",
+      "pc": 110,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978178,
+      "gasCost": 3,
+      "op": "EQ",
+      "pc": 115,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb",
+        "0x313ce567"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978175,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 116,
+      "stack": [
+        "0xa9059cbb",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978172,
+      "gasCost": 10,
+      "op": "JUMPI",
+      "pc": 119,
+      "stack": [
+        "0xa9059cbb",
+        "0x0",
+        "0x266"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978162,
+      "gasCost": 3,
+      "op": "DUP1",
+      "pc": 120,
+      "stack": [
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978159,
+      "gasCost": 3,
+      "op": "PUSH4",
+      "pc": 121,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978156,
+      "gasCost": 3,
+      "op": "EQ",
+      "pc": 126,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb",
+        "0x70a08231"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978153,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 127,
+      "stack": [
+        "0xa9059cbb",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978150,
+      "gasCost": 10,
+      "op": "JUMPI",
+      "pc": 130,
+      "stack": [
+        "0xa9059cbb",
+        "0x0",
+        "0x295"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978140,
+      "gasCost": 3,
+      "op": "DUP1",
+      "pc": 131,
+      "stack": [
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978137,
+      "gasCost": 3,
+      "op": "PUSH4",
+      "pc": 132,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978134,
+      "gasCost": 3,
+      "op": "EQ",
+      "pc": 137,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb",
+        "0x95d89b41"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978131,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 138,
+      "stack": [
+        "0xa9059cbb",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978128,
+      "gasCost": 10,
+      "op": "JUMPI",
+      "pc": 141,
+      "stack": [
+        "0xa9059cbb",
+        "0x0",
+        "0x2e2"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978118,
+      "gasCost": 3,
+      "op": "DUP1",
+      "pc": 142,
+      "stack": [
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978115,
+      "gasCost": 3,
+      "op": "PUSH4",
+      "pc": 143,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978112,
+      "gasCost": 3,
+      "op": "EQ",
+      "pc": 148,
+      "stack": [
+        "0xa9059cbb",
+        "0xa9059cbb",
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978109,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 149,
+      "stack": [
+        "0xa9059cbb",
+        "0x1"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978106,
+      "gasCost": 10,
+      "op": "JUMPI",
+      "pc": 152,
+      "stack": [
+        "0xa9059cbb",
+        "0x1",
+        "0x370"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978096,
+      "gasCost": 1,
+      "op": "JUMPDEST",
+      "pc": 880,
+      "stack": [
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978095,
+      "gasCost": 2,
+      "op": "CALLVALUE",
+      "pc": 881,
+      "stack": [
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978093,
+      "gasCost": 3,
+      "op": "ISZERO",
+      "pc": 882,
+      "stack": [
+        "0xa9059cbb",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978090,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 883,
+      "stack": [
+        "0xa9059cbb",
+        "0x1"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978087,
+      "gasCost": 10,
+      "op": "JUMPI",
+      "pc": 886,
+      "stack": [
+        "0xa9059cbb",
+        "0x1",
+        "0x37b"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978077,
+      "gasCost": 1,
+      "op": "JUMPDEST",
+      "pc": 891,
+      "stack": [
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978076,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 892,
+      "stack": [
+        "0xa9059cbb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978073,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 895,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978070,
+      "gasCost": 3,
+      "op": "DUP1",
+      "pc": 897,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x4"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978067,
+      "gasCost": 3,
+      "op": "DUP1",
+      "pc": 898,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x4",
+        "0x4"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978064,
+      "gasCost": 3,
+      "op": "CALLDATALOAD",
+      "pc": 899,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x4",
+        "0x4",
+        "0x4"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978061,
+      "gasCost": 3,
+      "op": "PUSH20",
+      "pc": 900,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x4",
+        "0x4",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978058,
+      "gasCost": 3,
+      "op": "AND",
+      "pc": 921,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x4",
+        "0x4",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0xffffffffffffffffffffffffffffffffffffffff"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978055,
+      "gasCost": 3,
+      "op": "SWAP1",
+      "pc": 922,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x4",
+        "0x4",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978052,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 923,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x4",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x4"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978049,
+      "gasCost": 3,
+      "op": "ADD",
+      "pc": 925,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x4",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x4",
+        "0x20"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978046,
+      "gasCost": 3,
+      "op": "SWAP1",
+      "pc": 926,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x4",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x24"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978043,
+      "gasCost": 3,
+      "op": "SWAP2",
+      "pc": 927,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x4",
+        "0x24",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978040,
+      "gasCost": 3,
+      "op": "SWAP1",
+      "pc": 928,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x24",
+        "0x4"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978037,
+      "gasCost": 3,
+      "op": "DUP1",
+      "pc": 929,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x4",
+        "0x24"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978034,
+      "gasCost": 3,
+      "op": "CALLDATALOAD",
+      "pc": 930,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x4",
+        "0x24",
+        "0x24"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978031,
+      "gasCost": 3,
+      "op": "SWAP1",
+      "pc": 931,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x4",
+        "0x24",
+        "0x10f0cf064dd59200000"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978028,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 932,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x4",
+        "0x10f0cf064dd59200000",
+        "0x24"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978025,
+      "gasCost": 3,
+      "op": "ADD",
+      "pc": 934,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x4",
+        "0x10f0cf064dd59200000",
+        "0x24",
+        "0x20"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978022,
+      "gasCost": 3,
+      "op": "SWAP1",
+      "pc": 935,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x4",
+        "0x10f0cf064dd59200000",
+        "0x44"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978019,
+      "gasCost": 3,
+      "op": "SWAP2",
+      "pc": 936,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x4",
+        "0x44",
+        "0x10f0cf064dd59200000"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978016,
+      "gasCost": 3,
+      "op": "SWAP1",
+      "pc": 937,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x44",
+        "0x4"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978013,
+      "gasCost": 2,
+      "op": "POP",
+      "pc": 938,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x4",
+        "0x44"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978011,
+      "gasCost": 2,
+      "op": "POP",
+      "pc": 939,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x4"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978009,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 940,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 978006,
+      "gasCost": 8,
+      "op": "JUMP",
+      "pc": 943,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0xbce"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977998,
+      "gasCost": 1,
+      "op": "JUMPDEST",
+      "pc": 3022,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977997,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 3023,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977994,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 3025,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977991,
+      "gasCost": 2,
+      "op": "CALLER",
+      "pc": 3028,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977989,
+      "gasCost": 3,
+      "op": "DUP5",
+      "pc": 3029,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977986,
+      "gasCost": 3,
+      "op": "DUP5",
+      "pc": 3030,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977983,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 3031,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977980,
+      "gasCost": 8,
+      "op": "JUMP",
+      "pc": 3034,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x68c"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977972,
+      "gasCost": 1,
+      "op": "JUMPDEST",
+      "pc": 1676,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977971,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 1677,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977968,
+      "gasCost": 3,
+      "op": "DUP2",
+      "pc": 1679,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977965,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 1680,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977962,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 1682,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x3"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977959,
+      "gasCost": 3,
+      "op": "DUP7",
+      "pc": 1684,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x3",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977956,
+      "gasCost": 3,
+      "op": "PUSH20",
+      "pc": 1685,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x3",
+        "0x0",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977953,
+      "gasCost": 3,
+      "op": "AND",
+      "pc": 1706,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x3",
+        "0x0",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0xffffffffffffffffffffffffffffffffffffffff"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977950,
+      "gasCost": 3,
+      "op": "PUSH20",
+      "pc": 1707,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x3",
+        "0x0",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977947,
+      "gasCost": 3,
+      "op": "AND",
+      "pc": 1728,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x3",
+        "0x0",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0xffffffffffffffffffffffffffffffffffffffff"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977944,
+      "gasCost": 3,
+      "op": "DUP2",
+      "pc": 1729,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x3",
+        "0x0",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977941,
+      "gasCost": 3,
+      "op": "MSTORE",
+      "pc": 1730,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x3",
+        "0x0",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977938,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 1731,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x3",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977935,
+      "gasCost": 3,
+      "op": "ADD",
+      "pc": 1733,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x3",
+        "0x0",
+        "0x20"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977932,
+      "gasCost": 3,
+      "op": "SWAP1",
+      "pc": 1734,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x3",
+        "0x20"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977929,
+      "gasCost": 3,
+      "op": "DUP2",
+      "pc": 1735,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x20",
+        "0x3"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977926,
+      "gasCost": 3,
+      "op": "MSTORE",
+      "pc": 1736,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x20",
+        "0x3",
+        "0x20"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977923,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 1737,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x20"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977920,
+      "gasCost": 3,
+      "op": "ADD",
+      "pc": 1739,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x20",
+        "0x20"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977917,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 1740,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x40"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977914,
+      "gasCost": 42,
+      "op": "SHA3",
+      "pc": 1742,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0x40",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 977872,
+      "gasCost": 2100,
+      "op": "SLOAD",
+      "pc": 1743,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137"
+      ],
+      "storage": {
+        "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137": "0x0000000000000000000000000000000000000000000000000de0b6b3a7640000"
+      }
+    },
+    {
+      "depth": 1,
+      "gas": 975772,
+      "gasCost": 3,
+      "op": "LT",
+      "pc": 1744,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x10f0cf064dd59200000",
+        "0xde0b6b3a7640000"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 975769,
+      "gasCost": 3,
+      "op": "ISZERO",
+      "pc": 1745,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x1"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 975766,
+      "gasCost": 3,
+      "op": "ISZERO",
+      "pc": 1746,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 975763,
+      "gasCost": 3,
+      "op": "ISZERO",
+      "pc": 1747,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x1"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 975760,
+      "gasCost": 3,
+      "op": "PUSH2",
+      "pc": 1748,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 975757,
+      "gasCost": 10,
+      "op": "JUMPI",
+      "pc": 1751,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x0",
+        "0x6dc"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 975747,
+      "gasCost": 3,
+      "op": "PUSH1",
+      "pc": 1752,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "gas": 975744,
+      "gasCost": 3,
+      "op": "DUP1",
+      "pc": 1754,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x0"
+      ]
+    },
+    {
+      "depth": 1,
+      "error": "Revert",
+      "gas": 975741,
+      "gasCost": 0,
+      "op": "REVERT",
+      "pc": 1755,
+      "stack": [
+        "0xa9059cbb",
+        "0x3b0",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0xbdb",
+        "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "0x6000eca38b8b5bba64986182fe2a69c57f6b5414",
+        "0x10f0cf064dd59200000",
+        "0x0",
+        "0x0",
+        "0x0"
+      ]
+    }
+  ]
+}

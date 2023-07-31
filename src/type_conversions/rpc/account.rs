@@ -4,6 +4,7 @@ use ethers::types::{
     EIP1186ProofResponse as EthersEIP1186ProofResponse, StorageProof as EthersStorageProof,
 };
 use reth_primitives::serde_helper::JsonStorageKey;
+
 use reth_rpc_types::{EIP1186AccountProofResponse, StorageProof};
 
 /// TransactionReceipt (ethers) -> (reth)

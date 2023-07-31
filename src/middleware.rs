@@ -179,7 +179,9 @@ where
     // Chain Info
 
     async fn get_chainid(&self) -> Result<EthersU256, RethMiddlewareError<M>> {
-        let chain_id = EthApiServer::chain_id(&self.reth_api)
+        let chain_id = self
+            .reth_api
+            .chain_id()
             .await?
             .ok_or_else(|| RethMiddlewareError::ChainIdUnavailable)?;
 
@@ -224,8 +226,12 @@ where
         transaction_hash: T,
     ) -> Result<Option<EthersTransactionReceipt>, RethMiddlewareError<M>> {
         let hash = ethers::types::H256::from_slice(transaction_hash.into().as_bytes());
-        match self.reth_api.transaction_receipt(hash.into()).await? {
-            Some(receipt) => Ok(Some(receipt.into_ethers())),
+        let receipt = self.reth_api.transaction_receipt(hash.into()).await?;
+        match receipt {
+            Some(receipt) => {
+                let receipt = receipt.into_ethers();
+                Ok(Some(receipt))
+            }
             None => Ok(None),
         }
     }
@@ -469,6 +475,6 @@ where
         tx_hash: EthersTxHash,
     ) -> Result<Vec<EthersTrace>, Self::Error> {
         let trace = self.reth_trace.trace_transaction(tx_hash.into()).await?;
-        Ok(trace.into_ethers().unwrap())
+        Ok(trace.into_ethers())
     }
 }

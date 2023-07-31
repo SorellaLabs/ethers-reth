@@ -1,0 +1,4109 @@
+[
+  {
+    "output": "0x",
+    "trace": [
+      {
+        "traceAddress": [],
+        "subtraces": 0,
+        "action": {
+          "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "to": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+          "value": "0x0",
+          "gas": "0x1c9c380",
+          "input": "0xa9059cbb0000000000000000000000006000eca38b8b5bba64986182fe2a69c57f6b541400000000000000000000000000000000000000000000010f0cf064dd59200000",
+          "callType": "call"
+        },
+        "type": "call",
+        "result": {
+          "gasUsed": "0xa37",
+          "output": "0x"
+        },
+        "error": "Reverted"
+      }
+    ],
+    "vmTrace": {
+      "code": "0x",
+      "ops": [
+        {
+          "pc": 0,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 2,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x40"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 4,
+          "cost": 0,
+          "ex": {
+            "used": 12,
+            "push": [],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 5,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 7,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0x44"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 8,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 9,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xaf"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 12,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 13,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 15,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xa9059cbb0000000000000000000000006000eca38b8b5bba64986182fe2a69c5"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 16,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x100000000000000000000000000000000000000000000000000000000"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 46,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xa9059cbb0000000000000000000000006000eca38b8b5bba64986182fe2a69c5"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 47,
+          "cost": 0,
+          "ex": {
+            "used": 5,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 48,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 53,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 54,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 55,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x6fdde03"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 60,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 61,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xb9"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 64,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 65,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 66,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x95ea7b3"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 71,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 72,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x147"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 75,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 76,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 77,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x18160ddd"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 82,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 83,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1a1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 86,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 87,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 88,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x23b872dd"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 93,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 94,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1ca"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 97,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 98,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 99,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x2e1a7d4d"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 104,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 105,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x243"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 108,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 109,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 110,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x313ce567"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 115,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 116,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x266"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 119,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 120,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 121,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x70a08231"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 126,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 127,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x295"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 130,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 131,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 132,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x95d89b41"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 137,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 138,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x2e2"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 141,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 142,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 143,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 148,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 149,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x370"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 152,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 880,
+          "cost": 0,
+          "ex": {
+            "used": 1,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 881,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 882,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 883,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x37b"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 886,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 891,
+          "cost": 0,
+          "ex": {
+            "used": 1,
+            "push": [
+              "0xa9059cbb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 892,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x3b0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 895,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 897,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 898,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 899,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x6000eca38b8b5bba64986182fe2a69c57f6b5414"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 900,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 921,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x6000eca38b8b5bba64986182fe2a69c57f6b5414"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 922,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 923,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 925,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x24"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 926,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x6000eca38b8b5bba64986182fe2a69c57f6b5414"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 927,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 928,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x24"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 929,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x24"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 930,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x10f0cf064dd59200000"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 931,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x24"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 932,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 934,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x44"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 935,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x10f0cf064dd59200000"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 936,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 937,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x44"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 938,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 939,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0x10f0cf064dd59200000"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 940,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xbce"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 943,
+          "cost": 0,
+          "ex": {
+            "used": 8,
+            "push": [
+              "0x10f0cf064dd59200000"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 3022,
+          "cost": 0,
+          "ex": {
+            "used": 1,
+            "push": [
+              "0x10f0cf064dd59200000"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 3023,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 3025,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xbdb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 3028,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 3029,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x6000eca38b8b5bba64986182fe2a69c57f6b5414"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 3030,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x10f0cf064dd59200000"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 3031,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x68c"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 3034,
+          "cost": 0,
+          "ex": {
+            "used": 8,
+            "push": [
+              "0x10f0cf064dd59200000"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1676,
+          "cost": 0,
+          "ex": {
+            "used": 1,
+            "push": [
+              "0x10f0cf064dd59200000"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1677,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1679,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x10f0cf064dd59200000"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1680,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x3"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1682,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1684,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1685,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1706,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1707,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1728,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1729,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1730,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1731,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1733,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1734,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x3"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1735,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1736,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1737,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1739,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x40"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1740,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1742,
+          "cost": 0,
+          "ex": {
+            "used": 42,
+            "push": [
+              "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1743,
+          "cost": 0,
+          "ex": {
+            "used": 2100,
+            "push": [
+              "0xde0b6b3a7640000"
+            ],
+            "mem": null,
+            "store": {
+              "key": "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137",
+              "val": "0xde0b6b3a7640000"
+            }
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1744,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1745,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1746,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1747,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1748,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x6dc"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1751,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1752,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1754,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1755,
+          "cost": 0,
+          "ex": {
+            "used": 0,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        }
+      ]
+    },
+    "stateDiff": {
+      "0x0000000000000000000000000000000000000000": {
+        "balance": "=",
+        "nonce": "=",
+        "code": "=",
+        "storage": {}
+      },
+      "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512": {
+        "balance": "=",
+        "nonce": "=",
+        "code": "=",
+        "storage": {
+          "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137": {
+            "+": "0x0000000000000000000000000000000000000000000000000de0b6b3a7640000"
+          }
+        }
+      },
+      "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266": {
+        "balance": "=",
+        "nonce": {
+          "*": {
+            "from": "0x3",
+            "to": "0x4"
+          }
+        },
+        "code": "=",
+        "storage": {}
+      }
+    },
+    "transactionHash": null
+  },
+  {
+    "output": "0x0000000000000000000000000000000000000000000000000000000000000001",
+    "trace": [
+      {
+        "traceAddress": [],
+        "subtraces": 0,
+        "action": {
+          "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "to": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+          "value": "0x0",
+          "gas": "0x1c9c380",
+          "input": "0x095ea7b30000000000000000000000001dc4c1cefef38a777b15aa20260a54e584b16c48ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "callType": "call"
+        },
+        "type": "call",
+        "result": {
+          "gasUsed": "0x5f64",
+          "output": "0x0000000000000000000000000000000000000000000000000000000000000001"
+        },
+        "error": null
+      }
+    ],
+    "vmTrace": {
+      "code": "0x",
+      "ops": [
+        {
+          "pc": 0,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 2,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x40"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 4,
+          "cost": 0,
+          "ex": {
+            "used": 12,
+            "push": [],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 5,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 7,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0x44"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 8,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 9,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xaf"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 12,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 13,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 15,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x95ea7b30000000000000000000000001dc4c1cefef38a777b15aa20260a54e5"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 16,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x100000000000000000000000000000000000000000000000000000000"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 46,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x95ea7b30000000000000000000000001dc4c1cefef38a777b15aa20260a54e5"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 47,
+          "cost": 0,
+          "ex": {
+            "used": 5,
+            "push": [
+              "0x95ea7b3"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 48,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 53,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x95ea7b3"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 54,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x95ea7b3"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 55,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x6fdde03"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 60,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 61,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xb9"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 64,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [
+              "0x95ea7b3"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 65,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x95ea7b3"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 66,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x95ea7b3"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 71,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 72,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x147"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 75,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [
+              "0x95ea7b3"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 327,
+          "cost": 0,
+          "ex": {
+            "used": 1,
+            "push": [
+              "0x95ea7b3"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 328,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 329,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 330,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x152"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 333,
+          "cost": 0,
+          "ex": {
+            "used": 10,
+            "push": [
+              "0x95ea7b3"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 338,
+          "cost": 0,
+          "ex": {
+            "used": 1,
+            "push": [
+              "0x95ea7b3"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 339,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x187"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 342,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 344,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 345,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 346,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1dc4c1cefef38a777b15aa20260a54e584b16c48"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 347,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 368,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1dc4c1cefef38a777b15aa20260a54e584b16c48"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 369,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 370,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 372,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x24"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 373,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1dc4c1cefef38a777b15aa20260a54e584b16c48"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 374,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 375,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x24"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 376,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x24"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 377,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 378,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x24"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 379,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 381,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x44"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 382,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 383,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 384,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x44"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 385,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 386,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 387,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x57b"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 390,
+          "cost": 0,
+          "ex": {
+            "used": 8,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1403,
+          "cost": 0,
+          "ex": {
+            "used": 1,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1404,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1406,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1407,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1409,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1411,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1412,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1433,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1434,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1455,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1456,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1457,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1458,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1460,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1461,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x4"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1462,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1463,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1464,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1466,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x40"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1467,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1469,
+          "cost": 0,
+          "ex": {
+            "used": 42,
+            "push": [
+              "0x499528c51356648db37e43952de9993f4899b24e72b85c8d22f7efa043247ceb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1470,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1472,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1dc4c1cefef38a777b15aa20260a54e584b16c48"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1473,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1494,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1dc4c1cefef38a777b15aa20260a54e584b16c48"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1495,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1516,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1dc4c1cefef38a777b15aa20260a54e584b16c48"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1517,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1518,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1519,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1521,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1522,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x499528c51356648db37e43952de9993f4899b24e72b85c8d22f7efa043247ceb"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1523,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1524,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1525,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1527,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x40"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1528,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1530,
+          "cost": 0,
+          "ex": {
+            "used": 42,
+            "push": [
+              "0x80ba7615dfb1ccc6b2a6cc89e9712f89543470f4a0b2283a9fc0da72a01743d1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1531,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1532,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x80ba7615dfb1ccc6b2a6cc89e9712f89543470f4a0b2283a9fc0da72a01743d1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1533,
+          "cost": 0,
+          "ex": {
+            "used": 22100,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": {
+              "key": "0x80ba7615dfb1ccc6b2a6cc89e9712f89543470f4a0b2283a9fc0da72a01743d1",
+              "val": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            }
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1534,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1535,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1dc4c1cefef38a777b15aa20260a54e584b16c48"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1536,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1557,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1dc4c1cefef38a777b15aa20260a54e584b16c48"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1558,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1559,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1580,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1581,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1614,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1615,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x40"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1617,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1618,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1619,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1620,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1621,
+          "cost": 0,
+          "ex": {
+            "used": 6,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1622,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1624,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x80"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1625,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1626,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1627,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0x80"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1628,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x40"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1630,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1631,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1632,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x80"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1633,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1634,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1635,
+          "cost": 0,
+          "ex": {
+            "used": 1756,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1636,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1638,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1639,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0x1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1640,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x187"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1641,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1dc4c1cefef38a777b15aa20260a54e584b16c48"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1642,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1643,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0x187"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 1644,
+          "cost": 0,
+          "ex": {
+            "used": 8,
+            "push": [
+              "0x1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 391,
+          "cost": 0,
+          "ex": {
+            "used": 1,
+            "push": [
+              "0x1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 392,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x40"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 394,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 395,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 396,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 397,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 398,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 399,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x0"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 400,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 401,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 402,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 403,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 405,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x80"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 406,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x1"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 407,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 408,
+          "cost": 0,
+          "ex": {
+            "used": 2,
+            "push": [
+              "0x80"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 409,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x40"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 411,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 412,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 413,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x80"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 414,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x20"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 415,
+          "cost": 0,
+          "ex": {
+            "used": 3,
+            "push": [
+              "0x60"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        },
+        {
+          "pc": 416,
+          "cost": 0,
+          "ex": {
+            "used": 0,
+            "push": [
+              "0x95ea7b3"
+            ],
+            "mem": null,
+            "store": null
+          },
+          "sub": null,
+          "op": "INVALID"
+        }
+      ]
+    },
+    "stateDiff": {
+      "0x0000000000000000000000000000000000000000": {
+        "balance": "=",
+        "nonce": "=",
+        "code": "=",
+        "storage": {}
+      },
+      "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512": {
+        "balance": "=",
+        "nonce": "=",
+        "code": "=",
+        "storage": {
+          "0x80ba7615dfb1ccc6b2a6cc89e9712f89543470f4a0b2283a9fc0da72a01743d1": {
+            "*": {
+              "from": "0x0000000000000000000000000000000000000000000000000000000000000000",
+              "to": "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+            }
+          }
+        }
+      },
+      "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266": {
+        "balance": "=",
+        "nonce": {
+          "*": {
+            "from": "0x4",
+            "to": "0x5"
+          }
+        },
+        "code": "=",
+        "storage": {}
+      }
+    },
+    "transactionHash": null
+  }
+]

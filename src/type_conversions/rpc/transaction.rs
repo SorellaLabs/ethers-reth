@@ -27,7 +27,7 @@ impl ToReth<Transaction> for EthersTransaction {
             v
         };
 
-        assert!((v == 0) | (v == 1));
+        assert!((normalized_v == 0) | (normalized_v == 1));
 
         let primitive_signature = PrimitiveSignature {
             r: self.r.into_reth(),
@@ -66,6 +66,7 @@ impl ToEthers<EthersTransaction> for Transaction {
     fn into_ethers(self) -> EthersTransaction {
         let (v, r, s) =
             self.signature.map_or((Uint::MIN, Uint::MIN, Uint::MIN), |sig| (sig.v, sig.r, sig.s));
+
         EthersTransaction {
             hash: self.hash.into_ethers(),
             nonce: self.nonce.into_ethers(),
@@ -137,5 +138,135 @@ impl ToEthers<EthersTransactionReceipt> for TransactionReceipt {
             effective_gas_price: Some(self.effective_gas_price.into_ethers()),
             other: OtherFields::default(),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::str::FromStr;
+
+    use crate::type_conversions::{ToEthers, ToReth};
+
+    use ethers::types::{
+        Bytes as EthersBytes, Transaction as EthersTransaction,
+        TransactionReceipt as EthersTransactionReceipt, H160 as EthersH160, H256 as EthersH256,
+        U256 as EthersU256, U64 as EthersU64,
+    };
+
+    use pretty_assertions::assert_eq;
+    use reth_primitives::{
+        hex_literal::hex, Address, Bloom, Bytes, Signature as PrimitiveSignature,
+        TxType as PrimitiveTxType, H256, U128, U256, U64, U8,
+    };
+    use reth_rpc_types::{Signature, Transaction, TransactionReceipt};
+
+    #[test]
+    fn transaction() {
+        let r: Transaction = Transaction {
+            hash: H256::from_low_u64_be(1),
+            nonce: U256::from(2),
+            block_hash: Some(H256::from_low_u64_be(3)),
+            block_number: Some(U256::from(4)),
+            transaction_index: Some(U256::from(5)),
+            from: Address::from_low_u64_be(6),
+            to: Some(Address::from_low_u64_be(7)),
+            value: U256::from(8),
+            gas_price: Some(U128::from(9)),
+            gas: U256::from(10),
+            input: Bytes::from(vec![11, 12, 13]),
+            signature: Some(Signature::from_primitive_signature(
+                PrimitiveSignature { r: U256::from(14), s: U256::from(14), odd_y_parity: true },
+                PrimitiveTxType::EIP1559,
+                Some(1),
+            )),
+            chain_id: Some(U64::from(1)),
+            access_list: None,
+            transaction_type: Some(U64::from(2)),
+            max_fee_per_gas: Some(U128::from(21)),
+            max_priority_fee_per_gas: Some(U128::from(22)),
+        };
+        let e: EthersTransaction = EthersTransaction {
+            hash: EthersH256::from_str(
+                "0x0000000000000000000000000000000000000000000000000000000000000001",
+            )
+            .unwrap(),
+            nonce: EthersU256::from(2),
+            block_hash: Some(
+                EthersH256::from_str(
+                    "0x0000000000000000000000000000000000000000000000000000000000000003",
+                )
+                .unwrap(),
+            ),
+            block_number: Some(EthersU64::from(4)),
+            transaction_index: Some(EthersU64::from(5)),
+            from: EthersH160::from_str("0x0000000000000000000000000000000000000006").unwrap(),
+            to: Some(EthersH160::from_str("0x0000000000000000000000000000000000000007").unwrap()),
+            value: EthersU256::from(8),
+            gas_price: Some(EthersU256::from(9)),
+            gas: EthersU256::from(10),
+            input: EthersBytes::from(vec![11, 12, 13]),
+            v: EthersU64::from(1),
+            r: EthersU256::from(14),
+            s: EthersU256::from(14),
+            chain_id: Some(EthersU256::from(1)),
+            access_list: None,
+            transaction_type: Some(EthersU64::from(2)),
+            max_fee_per_gas: Some(EthersU256::from(21)),
+            max_priority_fee_per_gas: Some(EthersU256::from(22)),
+            other: Default::default(),
+        };
+
+        assert_eq!(r, e.clone().into_reth());
+        assert_eq!(e, r.into_ethers());
+    }
+
+    #[test]
+    fn transaction_receipt() {
+        let bloom_hex = hex!(
+            "000000000000000000810000000000000000000000000000000000020000000000000000000000000000008000"
+            "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+            "000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000"
+            "000000000000000000000000000000000000000000000000000000280000000000400000800000004000000000"
+            "000000000000000000000000000000000000000000000000000000000000100000100000000000000000000000"
+            "00000000001400000000000000008000000000000000000000000000000000"
+        );
+        let r: TransactionReceipt = TransactionReceipt {
+            transaction_hash: Some(H256::from_low_u64_be(1)),
+            transaction_index: Some(U256::from(2)),
+            block_hash: Some(H256::from_low_u64_be(3)),
+            block_number: Some(U256::from(4)),
+            from: Address::from_low_u64_be(6),
+            to: Some(Address::from_low_u64_be(7)),
+            cumulative_gas_used: U256::from(8),
+            gas_used: Some(U256::from(9)),
+            contract_address: Some(Address::from_low_u64_be(10)),
+            logs: vec![],
+            state_root: Some(H256::from_low_u64_be(11)),
+            logs_bloom: Bloom::from_slice(&bloom_hex),
+            status_code: Some(U64::from(15)),
+            effective_gas_price: U128::from(16),
+            transaction_type: U8::from(0),
+        };
+        let e: EthersTransactionReceipt = EthersTransactionReceipt {
+            transaction_hash: H256::from_low_u64_be(1).into_ethers(),
+            transaction_index: EthersU64::from(2),
+            block_hash: Some(H256::from_low_u64_be(3).into_ethers()),
+            block_number: Some(EthersU64::from(4)),
+            from: Address::from_low_u64_be(6).into_ethers(),
+            to: Some(Address::from_low_u64_be(7).into_ethers()),
+            cumulative_gas_used: EthersU256::from(8),
+            gas_used: Some(EthersU256::from(9)),
+            contract_address: Some(Address::from_low_u64_be(10).into_ethers()),
+            logs: vec![],
+            logs_bloom: Bloom::from_slice(&bloom_hex).into_ethers(),
+            status: Some(EthersU64::from(15)),
+            root: Some(H256::from_low_u64_be(11).into_ethers()),
+            transaction_type: Some(EthersU64::from(0)),
+            effective_gas_price: Some(EthersU256::from(16)),
+            other: Default::default(),
+        };
+
+        assert_eq!(r, e.clone().into_reth());
+        assert_eq!(e, r.into_ethers());
     }
 }

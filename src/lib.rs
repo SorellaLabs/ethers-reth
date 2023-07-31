@@ -1,5 +1,7 @@
 // std
 use eyre::Result;
+use noop::NoopNetwork;
+use reth_primitives::ChainSpec;
 use std::{fmt::Debug, path::Path, sync::Arc};
 
 // ethers
@@ -9,7 +11,6 @@ use ethers::providers::{Middleware, MiddlewareError};
 use reth_beacon_consensus::BeaconConsensus;
 use reth_blockchain_tree::ShareableBlockchainTree;
 use reth_db::mdbx::{Env, WriteMap};
-use reth_network_api::noop::NoopNetwork;
 use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
 use reth_rpc::{eth::error::EthApiError, DebugApi, EthApi, EthFilter, TraceApi};
@@ -20,6 +21,7 @@ use thiserror::Error;
 
 pub mod init;
 pub mod middleware;
+pub mod noop;
 pub mod type_conversions;
 use tokio::runtime::Handle;
 
@@ -94,9 +96,14 @@ impl<M> RethMiddleware<M>
 where
     M: Middleware,
 {
-    pub fn new<P: AsRef<Path>>(inner: M, db_path: P, handle: Handle) -> Result<Self> {
+    pub fn new<P: AsRef<Path>>(
+        inner: M,
+        db_path: P,
+        handle: Handle,
+        chain: Arc<ChainSpec>,
+    ) -> Result<Self> {
         let (reth_api, reth_filter, reth_trace, reth_debug) =
-            Self::try_new(db_path.as_ref(), handle)?;
+            Self::try_new(db_path.as_ref(), handle, chain)?;
         Ok(Self { inner, reth_api, reth_filter, reth_trace, reth_debug })
     }
 

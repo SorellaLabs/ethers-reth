@@ -126,7 +126,7 @@ array_impls!(4, 32);
 impl_ToEthers_Uint!(EthersU256, (U256, U128));
 impl_ToEthers!(EthersU256, (U64, H256));
 
-impl_ToEthers_Uint!(EthersU64, (U256, U8));
+impl_ToEthers_Uint!(EthersU64, (U256));
 impl_ToEthers!(EthersU64, (U64));
 
 impl_ToEthers!(EthersH256, (H256));
@@ -134,6 +134,29 @@ impl_ToEthers!(EthersH160, (H160));
 impl_ToEthers!(EthersH64, (H64));
 
 impl_ToEthers!(EthersBloom, (Bloom));
+
+/// U8 (reth) -> U64 (ethers)
+impl ToReth<U8> for EthersU64 {
+    fn into_reth(self) -> U8 {
+        const SIZE_IN: usize = mem::size_of::<EthersU64>();
+        const SIZE_OUT: usize = 1;
+        let mut buf = [0u8; 64];
+
+        self.to_big_endian(&mut buf[(64 - SIZE_IN)..]);
+        <U8>::try_from_be_slice(&buf[(64 - SIZE_OUT)..]).unwrap()
+    }
+}
+
+impl ToEthers<EthersU64> for U8 {
+    fn into_ethers(self) -> U64 {
+        const SIZE_IN: usize = 1;
+        const SIZE_OUT: usize = mem::size_of::<EthersU64>();
+        let mut buf = [0u8; 64];
+
+        buf[(64 - SIZE_IN)..].copy_from_slice(&self.to_be_bytes::<SIZE_IN>());
+        <EthersU64>::from_big_endian(&buf[(64 - SIZE_OUT)..])
+    }
+}
 
 /// Bytes conversion
 impl ToReth<Bytes> for EthersBytes {
@@ -174,5 +197,60 @@ impl ToReth<U64HexOrNumber> for EthersU256 {
 impl ToEthers<EthersU256> for U64HexOrNumber {
     fn into_ethers(self) -> EthersU256 {
         U64::from(self).into_ethers()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::type_conversions::*;
+    use ethers::types::{Bloom as EthersBloom, U256 as EthersU256, U64 as EthersU64};
+    use reth_primitives::{hex_literal::hex, Bloom, U256, U64, U8};
+
+    #[test]
+    fn bloom() {
+        let hex = hex!(
+            "000000000000000000810000000000000000000000000000000000020000000000000000000000000000008000"
+            "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+            "000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000"
+            "000000000000000000000000000000000000000000000000000000280000000000400000800000004000000000"
+            "000000000000000000000000000000000000000000000000000000000000100000100000000000000000000000"
+            "00000000001400000000000000008000000000000000000000000000000000"
+        );
+        let r: Bloom = Bloom::from(hex);
+        let e: EthersBloom = EthersBloom::from(hex);
+        assert_eq!(r, e.into_reth());
+        assert_eq!(e, r.into_ethers());
+    }
+
+    #[test]
+    fn u256() {
+        let r: U256 = U256::from(1);
+        let e: EthersU256 = EthersU256::from(1);
+        assert_eq!(r, e.into_reth());
+        assert_eq!(e, r.into_ethers());
+    }
+
+    #[test]
+    fn u64() {
+        let r: U64 = U64::from(1);
+        let e: EthersU64 = EthersU64::from(1);
+        assert_eq!(r, e.into_reth());
+        assert_eq!(e, r.into_ethers());
+    }
+
+    #[test]
+    fn ethers_u64_u8() {
+        let r: U8 = U8::from(1);
+        let e: EthersU64 = EthersU64::from(1);
+        assert_eq!(r, e.into_reth());
+        assert_eq!(e, r.into_ethers());
+    }
+
+    #[test]
+    fn ethers_u64_u256() {
+        let r: U256 = U256::from(1);
+        let e: EthersU64 = EthersU64::from(1);
+        assert_eq!(r, e.into_reth());
+        assert_eq!(e, r.into_ethers());
     }
 }

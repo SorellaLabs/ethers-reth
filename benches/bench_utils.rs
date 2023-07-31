@@ -1,7 +1,8 @@
 use ethers::providers::{Ipc, Provider};
 use ethers_reth::{RethMiddleware, RethMiddlewareError};
 use eyre::Result;
-use std::path::Path;
+use reth_primitives::{ChainSpec, MAINNET};
+use std::{path::Path, sync::Arc};
 use tokio::runtime::Runtime;
 
 const TEST_IPC_PATH: &str = "/tmp/reth.ipc";
@@ -20,17 +21,18 @@ pub async fn spawn_bench_ipc_provider() -> Result<Provider<Ipc>, ethers::provide
 pub async fn spawn_reth_middleware(
     provider: Provider<Ipc>,
     db_path: &Path,
+    chain: Option<Arc<ChainSpec>>,
 ) -> Result<RethMiddleware<Provider<Ipc>>, RethMiddlewareError<Provider<Ipc>>> {
     let rt = Runtime::new().unwrap();
     let handle = rt.handle().clone();
-    Ok(RethMiddleware::new(provider, db_path, handle).unwrap())
+    Ok(RethMiddleware::new(provider, db_path, handle, chain.unwrap_or(MAINNET.clone())).unwrap())
 }
 
 pub async fn spawn_bench_reth_middleware(
 ) -> Result<RethMiddleware<Provider<Ipc>>, RethMiddlewareError<Provider<Ipc>>> {
-    let rt = Runtime::new().unwrap();
-    let handle = rt.handle().clone();
+    let _rt = Runtime::new().unwrap();
     let provider = Provider::connect_ipc(TEST_IPC_PATH).await.unwrap();
-    let middleware = spawn_reth_middleware(provider, Path::new(TEST_DB_PATH)).await?;
+    let middleware =
+        spawn_reth_middleware(provider, Path::new(TEST_DB_PATH), Some(MAINNET.clone())).await?;
     Ok(middleware)
 }

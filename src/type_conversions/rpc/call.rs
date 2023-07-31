@@ -1,8 +1,15 @@
 use crate::type_conversions::ToReth;
 
-use ethers::types::transaction::eip2718::TypedTransaction as EthersTypedTransaction;
+use ethers::types::{transaction::eip2718::TypedTransaction as EthersTypedTransaction, Bytes};
 use reth_revm::primitives::ruint::Uint;
-use reth_rpc_types::CallRequest;
+use reth_rpc_types::{CallInput, CallRequest};
+
+/// Bytes (ethers) -> CallInput (reth)
+impl ToReth<CallInput> for Bytes {
+    fn into_reth(self) -> CallInput {
+        CallInput { input: Some(self.into_reth()), data: None }
+    }
+}
 
 /// Typed Tx (ethers) -> Call Request (reth)
 impl ToReth<CallRequest> for EthersTypedTransaction {
@@ -21,7 +28,7 @@ impl ToReth<CallRequest> for EthersTypedTransaction {
                 .unwrap(),
             gas: self.gas().into_reth(),
             value: self.value().into_reth(),
-            data: self.data().into_reth(),
+            input: self.data().into_reth().into(),
             nonce: self.nonce().into_reth(),
             chain_id: self.chain_id().into_reth(),
             access_list: self.access_list().into_reth(),

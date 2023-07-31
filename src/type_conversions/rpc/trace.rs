@@ -1,13 +1,23 @@
 use crate::type_conversions::{ToEthers, ToReth};
 
 use ethers::types::{
-    AccountDiff as EthersAccountDiff, Action as EthersAction, ActionType as EthersActionType,
-    BlockTrace as EthersBlockTrace, Call as EthersCall, CallResult as EthersCallResult,
-    CallType as EthersCallType, ChangedType as EthersChangedType, Create as EthersCreate,
-    CreateResult as EthersCreateResult, Diff as EthersDiff, MemoryDiff as EthersMemoryDiff,
-    Res as EthersRes, Reward as EthersReward, RewardType as EthersRewardType,
-    StateDiff as EthersStateDiff, StorageDiff as EthersStorageDiff, Suicide as EthersSuicide,
-    Trace as EthersTrace, TraceType as EthersTraceType, TransactionTrace as EthersTransactionTrace,
+    AccountDiff as EthersAccountDiff, AccountState as EthersAccountState, Action as EthersAction,
+    ActionType as EthersActionType, BlockTrace as EthersBlockTrace, Call as EthersCall,
+    CallFrame as EthersCallFrame, CallLogFrame as EthersCallLogFrame,
+    CallResult as EthersCallResult, CallType as EthersCallType, ChangedType as EthersChangedType,
+    Create as EthersCreate, CreateResult as EthersCreateResult, DefaultFrame as EthersDefaultFrame,
+    Diff as EthersDiff, DiffMode as EthersDiffMode, FourByteFrame as EthersFourByteFrame,
+    GethDebugBuiltInTracerType as EthersGethDebugBuiltInTracerType,
+    GethDebugTracerConfig as EthersGethDebugTracerConfig,
+    GethDebugTracerType as EthersGethDebugTracerType,
+    GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
+    GethDebugTracingOptions as EthersDebugTracingOptions, GethTrace as EthersGethTrace,
+    GethTraceFrame as EthersGethTraceFrame, MemoryDiff as EthersMemoryDiff, NameOrAddress,
+    NoopFrame as EthersNoopFrame, PreStateFrame as EthersPreStateFrame,
+    PreStateMode as EthersPreStateMode, Res as EthersRes, Reward as EthersReward,
+    RewardType as EthersRewardType, StateDiff as EthersStateDiff, StorageDiff as EthersStorageDiff,
+    StructLog as EthersStructLog, Suicide as EthersSuicide, Trace as EthersTrace,
+    TraceType as EthersTraceType, TransactionTrace as EthersTransactionTrace,
     VMExecutedOperation as EthersVMExecutedOperation, VMOperation as EthersVMOperation,
     VMTrace as EthersVMTrace,
 };
@@ -20,15 +30,10 @@ use reth_rpc_types::trace::parity::{
 };
 
 use reth_rpc_types::trace::geth::{
-    GethDebugTracerConfig, GethDebugTracingCallOptions, GethDebugTracingOptions,
-    GethDefaultTracingOptions, GethTrace,
-};
-
-use ethers::types::{
-    CallFrame, DefaultFrame, FourByteFrame,
-    GethDebugTracingCallOptions as EthersDebugTracingCallOptions,
-    GethDebugTracingOptions as EthersDebugTracingOptions, GethTrace as EthersGethTrace,
-    GethTraceFrame as EthersGethTraceFrame, NoopFrame, PreStateFrame, PreStateMode,
+    CallFrame, CallLogFrame, DefaultFrame, FourByteFrame, GethDebugBuiltInTracerType,
+    GethDebugTracerConfig, GethDebugTracerType, GethDebugTracingCallOptions,
+    GethDebugTracingOptions, GethDefaultTracingOptions, GethTrace, NoopFrame, PreStateFrame,
+    StructLog,
 };
 
 /// GethDebugTracingCallOptions (ethers) -> (reth)
@@ -46,11 +51,198 @@ impl ToReth<GethDebugTracingCallOptions> for EthersDebugTracingCallOptions {
 impl ToReth<GethDebugTracingOptions> for EthersDebugTracingOptions {
     fn into_reth(self) -> GethDebugTracingOptions {
         GethDebugTracingOptions {
-            config: GethDefaultTracingOptions::default(),
-            tracer: None,
-            tracer_config: GethDebugTracerConfig::default(),
-            timeout: None,
+            config: GethDefaultTracingOptions {
+                enable_memory: self.enable_memory,
+                disable_memory: None,
+                disable_stack: self.disable_stack,
+                disable_storage: self.disable_storage,
+                enable_return_data: self.enable_return_data,
+                disable_return_data: None,
+                debug: None,
+                limit: None,
+            },
+            tracer: self.tracer.into_reth(),
+            tracer_config: if let Some(config) = self.tracer_config {
+                config.into_reth()
+            } else {
+                GethDebugTracerConfig::default()
+            },
+            timeout: self.timeout,
         }
+    }
+}
+
+/// GethDebugTracerType (ethers) -> (reth)
+impl ToReth<GethDebugTracerType> for EthersGethDebugTracerType {
+    fn into_reth(self) -> GethDebugTracerType {
+        match self {
+            EthersGethDebugTracerType::BuiltInTracer(tracer) => {
+                GethDebugTracerType::BuiltInTracer(tracer.into_reth())
+            }
+            EthersGethDebugTracerType::JsTracer(tracer) => GethDebugTracerType::JsTracer(tracer),
+        }
+    }
+}
+
+/// GethDebugTracerConfig (ethers) -> (reth)
+impl ToReth<GethDebugTracerConfig> for EthersGethDebugTracerConfig {
+    fn into_reth(self) -> GethDebugTracerConfig {
+        GethDebugTracerConfig(serde_json::to_value(self).unwrap())
+    }
+}
+
+/// GethDebugBuiltInTracerType (ethers) -> (reth)
+impl ToReth<GethDebugBuiltInTracerType> for EthersGethDebugBuiltInTracerType {
+    fn into_reth(self) -> GethDebugBuiltInTracerType {
+        match self {
+            EthersGethDebugBuiltInTracerType::CallTracer => GethDebugBuiltInTracerType::CallTracer,
+            EthersGethDebugBuiltInTracerType::FourByteTracer => {
+                GethDebugBuiltInTracerType::FourByteTracer
+            }
+            EthersGethDebugBuiltInTracerType::PreStateTracer => {
+                GethDebugBuiltInTracerType::PreStateTracer
+            }
+            EthersGethDebugBuiltInTracerType::NoopTracer => GethDebugBuiltInTracerType::NoopTracer,
+        }
+    }
+}
+
+/// StructLog (reth) -> (ethers)
+impl ToEthers<EthersStructLog> for StructLog {
+    fn into_ethers(self) -> EthersStructLog {
+        EthersStructLog {
+            depth: self.depth,
+            error: self.error,
+            gas: self.gas,
+            gas_cost: self.gas_cost,
+            memory: self.memory,
+            op: self.op,
+            pc: self.pc,
+            stack: self.stack.into_ethers(),
+            storage: self.storage.into_ethers(),
+            refund_counter: self.refund_counter,
+        }
+    }
+}
+
+/// DefaultFrame (reth) -> (ethers)
+impl ToEthers<EthersDefaultFrame> for DefaultFrame {
+    fn into_ethers(self) -> EthersDefaultFrame {
+        EthersDefaultFrame {
+            failed: self.failed,
+            gas: self.gas.into(),
+            return_value: self.return_value.into_ethers(),
+            struct_logs: self.struct_logs.into_ethers(),
+        }
+    }
+}
+
+/// CallLogFrame (reth) -> (ethers)
+impl ToEthers<EthersCallLogFrame> for CallLogFrame {
+    fn into_ethers(self) -> EthersCallLogFrame {
+        EthersCallLogFrame {
+            address: self.address.map(|v| v.into_ethers()),
+            topics: self.topics.map(|v| v.into_ethers()),
+            data: self.data.map(|v| v.into_ethers()),
+        }
+    }
+}
+
+/// CallFrame (reth) -> (ethers)
+impl ToEthers<EthersCallFrame> for CallFrame {
+    fn into_ethers(self) -> EthersCallFrame {
+        EthersCallFrame {
+            typ: self.typ,
+            from: self.from.into_ethers(),
+            to: self.to.map(|v| NameOrAddress::Address(v.into_ethers())),
+            value: self.value.into_ethers(),
+            gas: self.gas.into_ethers(),
+            gas_used: self.gas_used.into_ethers(),
+            input: self.input.into_ethers(),
+            output: self.output.into_ethers(),
+            error: self.error,
+            calls: self.calls.into_ethers(),
+            logs: self.logs.into_ethers(),
+        }
+    }
+}
+
+/// FourByteFrame (reth) -> (ethers)
+impl ToEthers<EthersFourByteFrame> for FourByteFrame {
+    fn into_ethers(self) -> EthersFourByteFrame {
+        EthersFourByteFrame(self.0)
+    }
+}
+
+/// PreStateFrame (reth) -> (ethers)
+impl ToEthers<EthersPreStateFrame> for PreStateFrame {
+    fn into_ethers(self) -> EthersPreStateFrame {
+        // There are some reexports missing in reth_rpc_types::trace::geth which makes it this ugly
+        // also impossible to implement ToEthers fns for the structs directly
+        match self {
+            PreStateFrame::Default(mode) => EthersPreStateFrame::Default(EthersPreStateMode(
+                mode.0
+                    .into_iter()
+                    .map(|(k, v)| {
+                        (
+                            k.into_ethers(),
+                            EthersAccountState {
+                                balance: v.balance.into_ethers(),
+                                code: v.code,
+                                nonce: v.nonce.into_ethers(),
+                                storage: v.storage.into_ethers(),
+                            },
+                        )
+                    })
+                    .collect(),
+            )),
+            PreStateFrame::Diff(mode) => EthersPreStateFrame::Diff(EthersDiffMode {
+                pre: mode
+                    .pre
+                    .into_iter()
+                    .map(|(k, v)| {
+                        (
+                            k.into_ethers(),
+                            EthersAccountState {
+                                balance: v.balance.into_ethers(),
+                                code: v.code,
+                                nonce: v.nonce.into_ethers(),
+                                storage: v.storage.into_ethers(),
+                            },
+                        )
+                    })
+                    .collect(),
+                post: mode
+                    .post
+                    .into_iter()
+                    .map(|(k, v)| {
+                        (
+                            k.into_ethers(),
+                            EthersAccountState {
+                                balance: v.balance.into_ethers(),
+                                code: v.code,
+                                nonce: v.nonce.into_ethers(),
+                                storage: v.storage.into_ethers(),
+                            },
+                        )
+                    })
+                    .collect(),
+            }),
+        }
+    }
+}
+
+/// NoopTracer (reth) -> (ethers)
+impl ToEthers<EthersNoopFrame> for NoopFrame {
+    fn into_ethers(self) -> EthersNoopFrame {
+        EthersNoopFrame::default()
+    }
+}
+
+/// NoopTracer (ethers) -> (reth)
+impl ToReth<NoopFrame> for EthersNoopFrame {
+    fn into_reth(self) -> NoopFrame {
+        NoopFrame::default()
     }
 }
 
@@ -58,22 +250,20 @@ impl ToReth<GethDebugTracingOptions> for EthersDebugTracingOptions {
 impl ToEthers<EthersGethTrace> for GethTrace {
     fn into_ethers(self) -> EthersGethTrace {
         match self {
-            GethTrace::Default(_) => {
-                EthersGethTrace::Known(EthersGethTraceFrame::Default(DefaultFrame::default()))
+            GethTrace::Default(frame) => {
+                EthersGethTrace::Known(EthersGethTraceFrame::Default(frame.into_ethers()))
             }
-            GethTrace::CallTracer(_) => {
-                EthersGethTrace::Known(EthersGethTraceFrame::CallTracer(CallFrame::default()))
+            GethTrace::CallTracer(frame) => {
+                EthersGethTrace::Known(EthersGethTraceFrame::CallTracer(frame.into_ethers()))
             }
-            GethTrace::FourByteTracer(_) => EthersGethTrace::Known(
-                EthersGethTraceFrame::FourByteTracer(FourByteFrame::default()),
-            ),
-            GethTrace::PreStateTracer(_) => {
-                EthersGethTrace::Known(EthersGethTraceFrame::PreStateTracer(
-                    PreStateFrame::Default(PreStateMode::default()),
-                ))
+            GethTrace::FourByteTracer(frame) => {
+                EthersGethTrace::Known(EthersGethTraceFrame::FourByteTracer(frame.into_ethers()))
             }
-            GethTrace::NoopTracer(_) => {
-                EthersGethTrace::Known(EthersGethTraceFrame::NoopTracer(NoopFrame::default()))
+            GethTrace::PreStateTracer(frame) => {
+                EthersGethTrace::Known(EthersGethTraceFrame::PreStateTracer(frame.into_ethers()))
+            }
+            GethTrace::NoopTracer(frame) => {
+                EthersGethTrace::Known(EthersGethTraceFrame::NoopTracer(frame.into_ethers()))
             }
             GethTrace::JS(value) => EthersGethTrace::Unknown(value),
         }
@@ -325,7 +515,7 @@ impl ToReth<TraceResults> for EthersBlockTrace {
         TraceResults {
             output: self.output.into_reth(),
             // Ethers represents missing traces as Options, Reth uses empty vectors
-            trace: self.trace.into_reth().unwrap_or_default(),
+            trace: self.trace.unwrap_or_default().into_reth(),
             vm_trace: self.vm_trace.into_reth(),
             state_diff: self.state_diff.into_reth(),
         }
@@ -475,7 +665,7 @@ impl ToEthers<EthersVMExecutedOperation> for VmExecutedOperation {
     fn into_ethers(self) -> EthersVMExecutedOperation {
         EthersVMExecutedOperation {
             used: self.used,
-            push: vec![self.push.into_ethers().unwrap()], // Check this
+            push: self.push.into_ethers().into_iter().collect(), // Check this
             mem: self.mem.into_ethers(),
             store: self.store.into_ethers(),
         }
