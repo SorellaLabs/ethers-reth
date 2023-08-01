@@ -4,7 +4,7 @@ use reth_blockchain_tree::{
     externals::TreeExternals, BlockchainTree, BlockchainTreeConfig, ShareableBlockchainTree,
 };
 
-use crate::{RethApi, RethDebug, RethFilter, RethMiddleware, RethTrace};
+use crate::{noop::NoopNetwork, RethApi, RethDebug, RethFilter, RethMiddleware, RethTrace};
 use ethers::providers::Middleware;
 // Reth
 use reth_db::{
@@ -14,8 +14,7 @@ use reth_db::{
     transaction::DbTx,
     DatabaseError,
 };
-use reth_network_api::noop::NoopNetwork;
-use reth_primitives::{constants::ETHEREUM_BLOCK_GAS_LIMIT, MAINNET};
+use reth_primitives::{constants::ETHEREUM_BLOCK_GAS_LIMIT, ChainSpec};
 use reth_provider::{providers::BlockchainProvider, ProviderFactory};
 use reth_revm::Factory;
 use reth_rpc::{
@@ -46,13 +45,13 @@ where
     pub fn try_new(
         db_path: &Path,
         handle: Handle,
+        chain: Arc<ChainSpec>,
     ) -> Result<(RethApi, RethFilter, RethTrace, RethDebug), DatabaseError> {
         let task_manager = TaskManager::new(handle);
         let task_executor = task_manager.executor();
 
         tokio::task::spawn(task_manager);
 
-        let chain = MAINNET.clone();
         let db = Arc::new(init_db(db_path).unwrap());
 
         let tree_externals = TreeExternals::new(
@@ -81,14 +80,14 @@ where
         let state_cache = EthStateCache::spawn(provider.clone(), EthStateCacheConfig::default());
 
         let tx_pool = reth_transaction_pool::Pool::eth_pool(
-            EthTransactionValidator::new(provider.clone(), chain, task_executor.clone()),
+            EthTransactionValidator::new(provider.clone(), chain.clone(), task_executor.clone()),
             Default::default(),
         );
 
         let reth_api = EthApi::new(
             provider.clone(),
             tx_pool.clone(),
-            NoopNetwork::default(),
+            NoopNetwork::new(chain.chain),
             state_cache.clone(),
             GasPriceOracle::new(
                 provider.clone(),

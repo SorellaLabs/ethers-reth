@@ -22,7 +22,7 @@ impl ToEthers<EthersFeeHistory> for FeeHistory {
             base_fee_per_gas: self.base_fee_per_gas.into_ethers(),
             gas_used_ratio: self.gas_used_ratio,
             oldest_block: self.oldest_block.into_ethers(),
-            reward: self.reward.into_ethers().unwrap(),
+            reward: self.reward.into_ethers(),
         }
     }
 }

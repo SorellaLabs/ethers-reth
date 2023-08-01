@@ -83,6 +83,53 @@ where
     }
 }
 
+/// Vec<> to Option<Vec<>> conversion
+impl<T, F> ToReth<Vec<T>> for Option<Vec<F>>
+where
+    F: ToReth<T>,
+{
+    fn into_reth(self) -> Vec<T> {
+        self.map(|x| x.into_reth()).unwrap_or_default()
+    }
+}
+
+impl<F, T> ToEthers<Vec<F>> for Option<Vec<T>>
+where
+    T: ToEthers<F>,
+{
+    fn into_ethers(self) -> Vec<F> {
+        self.map(|x| x.into_ethers()).unwrap_or_default()
+    }
+}
+
+/// Option<Vec<>> to Vec<> conversion
+
+impl<F, T> ToEthers<Option<Vec<F>>> for Vec<T>
+where
+    T: ToEthers<F>,
+{
+    fn into_ethers(self) -> Option<Vec<F>> {
+        if self.is_empty() {
+            None
+        } else {
+            Some(self.into_iter().map(|x| x.into_ethers()).collect())
+        }
+    }
+}
+
+impl<T, F> ToReth<Option<Vec<T>>> for Vec<F>
+where
+    F: ToReth<T>,
+{
+    fn into_reth(self) -> Option<Vec<T>> {
+        if self.is_empty() {
+            None
+        } else {
+            Some(self.into_iter().map(|x| x.into_reth()).collect())
+        }
+    }
+}
+
 // -----------------------------------------------
 
 /// generic HashSet<> -> Vec<> conversion
