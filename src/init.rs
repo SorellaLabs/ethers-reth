@@ -22,10 +22,12 @@ use reth_rpc::{
         cache::{EthStateCache, EthStateCacheConfig},
         gas_oracle::{GasPriceOracle, GasPriceOracleConfig},
     },
-    DebugApi, EthApi, EthFilter, TraceApi, TracingCallGuard,
+    DebugApi, EthApi, EthFilter, TraceApi, TracingCallGuard, TracingCallPool,
 };
 use reth_tasks::TaskManager;
-use reth_transaction_pool::{EthTransactionValidator, GasCostOrdering, Pool, PooledTransaction};
+use reth_transaction_pool::{
+    CoinbaseTipOrdering, EthTransactionValidator, Pool, PooledTransaction,
+};
 // Std
 use std::{fmt::Debug, path::Path, sync::Arc};
 use tokio::runtime::Handle;
@@ -35,8 +37,10 @@ pub type Provider = BlockchainProvider<
     ShareableBlockchainTree<Arc<Env<WriteMap>>, Arc<BeaconConsensus>, Factory>,
 >;
 
-pub type RethTxPool =
-    Pool<EthTransactionValidator<Provider, PooledTransaction>, GasCostOrdering<PooledTransaction>>;
+pub type RethTxPool = Pool<
+    EthTransactionValidator<Provider, PooledTransaction>,
+    CoinbaseTipOrdering<PooledTransaction>,
+>;
 
 impl<M> RethMiddleware<M>
 where
@@ -95,17 +99,13 @@ where
                 state_cache.clone(),
             ),
             ETHEREUM_BLOCK_GAS_LIMIT,
+            TracingCallPool::build().unwrap(),
         );
 
         let tracing_call_guard = TracingCallGuard::new(10);
 
-        let reth_trace = TraceApi::new(
-            provider.clone(),
-            reth_api.clone(),
-            state_cache.clone(),
-            Box::new(task_executor.clone()),
-            tracing_call_guard.clone(),
-        );
+        let reth_trace =
+            TraceApi::new(provider.clone(), reth_api.clone(), tracing_call_guard.clone());
 
         let reth_debug = DebugApi::new(
             provider.clone(),

@@ -26,9 +26,9 @@
       "ops": [
         {
           "pc": 0,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23974,
             "push": [
               "0x60"
             ],
@@ -40,10 +40,11 @@
         },
         {
           "pc": 2,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23971,
             "push": [
+              "0x60",
               "0x40"
             ],
             "mem": null,
@@ -54,9 +55,9 @@
         },
         {
           "pc": 4,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 12,
+            "used": 23968,
             "push": [],
             "mem": null,
             "store": null
@@ -66,9 +67,9 @@
         },
         {
           "pc": 5,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23956,
             "push": [
               "0x4"
             ],
@@ -80,10 +81,11 @@
         },
         {
           "pc": 7,
-          "cost": 0,
+          "cost": 2,
           "ex": {
-            "used": 2,
+            "used": 23953,
             "push": [
+              "0x4",
               "0x4"
             ],
             "mem": null,
@@ -94,9 +96,9 @@
         },
         {
           "pc": 8,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23951,
             "push": [
               "0x0"
             ],
@@ -108,10 +110,11 @@
         },
         {
           "pc": 9,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23948,
             "push": [
+              "0x0",
               "0xaf"
             ],
             "mem": null,
@@ -122,9 +125,9 @@
         },
         {
           "pc": 12,
-          "cost": 0,
+          "cost": 10,
           "ex": {
-            "used": 10,
+            "used": 23945,
             "push": [],
             "mem": null,
             "store": null
@@ -134,9 +137,9 @@
         },
         {
           "pc": 13,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23935,
             "push": [
               "0x0"
             ],
@@ -148,9 +151,9 @@
         },
         {
           "pc": 15,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23932,
             "push": [
               "0xd0e30db000000000000000000000000000000000000000000000000000000000"
             ],
@@ -162,10 +165,11 @@
         },
         {
           "pc": 16,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23929,
             "push": [
+              "0xd0e30db000000000000000000000000000000000000000000000000000000000",
               "0x100000000000000000000000000000000000000000000000000000000"
             ],
             "mem": null,
@@ -176,10 +180,11 @@
         },
         {
           "pc": 46,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23926,
             "push": [
+              "0x100000000000000000000000000000000000000000000000000000000",
               "0xd0e30db000000000000000000000000000000000000000000000000000000000"
             ],
             "mem": null,
@@ -190,9 +195,9 @@
         },
         {
           "pc": 47,
-          "cost": 0,
+          "cost": 5,
           "ex": {
-            "used": 5,
+            "used": 23923,
             "push": [
               "0xd0e30db0"
             ],
@@ -204,10 +209,11 @@
         },
         {
           "pc": 48,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23918,
             "push": [
+              "0xd0e30db0",
               "0xffffffff"
             ],
             "mem": null,
@@ -218,9 +224,9 @@
         },
         {
           "pc": 53,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23915,
             "push": [
               "0xd0e30db0"
             ],
@@ -232,10 +238,11 @@
         },
         {
           "pc": 54,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23912,
             "push": [
+              "0xd0e30db0",
               "0xd0e30db0"
             ],
             "mem": null,
@@ -246,10 +253,12 @@
         },
         {
           "pc": 55,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23909,
             "push": [
+              "0xd0e30db0",
+              "0xd0e30db0",
               "0x6fdde03"
             ],
             "mem": null,
@@ -260,10 +269,11 @@
         },
         {
           "pc": 60,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23906,
             "push": [
+              "0xd0e30db0",
               "0x0"
             ],
             "mem": null,
@@ -274,10 +284,12 @@
         },
         {
           "pc": 61,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23903,
             "push": [
+              "0xd0e30db0",
+              "0x0",
               "0xb9"
             ],
             "mem": null,
@@ -288,9 +300,9 @@
         },
         {
           "pc": 64,
-          "cost": 0,
+          "cost": 10,
           "ex": {
-            "used": 10,
+            "used": 23900,
             "push": [
               "0xd0e30db0"
             ],
@@ -302,10 +314,11 @@
         },
         {
           "pc": 65,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23890,
             "push": [
+              "0xd0e30db0",
               "0xd0e30db0"
             ],
             "mem": null,
@@ -316,10 +329,12 @@
         },
         {
           "pc": 66,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23887,
             "push": [
+              "0xd0e30db0",
+              "0xd0e30db0",
               "0x95ea7b3"
             ],
             "mem": null,
@@ -330,10 +345,11 @@
         },
         {
           "pc": 71,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23884,
             "push": [
+              "0xd0e30db0",
               "0x0"
             ],
             "mem": null,
@@ -344,10 +360,12 @@
         },
         {
           "pc": 72,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23881,
             "push": [
+              "0xd0e30db0",
+              "0x0",
               "0x147"
             ],
             "mem": null,
@@ -358,9 +376,9 @@
         },
         {
           "pc": 75,
-          "cost": 0,
+          "cost": 10,
           "ex": {
-            "used": 10,
+            "used": 23878,
             "push": [
               "0xd0e30db0"
             ],
@@ -372,10 +390,11 @@
         },
         {
           "pc": 76,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23868,
             "push": [
+              "0xd0e30db0",
               "0xd0e30db0"
             ],
             "mem": null,
@@ -386,10 +405,12 @@
         },
         {
           "pc": 77,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23865,
             "push": [
+              "0xd0e30db0",
+              "0xd0e30db0",
               "0x18160ddd"
             ],
             "mem": null,
@@ -400,10 +421,11 @@
         },
         {
           "pc": 82,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23862,
             "push": [
+              "0xd0e30db0",
               "0x0"
             ],
             "mem": null,
@@ -414,10 +436,12 @@
         },
         {
           "pc": 83,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23859,
             "push": [
+              "0xd0e30db0",
+              "0x0",
               "0x1a1"
             ],
             "mem": null,
@@ -428,9 +452,9 @@
         },
         {
           "pc": 86,
-          "cost": 0,
+          "cost": 10,
           "ex": {
-            "used": 10,
+            "used": 23856,
             "push": [
               "0xd0e30db0"
             ],
@@ -442,10 +466,11 @@
         },
         {
           "pc": 87,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23846,
             "push": [
+              "0xd0e30db0",
               "0xd0e30db0"
             ],
             "mem": null,
@@ -456,10 +481,12 @@
         },
         {
           "pc": 88,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23843,
             "push": [
+              "0xd0e30db0",
+              "0xd0e30db0",
               "0x23b872dd"
             ],
             "mem": null,
@@ -470,10 +497,11 @@
         },
         {
           "pc": 93,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23840,
             "push": [
+              "0xd0e30db0",
               "0x0"
             ],
             "mem": null,
@@ -484,10 +512,12 @@
         },
         {
           "pc": 94,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23837,
             "push": [
+              "0xd0e30db0",
+              "0x0",
               "0x1ca"
             ],
             "mem": null,
@@ -498,9 +528,9 @@
         },
         {
           "pc": 97,
-          "cost": 0,
+          "cost": 10,
           "ex": {
-            "used": 10,
+            "used": 23834,
             "push": [
               "0xd0e30db0"
             ],
@@ -512,10 +542,11 @@
         },
         {
           "pc": 98,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23824,
             "push": [
+              "0xd0e30db0",
               "0xd0e30db0"
             ],
             "mem": null,
@@ -526,10 +557,12 @@
         },
         {
           "pc": 99,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23821,
             "push": [
+              "0xd0e30db0",
+              "0xd0e30db0",
               "0x2e1a7d4d"
             ],
             "mem": null,
@@ -540,10 +573,11 @@
         },
         {
           "pc": 104,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23818,
             "push": [
+              "0xd0e30db0",
               "0x0"
             ],
             "mem": null,
@@ -554,10 +588,12 @@
         },
         {
           "pc": 105,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23815,
             "push": [
+              "0xd0e30db0",
+              "0x0",
               "0x243"
             ],
             "mem": null,
@@ -568,9 +604,9 @@
         },
         {
           "pc": 108,
-          "cost": 0,
+          "cost": 10,
           "ex": {
-            "used": 10,
+            "used": 23812,
             "push": [
               "0xd0e30db0"
             ],
@@ -582,10 +618,11 @@
         },
         {
           "pc": 109,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23802,
             "push": [
+              "0xd0e30db0",
               "0xd0e30db0"
             ],
             "mem": null,
@@ -596,10 +633,12 @@
         },
         {
           "pc": 110,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23799,
             "push": [
+              "0xd0e30db0",
+              "0xd0e30db0",
               "0x313ce567"
             ],
             "mem": null,
@@ -610,10 +649,11 @@
         },
         {
           "pc": 115,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23796,
             "push": [
+              "0xd0e30db0",
               "0x0"
             ],
             "mem": null,
@@ -624,10 +664,12 @@
         },
         {
           "pc": 116,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23793,
             "push": [
+              "0xd0e30db0",
+              "0x0",
               "0x266"
             ],
             "mem": null,
@@ -638,9 +680,9 @@
         },
         {
           "pc": 119,
-          "cost": 0,
+          "cost": 10,
           "ex": {
-            "used": 10,
+            "used": 23790,
             "push": [
               "0xd0e30db0"
             ],
@@ -652,10 +694,11 @@
         },
         {
           "pc": 120,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23780,
             "push": [
+              "0xd0e30db0",
               "0xd0e30db0"
             ],
             "mem": null,
@@ -666,10 +709,12 @@
         },
         {
           "pc": 121,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23777,
             "push": [
+              "0xd0e30db0",
+              "0xd0e30db0",
               "0x70a08231"
             ],
             "mem": null,
@@ -680,10 +725,11 @@
         },
         {
           "pc": 126,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23774,
             "push": [
+              "0xd0e30db0",
               "0x0"
             ],
             "mem": null,
@@ -694,10 +740,12 @@
         },
         {
           "pc": 127,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23771,
             "push": [
+              "0xd0e30db0",
+              "0x0",
               "0x295"
             ],
             "mem": null,
@@ -708,9 +756,9 @@
         },
         {
           "pc": 130,
-          "cost": 0,
+          "cost": 10,
           "ex": {
-            "used": 10,
+            "used": 23768,
             "push": [
               "0xd0e30db0"
             ],
@@ -722,10 +770,11 @@
         },
         {
           "pc": 131,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23758,
             "push": [
+              "0xd0e30db0",
               "0xd0e30db0"
             ],
             "mem": null,
@@ -736,10 +785,12 @@
         },
         {
           "pc": 132,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23755,
             "push": [
+              "0xd0e30db0",
+              "0xd0e30db0",
               "0x95d89b41"
             ],
             "mem": null,
@@ -750,10 +801,11 @@
         },
         {
           "pc": 137,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23752,
             "push": [
+              "0xd0e30db0",
               "0x0"
             ],
             "mem": null,
@@ -764,10 +816,12 @@
         },
         {
           "pc": 138,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23749,
             "push": [
+              "0xd0e30db0",
+              "0x0",
               "0x2e2"
             ],
             "mem": null,
@@ -778,9 +832,9 @@
         },
         {
           "pc": 141,
-          "cost": 0,
+          "cost": 10,
           "ex": {
-            "used": 10,
+            "used": 23746,
             "push": [
               "0xd0e30db0"
             ],
@@ -792,10 +846,11 @@
         },
         {
           "pc": 142,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23736,
             "push": [
+              "0xd0e30db0",
               "0xd0e30db0"
             ],
             "mem": null,
@@ -806,10 +861,12 @@
         },
         {
           "pc": 143,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23733,
             "push": [
+              "0xd0e30db0",
+              "0xd0e30db0",
               "0xa9059cbb"
             ],
             "mem": null,
@@ -820,10 +877,11 @@
         },
         {
           "pc": 148,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23730,
             "push": [
+              "0xd0e30db0",
               "0x0"
             ],
             "mem": null,
@@ -834,10 +892,12 @@
         },
         {
           "pc": 149,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23727,
             "push": [
+              "0xd0e30db0",
+              "0x0",
               "0x370"
             ],
             "mem": null,
@@ -848,9 +908,9 @@
         },
         {
           "pc": 152,
-          "cost": 0,
+          "cost": 10,
           "ex": {
-            "used": 10,
+            "used": 23724,
             "push": [
               "0xd0e30db0"
             ],
@@ -862,10 +922,11 @@
         },
         {
           "pc": 153,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23714,
             "push": [
+              "0xd0e30db0",
               "0xd0e30db0"
             ],
             "mem": null,
@@ -876,10 +937,12 @@
         },
         {
           "pc": 154,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23711,
             "push": [
+              "0xd0e30db0",
+              "0xd0e30db0",
               "0xd0e30db0"
             ],
             "mem": null,
@@ -890,10 +953,11 @@
         },
         {
           "pc": 159,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23708,
             "push": [
+              "0xd0e30db0",
               "0x1"
             ],
             "mem": null,
@@ -904,10 +968,12 @@
         },
         {
           "pc": 160,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23705,
             "push": [
+              "0xd0e30db0",
+              "0x1",
               "0x3ca"
             ],
             "mem": null,
@@ -918,9 +984,9 @@
         },
         {
           "pc": 163,
-          "cost": 0,
+          "cost": 10,
           "ex": {
-            "used": 10,
+            "used": 23702,
             "push": [
               "0xd0e30db0"
             ],
@@ -934,7 +1000,7 @@
           "pc": 970,
           "cost": 0,
           "ex": {
-            "used": 1,
+            "used": 23692,
             "push": [
               "0xd0e30db0"
             ],
@@ -946,10 +1012,11 @@
         },
         {
           "pc": 971,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23691,
             "push": [
+              "0xd0e30db0",
               "0x3d2"
             ],
             "mem": null,
@@ -960,10 +1027,12 @@
         },
         {
           "pc": 974,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23688,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
               "0x440"
             ],
             "mem": null,
@@ -974,10 +1043,11 @@
         },
         {
           "pc": 977,
-          "cost": 0,
+          "cost": 8,
           "ex": {
-            "used": 8,
+            "used": 23685,
             "push": [
+              "0xd0e30db0",
               "0x3d2"
             ],
             "mem": null,
@@ -990,8 +1060,9 @@
           "pc": 1088,
           "cost": 0,
           "ex": {
-            "used": 1,
+            "used": 23677,
             "push": [
+              "0xd0e30db0",
               "0x3d2"
             ],
             "mem": null,
@@ -1002,10 +1073,12 @@
         },
         {
           "pc": 1089,
-          "cost": 0,
+          "cost": 2,
           "ex": {
-            "used": 2,
+            "used": 23676,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
               "0xde0b6b3a7640000"
             ],
             "mem": null,
@@ -1016,10 +1089,13 @@
         },
         {
           "pc": 1090,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23674,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
               "0x3"
             ],
             "mem": null,
@@ -1030,10 +1106,14 @@
         },
         {
           "pc": 1092,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23671,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0x3",
               "0x0"
             ],
             "mem": null,
@@ -1044,10 +1124,15 @@
         },
         {
           "pc": 1094,
-          "cost": 0,
+          "cost": 2,
           "ex": {
-            "used": 2,
+            "used": 23668,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0x3",
+              "0x0",
               "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
             ],
             "mem": null,
@@ -1058,10 +1143,16 @@
         },
         {
           "pc": 1095,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23666,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0x3",
+              "0x0",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
               "0xffffffffffffffffffffffffffffffffffffffff"
             ],
             "mem": null,
@@ -1072,10 +1163,15 @@
         },
         {
           "pc": 1116,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23663,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0x3",
+              "0x0",
               "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
             ],
             "mem": null,
@@ -1086,10 +1182,16 @@
         },
         {
           "pc": 1117,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23660,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0x3",
+              "0x0",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
               "0xffffffffffffffffffffffffffffffffffffffff"
             ],
             "mem": null,
@@ -1100,10 +1202,15 @@
         },
         {
           "pc": 1138,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23657,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0x3",
+              "0x0",
               "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
             ],
             "mem": null,
@@ -1114,10 +1221,16 @@
         },
         {
           "pc": 1139,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23654,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0x3",
+              "0x0",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
               "0x0"
             ],
             "mem": null,
@@ -1128,10 +1241,14 @@
         },
         {
           "pc": 1140,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23651,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0x3",
               "0x0"
             ],
             "mem": null,
@@ -1142,10 +1259,15 @@
         },
         {
           "pc": 1141,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23648,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0x3",
+              "0x0",
               "0x20"
             ],
             "mem": null,
@@ -1156,10 +1278,14 @@
         },
         {
           "pc": 1143,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23645,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0x3",
               "0x20"
             ],
             "mem": null,
@@ -1170,10 +1296,14 @@
         },
         {
           "pc": 1144,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23642,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0x20",
               "0x3"
             ],
             "mem": null,
@@ -1184,10 +1314,15 @@
         },
         {
           "pc": 1145,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23639,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0x20",
+              "0x3",
               "0x20"
             ],
             "mem": null,
@@ -1198,10 +1333,13 @@
         },
         {
           "pc": 1146,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23636,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
               "0x20"
             ],
             "mem": null,
@@ -1212,10 +1350,14 @@
         },
         {
           "pc": 1147,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23633,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0x20",
               "0x20"
             ],
             "mem": null,
@@ -1226,10 +1368,13 @@
         },
         {
           "pc": 1149,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23630,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
               "0x40"
             ],
             "mem": null,
@@ -1240,10 +1385,14 @@
         },
         {
           "pc": 1150,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23627,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0x40",
               "0x0"
             ],
             "mem": null,
@@ -1256,8 +1405,11 @@
           "pc": 1152,
           "cost": 0,
           "ex": {
-            "used": 42,
+            "used": 23624,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
               "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137"
             ],
             "mem": null,
@@ -1268,10 +1420,14 @@
         },
         {
           "pc": 1153,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23582,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137",
               "0x0"
             ],
             "mem": null,
@@ -1282,10 +1438,15 @@
         },
         {
           "pc": 1155,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23579,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137",
+              "0x0",
               "0xde0b6b3a7640000"
             ],
             "mem": null,
@@ -1296,10 +1457,16 @@
         },
         {
           "pc": 1156,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 23576,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137",
+              "0x0",
+              "0xde0b6b3a7640000",
               "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137"
             ],
             "mem": null,
@@ -1312,8 +1479,14 @@
           "pc": 1157,
           "cost": 0,
           "ex": {
-            "used": 2100,
+            "used": 23573,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137",
+              "0x0",
+              "0xde0b6b3a7640000",
               "0x0"
             ],
             "mem": null,
@@ -1327,10 +1500,15 @@
         },
         {
           "pc": 1158,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 21473,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137",
+              "0x0",
               "0xde0b6b3a7640000"
             ],
             "mem": null,
@@ -1341,10 +1519,15 @@
         },
         {
           "pc": 1159,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 21470,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137",
+              "0x0",
               "0xde0b6b3a7640000"
             ],
             "mem": null,
@@ -1355,10 +1538,14 @@
         },
         {
           "pc": 1160,
-          "cost": 0,
+          "cost": 2,
           "ex": {
-            "used": 2,
+            "used": 21467,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137",
               "0x0"
             ],
             "mem": null,
@@ -1369,10 +1556,13 @@
         },
         {
           "pc": 1161,
-          "cost": 0,
+          "cost": 2,
           "ex": {
-            "used": 2,
+            "used": 21465,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
               "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137"
             ],
             "mem": null,
@@ -1383,10 +1573,14 @@
         },
         {
           "pc": 1162,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 21463,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137",
               "0xde0b6b3a7640000"
             ],
             "mem": null,
@@ -1397,10 +1591,14 @@
         },
         {
           "pc": 1163,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 21460,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xde0b6b3a7640000",
+              "0xde0b6b3a7640000",
               "0xc651ee22c6951bb8b5bd29e8210fb394645a94315fe10eff2cc73de1aa75c137"
             ],
             "mem": null,
@@ -1413,8 +1611,10 @@
           "pc": 1164,
           "cost": 0,
           "ex": {
-            "used": 20000,
+            "used": 21457,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
               "0xde0b6b3a7640000"
             ],
             "mem": null,
@@ -1428,10 +1628,11 @@
         },
         {
           "pc": 1165,
-          "cost": 0,
+          "cost": 2,
           "ex": {
-            "used": 2,
+            "used": 1457,
             "push": [
+              "0xd0e30db0",
               "0x3d2"
             ],
             "mem": null,
@@ -1442,10 +1643,12 @@
         },
         {
           "pc": 1166,
-          "cost": 0,
+          "cost": 2,
           "ex": {
-            "used": 2,
+            "used": 1455,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
               "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
             ],
             "mem": null,
@@ -1456,10 +1659,13 @@
         },
         {
           "pc": 1167,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1453,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
               "0xffffffffffffffffffffffffffffffffffffffff"
             ],
             "mem": null,
@@ -1470,10 +1676,12 @@
         },
         {
           "pc": 1188,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1450,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
               "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266"
             ],
             "mem": null,
@@ -1484,10 +1692,13 @@
         },
         {
           "pc": 1189,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1447,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
               "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c"
             ],
             "mem": null,
@@ -1498,10 +1709,14 @@
         },
         {
           "pc": 1222,
-          "cost": 0,
+          "cost": 2,
           "ex": {
-            "used": 2,
+            "used": 1444,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
               "0xde0b6b3a7640000"
             ],
             "mem": null,
@@ -1512,10 +1727,15 @@
         },
         {
           "pc": 1223,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1442,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0xde0b6b3a7640000",
               "0x40"
             ],
             "mem": null,
@@ -1526,10 +1746,15 @@
         },
         {
           "pc": 1225,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1439,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0xde0b6b3a7640000",
               "0x60"
             ],
             "mem": null,
@@ -1540,10 +1765,16 @@
         },
         {
           "pc": 1226,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1436,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0xde0b6b3a7640000",
+              "0x60",
               "0x60"
             ],
             "mem": null,
@@ -1554,10 +1785,17 @@
         },
         {
           "pc": 1227,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1433,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0xde0b6b3a7640000",
+              "0x60",
+              "0x60",
               "0xde0b6b3a7640000"
             ],
             "mem": null,
@@ -1568,10 +1806,18 @@
         },
         {
           "pc": 1228,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1430,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0xde0b6b3a7640000",
+              "0x60",
+              "0x60",
+              "0xde0b6b3a7640000",
               "0x60"
             ],
             "mem": null,
@@ -1582,10 +1828,16 @@
         },
         {
           "pc": 1229,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 6,
+            "used": 1427,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0xde0b6b3a7640000",
+              "0x60",
               "0x60"
             ],
             "mem": null,
@@ -1596,10 +1848,17 @@
         },
         {
           "pc": 1230,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1421,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0xde0b6b3a7640000",
+              "0x60",
+              "0x60",
               "0x20"
             ],
             "mem": null,
@@ -1610,10 +1869,16 @@
         },
         {
           "pc": 1232,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1418,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0xde0b6b3a7640000",
+              "0x60",
               "0x80"
             ],
             "mem": null,
@@ -1624,10 +1889,16 @@
         },
         {
           "pc": 1233,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1415,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0x80",
+              "0x60",
               "0xde0b6b3a7640000"
             ],
             "mem": null,
@@ -1638,10 +1909,15 @@
         },
         {
           "pc": 1234,
-          "cost": 0,
+          "cost": 2,
           "ex": {
-            "used": 2,
+            "used": 1412,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0x80",
               "0x60"
             ],
             "mem": null,
@@ -1652,10 +1928,14 @@
         },
         {
           "pc": 1235,
-          "cost": 0,
+          "cost": 2,
           "ex": {
-            "used": 2,
+            "used": 1410,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
               "0x80"
             ],
             "mem": null,
@@ -1666,10 +1946,15 @@
         },
         {
           "pc": 1236,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1408,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0x80",
               "0x40"
             ],
             "mem": null,
@@ -1680,10 +1965,15 @@
         },
         {
           "pc": 1238,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1405,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0x80",
               "0x60"
             ],
             "mem": null,
@@ -1694,10 +1984,16 @@
         },
         {
           "pc": 1239,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1402,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0x80",
+              "0x60",
               "0x60"
             ],
             "mem": null,
@@ -1708,10 +2004,16 @@
         },
         {
           "pc": 1240,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1399,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0x60",
+              "0x60",
               "0x80"
             ],
             "mem": null,
@@ -1722,10 +2024,15 @@
         },
         {
           "pc": 1241,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1396,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0x60",
               "0x20"
             ],
             "mem": null,
@@ -1736,10 +2043,15 @@
         },
         {
           "pc": 1242,
-          "cost": 0,
+          "cost": 3,
           "ex": {
-            "used": 3,
+            "used": 1393,
             "push": [
+              "0xd0e30db0",
+              "0x3d2",
+              "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+              "0xe1fffcc4923d04b559f4d29a8bfc6cda04eb5b0d3c460751c2402c5c5cc9109c",
+              "0x20",
               "0x60"
             ],
             "mem": null,
@@ -1752,8 +2064,9 @@
           "pc": 1243,
           "cost": 0,
           "ex": {
-            "used": 1381,
+            "used": 1390,
             "push": [
+              "0xd0e30db0",
               "0x3d2"
             ],
             "mem": null,
@@ -1764,9 +2077,9 @@
         },
         {
           "pc": 1244,
-          "cost": 0,
+          "cost": 8,
           "ex": {
-            "used": 8,
+            "used": 9,
             "push": [
               "0xd0e30db0"
             ],

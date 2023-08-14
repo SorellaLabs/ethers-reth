@@ -414,10 +414,6 @@ mod tests {
             .unwrap();
 
         let expected_trace_call_path = get_testdata_dir().join("expected_trace_call.json");
-        let _ = std::fs::write(
-            &expected_trace_call_path,
-            serde_json::to_string_pretty(&trace_call_result).unwrap(),
-        );
         let expected_trace_call: EthersBlockTrace =
             serde_json::from_str(&std::fs::read_to_string(expected_trace_call_path).unwrap())
                 .unwrap();
@@ -465,10 +461,6 @@ mod tests {
 
         let expected_trace_call_many_path =
             get_testdata_dir().join("expected_trace_call_many.json");
-        let _ = std::fs::write(
-            &expected_trace_call_many_path,
-            serde_json::to_string_pretty(&trace_call_many_result).unwrap(),
-        );
         let expected_trace_call_many: Vec<EthersBlockTrace> =
             serde_json::from_str(&std::fs::read_to_string(expected_trace_call_many_path).unwrap())
                 .unwrap();
@@ -511,10 +503,6 @@ mod tests {
             .to_str()
             .unwrap()
             .to_string();
-        let _ = std::fs::write(
-            &expected_trace_raw_transaction_path,
-            serde_json::to_string_pretty(&trace_raw_transaction_result).unwrap(),
-        );
         let expected_trace_raw_transaction: EthersBlockTrace = serde_json::from_str(
             &std::fs::read_to_string(expected_trace_raw_transaction_path).unwrap(),
         )
@@ -538,10 +526,6 @@ mod tests {
 
         let expected_trace_replay_transaction_path =
             get_testdata_dir().join("expected_trace_replay_transaction.json");
-        let _ = std::fs::write(
-            &expected_trace_replay_transaction_path,
-            serde_json::to_string_pretty(&trace_replay_transaction_result).unwrap(),
-        );
         let expected_trace_replay_transaction: EthersBlockTrace = serde_json::from_str(
             &std::fs::read_to_string(expected_trace_replay_transaction_path).unwrap(),
         )
@@ -567,10 +551,6 @@ mod tests {
 
         let expected_trace_replay_block_transactions_path =
             get_testdata_dir().join("expected_trace_replay_block_transactions.json");
-        let _ = std::fs::write(
-            &expected_trace_replay_block_transactions_path,
-            serde_json::to_string_pretty(&trace_replay_block_transactions_result).unwrap(),
-        );
         let expected_trace_replay_block_transactions: Vec<EthersBlockTrace> = serde_json::from_str(
             &std::fs::read_to_string(expected_trace_replay_block_transactions_path).unwrap(),
         )
@@ -592,10 +572,6 @@ mod tests {
         let trace_block_result = reth_middleware.trace_block(block_number).await.unwrap();
 
         let expected_trace_block_path = get_testdata_dir().join("expected_trace_block.json");
-        let _ = std::fs::write(
-            expected_trace_block_path.clone(),
-            serde_json::to_string_pretty(&trace_block_result).unwrap(),
-        );
         let expected_trace_block: Vec<EthersTrace> =
             serde_json::from_str(&std::fs::read_to_string(expected_trace_block_path).unwrap())
                 .unwrap();

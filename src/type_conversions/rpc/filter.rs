@@ -2,8 +2,9 @@ use crate::type_conversions::{ToEthers, ToReth};
 
 use ethers::types::{
     Filter as EthersFilter, FilterBlockOption as EthersFilterBlockOption,
-    ValueOrArray as EthersValueOrArray,
+    ValueOrArray as EthersValueOrArray, H256 as EthersH256,
 };
+use reth_primitives::H256;
 use reth_rpc_types::{Filter, FilterBlockOption, ValueOrArray};
 
 /// BlockNumber (ethers) -> BlockNumberOrTag (reth)
@@ -71,9 +72,16 @@ impl ToReth<Filter> for EthersFilter {
     fn into_reth(self) -> Filter {
         Filter {
             block_option: self.block_option.into_reth(),
-            address: self.address.into_reth(),
-            topics: self.topics.into_reth(),
+            address: self.address.map(|a| a.into_reth().into()).unwrap_or_default(),
+            topics: self.topics.map(|t| t.map(|a| a.into_reth().into()).unwrap_or_default()),
         }
+    }
+}
+
+// Helper for converting H256 (reth) to Option<EthersH256> (ethers)
+impl ToEthers<Option<EthersH256>> for H256 {
+    fn into_ethers(self) -> Option<EthersH256> {
+        Some(self.into_ethers())
     }
 }
 
@@ -82,8 +90,8 @@ impl ToEthers<EthersFilter> for Filter {
     fn into_ethers(self) -> EthersFilter {
         EthersFilter {
             block_option: self.block_option.into_ethers(),
-            address: self.address.into_ethers(),
-            topics: self.topics.into_ethers(),
+            address: self.address.to_value_or_array().into_ethers(),
+            topics: self.topics.map(|t| t.to_value_or_array().into_ethers()),
         }
     }
 }

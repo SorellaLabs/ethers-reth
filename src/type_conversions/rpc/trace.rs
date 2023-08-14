@@ -6,7 +6,8 @@ use ethers::types::{
     CallFrame as EthersCallFrame, CallLogFrame as EthersCallLogFrame,
     CallResult as EthersCallResult, CallType as EthersCallType, ChangedType as EthersChangedType,
     Create as EthersCreate, CreateResult as EthersCreateResult, DefaultFrame as EthersDefaultFrame,
-    Diff as EthersDiff, DiffMode as EthersDiffMode, FourByteFrame as EthersFourByteFrame,
+    Diff as EthersDiff, DiffMode as EthersDiffMode, ExecutedInstruction,
+    FourByteFrame as EthersFourByteFrame,
     GethDebugBuiltInTracerType as EthersGethDebugBuiltInTracerType,
     GethDebugTracerConfig as EthersGethDebugTracerConfig,
     GethDebugTracerType as EthersGethDebugTracerType,
@@ -188,7 +189,7 @@ impl ToEthers<EthersPreStateFrame> for PreStateFrame {
                             k.into_ethers(),
                             EthersAccountState {
                                 balance: v.balance.into_ethers(),
-                                code: v.code,
+                                code: v.code.map(|x| x.to_string()),
                                 nonce: v.nonce.into_ethers(),
                                 storage: v.storage.into_ethers(),
                             },
@@ -205,7 +206,7 @@ impl ToEthers<EthersPreStateFrame> for PreStateFrame {
                             k.into_ethers(),
                             EthersAccountState {
                                 balance: v.balance.into_ethers(),
-                                code: v.code,
+                                code: v.code.map(|x| x.to_string()),
                                 nonce: v.nonce.into_ethers(),
                                 storage: v.storage.into_ethers(),
                             },
@@ -220,7 +221,7 @@ impl ToEthers<EthersPreStateFrame> for PreStateFrame {
                             k.into_ethers(),
                             EthersAccountState {
                                 balance: v.balance.into_ethers(),
-                                code: v.code,
+                                code: v.code.map(|x| x.to_string()),
                                 nonce: v.nonce.into_ethers(),
                                 storage: v.storage.into_ethers(),
                             },
@@ -624,11 +625,17 @@ impl ToEthers<EthersVMTrace> for VmTrace {
 /// EthersVMOperation (ethers) -> VmInstruction (reth)
 impl ToReth<VmInstruction> for EthersVMOperation {
     fn into_reth(self) -> VmInstruction {
+        let op: String = match self.op {
+            ExecutedInstruction::Known(opcode) => opcode.to_string(),
+            ExecutedInstruction::Unknown(opcode) => opcode,
+        };
         VmInstruction {
             pc: self.pc,
             cost: self.cost,
             ex: self.ex.into_reth(),
             sub: self.sub.into_reth(),
+            op: Some(op),
+            idx: None, // Ether-rs does not have an idx field
         }
     }
 }
@@ -653,7 +660,7 @@ impl ToReth<VmExecutedOperation> for EthersVMExecutedOperation {
     fn into_reth(self) -> VmExecutedOperation {
         VmExecutedOperation {
             used: self.used,
-            push: Some(self.push[0]).into_reth(), // Check this
+            push: self.push.into_reth(),
             mem: self.mem.into_reth(),
             store: self.store.into_reth(),
         }
@@ -665,7 +672,7 @@ impl ToEthers<EthersVMExecutedOperation> for VmExecutedOperation {
     fn into_ethers(self) -> EthersVMExecutedOperation {
         EthersVMExecutedOperation {
             used: self.used,
-            push: self.push.into_ethers().into_iter().collect(), // Check this
+            push: self.push.into_ethers(),
             mem: self.mem.into_ethers(),
             store: self.store.into_ethers(),
         }

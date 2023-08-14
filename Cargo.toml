@@ -5,22 +5,22 @@ edition = "2021"
 
 
 [dependencies]
-reth-tasks = { git = "https://github.com/paradigmxyz/reth", package = "reth-tasks", rev = "d5ea168" }
-reth-rpc = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc", rev = "d5ea168" }
-reth-rpc-api = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-api", rev = "d5ea168" }
-reth-rpc-types = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-types", rev = "d5ea168" }
-reth-provider = { git = "https://github.com/paradigmxyz/reth", package = "reth-provider", rev = "d5ea168" }
-reth-transaction-pool = { git = "https://github.com/paradigmxyz/reth", package = "reth-transaction-pool", rev = "d5ea168" }
-reth-network-api = { git = "https://github.com/paradigmxyz/reth", package = "reth-network-api", rev = "d5ea168" }
-reth-primitives = { git = "https://github.com/paradigmxyz/reth", package = "reth-primitives", rev = "d5ea168" }
-reth-db = { git = "https://github.com/paradigmxyz/reth", package = "reth-db", rev = "d5ea168", features = ["test-utils"] }
-reth-blockchain-tree = { git = "https://github.com/paradigmxyz/reth", package = "reth-blockchain-tree", rev = "d5ea168" }
-reth-beacon-consensus = { git = "https://github.com/paradigmxyz/reth", package = "reth-beacon-consensus", rev = "d5ea168" }
-reth-revm = { git = "https://github.com/paradigmxyz/reth", package = "reth-revm", rev = "d5ea168" }
-reth-interfaces = { git = "https://github.com/paradigmxyz/reth", package = "reth-interfaces", rev = "d5ea168", features = ["test-utils"] }
-reth-stages = { git = "https://github.com/paradigmxyz/reth", package = "reth-stages", rev = "d5ea168", features = ["test-utils"] }
-reth-trie = { git = "https://github.com/paradigmxyz/reth", package = "reth-trie", rev = "d5ea168" }
-reth-eth-wire = { git = "https://github.com/paradigmxyz/reth", package = "reth-eth-wire", rev = "d5ea168" }
+reth-tasks = { git = "https://github.com/paradigmxyz/reth", package = "reth-tasks", rev = "88aea63" }
+reth-rpc = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc", rev = "88aea63" }
+reth-rpc-api = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-api", rev = "88aea63" }
+reth-rpc-types = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-types", rev = "88aea63" }
+reth-provider = { git = "https://github.com/paradigmxyz/reth", package = "reth-provider", rev = "88aea63" }
+reth-transaction-pool = { git = "https://github.com/paradigmxyz/reth", package = "reth-transaction-pool", rev = "88aea63" }
+reth-network-api = { git = "https://github.com/paradigmxyz/reth", package = "reth-network-api", rev = "88aea63" }
+reth-primitives = { git = "https://github.com/paradigmxyz/reth", package = "reth-primitives", rev = "88aea63" }
+reth-db = { git = "https://github.com/paradigmxyz/reth", package = "reth-db", rev = "88aea63", features = ["test-utils"] }
+reth-blockchain-tree = { git = "https://github.com/paradigmxyz/reth", package = "reth-blockchain-tree", rev = "88aea63" }
+reth-beacon-consensus = { git = "https://github.com/paradigmxyz/reth", package = "reth-beacon-consensus", rev = "88aea63" }
+reth-revm = { git = "https://github.com/paradigmxyz/reth", package = "reth-revm", rev = "88aea63" }
+reth-interfaces = { git = "https://github.com/paradigmxyz/reth", package = "reth-interfaces", rev = "88aea63", features = ["test-utils"] }
+reth-stages = { git = "https://github.com/paradigmxyz/reth", package = "reth-stages", rev = "88aea63", features = ["test-utils"] }
+reth-trie = { git = "https://github.com/paradigmxyz/reth", package = "reth-trie", rev = "88aea63" }
+reth-eth-wire = { git = "https://github.com/paradigmxyz/reth", package = "reth-eth-wire", rev = "88aea63" }
 
 # ethers
 ethers = { version = "2.0.8", default-features = false, features = ["ipc", "ws", "rustls", "ethers-solc"] }
@@ -33,7 +33,7 @@ async-trait = "0.1.68"
 eyre = "0.6.8"
 thiserror = "1.0.40"
 
-jsonrpsee = { version = "0.18", features = ["server", "macros"] }
+jsonrpsee = { version = "0.19", features = ["server", "macros"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serial_test = "2.0.0"
