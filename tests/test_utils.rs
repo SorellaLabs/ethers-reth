@@ -21,6 +21,6 @@ pub async fn spawn_reth_middleware<P: AsRef<Path>>(
 ) -> RethMiddleware<Provider<Http>> {
     let http_provider =
         spawn_http_provider(http_path).await.expect("Could not spawn http provider");
-    RethMiddleware::new(http_provider, db_path, Handle::current(), chain.clone())
+    RethMiddleware::new(http_provider, db_path, Handle::current(), chain.chain().id())
         .expect("Could not spawn reth middleware")
 }

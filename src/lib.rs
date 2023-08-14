@@ -1,7 +1,6 @@
 // std
 use eyre::Result;
 use noop::NoopNetwork;
-use reth_primitives::ChainSpec;
 use std::{fmt::Debug, path::Path, sync::Arc};
 
 // ethers
@@ -102,10 +101,10 @@ where
         inner: M,
         db_path: P,
         handle: Handle,
-        chain: Arc<ChainSpec>,
+        chain_id: u64,
     ) -> Result<Self> {
         let (reth_api, reth_filter, reth_trace, reth_debug) =
-            Self::try_new(db_path.as_ref(), handle, chain)?;
+            Self::try_new(db_path.as_ref(), handle, chain_id)?;
         Ok(Self { inner, reth_api, reth_filter, reth_trace, reth_debug })
     }
 
