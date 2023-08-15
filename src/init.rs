@@ -14,7 +14,7 @@ use reth_db::{
     transaction::DbTx,
     DatabaseError,
 };
-use reth_primitives::{constants::ETHEREUM_BLOCK_GAS_LIMIT, ChainSpec};
+use reth_primitives::{constants::ETHEREUM_BLOCK_GAS_LIMIT, DEV, GOERLI, MAINNET, SEPOLIA};
 use reth_provider::{providers::BlockchainProvider, ProviderFactory};
 use reth_revm::Factory;
 use reth_rpc::{
@@ -22,10 +22,12 @@ use reth_rpc::{
         cache::{EthStateCache, EthStateCacheConfig},
         gas_oracle::{GasPriceOracle, GasPriceOracleConfig},
     },
-    DebugApi, EthApi, EthFilter, TraceApi, TracingCallGuard,
+    DebugApi, EthApi, EthFilter, TraceApi, TracingCallGuard, TracingCallPool,
 };
 use reth_tasks::TaskManager;
-use reth_transaction_pool::{EthTransactionValidator, GasCostOrdering, Pool, PooledTransaction};
+use reth_transaction_pool::{
+    CoinbaseTipOrdering, EthTransactionValidator, Pool, PooledTransaction,
+};
 // Std
 use std::{fmt::Debug, path::Path, sync::Arc};
 use tokio::runtime::Handle;
@@ -35,17 +37,20 @@ pub type Provider = BlockchainProvider<
     ShareableBlockchainTree<Arc<Env<WriteMap>>, Arc<BeaconConsensus>, Factory>,
 >;
 
-pub type RethTxPool =
-    Pool<EthTransactionValidator<Provider, PooledTransaction>, GasCostOrdering<PooledTransaction>>;
+pub type RethTxPool = Pool<
+    EthTransactionValidator<Provider, PooledTransaction>,
+    CoinbaseTipOrdering<PooledTransaction>,
+>;
 
 impl<M> RethMiddleware<M>
 where
     M: Middleware,
 {
+    /// Until chain spec is in reth db, we need it as an argument
     pub fn try_new(
         db_path: &Path,
         handle: Handle,
-        chain: Arc<ChainSpec>,
+        chain_id: u64,
     ) -> Result<(RethApi, RethFilter, RethTrace, RethDebug), DatabaseError> {
         let task_manager = TaskManager::new(handle);
         let task_executor = task_manager.executor();
@@ -53,12 +58,19 @@ where
         tokio::task::spawn(task_manager);
 
         let db = Arc::new(init_db(db_path).unwrap());
+        let chain_spec = match chain_id {
+            1 => MAINNET.clone(),
+            5 => GOERLI.clone(),
+            11155111 => SEPOLIA.clone(),
+            1337 => DEV.clone(),
+            _ => panic!("Unsupported chain id"),
+        };
 
         let tree_externals = TreeExternals::new(
             db.clone(),
-            Arc::new(BeaconConsensus::new(Arc::clone(&chain))),
-            Factory::new(chain.clone()),
-            Arc::clone(&chain),
+            Arc::new(BeaconConsensus::new(chain_spec.clone())),
+            Factory::new(chain_spec.clone()),
+            chain_spec.clone(),
         );
 
         let tree_config = BlockchainTreeConfig::default();
@@ -72,7 +84,7 @@ where
         );
 
         let provider = BlockchainProvider::new(
-            ProviderFactory::new(Arc::clone(&db), Arc::clone(&chain)),
+            ProviderFactory::new(Arc::clone(&db), Arc::clone(&chain_spec)),
             blockchain_tree,
         )
         .unwrap();
@@ -80,14 +92,18 @@ where
         let state_cache = EthStateCache::spawn(provider.clone(), EthStateCacheConfig::default());
 
         let tx_pool = reth_transaction_pool::Pool::eth_pool(
-            EthTransactionValidator::new(provider.clone(), chain.clone(), task_executor.clone()),
+            EthTransactionValidator::new(
+                provider.clone(),
+                chain_spec.clone(),
+                task_executor.clone(),
+            ),
             Default::default(),
         );
 
         let reth_api = EthApi::new(
             provider.clone(),
             tx_pool.clone(),
-            NoopNetwork::new(chain.chain),
+            NoopNetwork::new(chain_spec.chain),
             state_cache.clone(),
             GasPriceOracle::new(
                 provider.clone(),
@@ -95,17 +111,13 @@ where
                 state_cache.clone(),
             ),
             ETHEREUM_BLOCK_GAS_LIMIT,
+            TracingCallPool::build().unwrap(),
         );
 
         let tracing_call_guard = TracingCallGuard::new(10);
 
-        let reth_trace = TraceApi::new(
-            provider.clone(),
-            reth_api.clone(),
-            state_cache.clone(),
-            Box::new(task_executor.clone()),
-            tracing_call_guard.clone(),
-        );
+        let reth_trace =
+            TraceApi::new(provider.clone(), reth_api.clone(), tracing_call_guard.clone());
 
         let reth_debug = DebugApi::new(
             provider.clone(),

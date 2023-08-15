@@ -29,6 +29,8 @@ impl ToReth<Rich<Block>> for EthersBlock<EthersH256> {
                 nonce: self.nonce.into_reth(),
                 base_fee_per_gas: self.base_fee_per_gas.into_reth(),
                 withdrawals_root: self.withdrawals_root.into_reth(),
+                blob_gas_used: None,   // @todo
+                excess_blob_gas: None, // @todo
             },
             total_difficulty: self.total_difficulty.into_reth(),
             uncles: self.uncles.into_reth(),
@@ -64,6 +66,8 @@ impl ToReth<Rich<Block>> for EthersBlock<EthersTransaction> {
                 nonce: self.nonce.into_reth(),
                 base_fee_per_gas: self.base_fee_per_gas.into_reth(),
                 withdrawals_root: self.withdrawals_root.into_reth(),
+                blob_gas_used: None,   // @todo
+                excess_blob_gas: None, // @todo
             },
             total_difficulty: self.total_difficulty.into_reth(),
             uncles: self.uncles.into_reth(),
