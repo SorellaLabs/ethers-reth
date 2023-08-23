@@ -3,22 +3,13 @@ use crate::type_conversions::{ToEthers, ToReth};
 use ethers::types::{
     OtherFields, Transaction as EthersTransaction, TransactionReceipt as EthersTransactionReceipt,
 };
-use reth_primitives::{AccessList, Signature as PrimitiveSignature, TxType as PrimitiveTxType};
+use reth_primitives::{AccessList, Signature as PrimitiveSignature, U256, U64};
 use reth_revm::primitives::ruint::Uint;
-use reth_rpc_types::{Signature, Transaction, TransactionReceipt};
+use reth_rpc_types::{Parity, Signature, Transaction, TransactionReceipt};
 
 /// Transaction (ethers) -> (reth)
 impl ToReth<Transaction> for EthersTransaction {
     fn into_reth(self) -> Transaction {
-        let primitive_tx_type = match self.transaction_type.map(|t| t.as_u64()) {
-            None => PrimitiveTxType::Legacy,
-            Some(1) => PrimitiveTxType::EIP2930,
-            Some(2) => PrimitiveTxType::EIP1559,
-            _ => {
-                unimplemented!("Missing tx type");
-            }
-        };
-
         let v = self.v.as_u64();
         let normalized_v = if v > 1 {
             v - self.chain_id.expect("Should not have unnormalized v without chain id").as_u64() * 2 -
@@ -49,11 +40,14 @@ impl ToReth<Transaction> for EthersTransaction {
             max_fee_per_gas: self.max_fee_per_gas.into_reth(),
             max_priority_fee_per_gas: self.max_priority_fee_per_gas.into_reth(),
             input: self.input.into_reth(),
-            signature: Some(Signature::from_primitive_signature(
-                primitive_signature,
-                primitive_tx_type,
-                self.chain_id.map(|t| t.as_u64()),
-            )),
+            signature: Some(Signature {
+                r: primitive_signature.r,
+                s: primitive_signature.s,
+                v: U256::from(
+                    primitive_signature.v(self.chain_id.into_reth().map(|v: U64| v.as_u64())),
+                ),
+                y_parity: Some(Parity(primitive_signature.odd_y_parity)),
+            }),
             chain_id: self.chain_id.into_reth(),
             access_list: self.access_list.map(|a| a.into_reth().0),
             transaction_type: self.transaction_type,
@@ -99,7 +93,7 @@ impl ToReth<TransactionReceipt> for EthersTransactionReceipt {
     fn into_reth(self) -> TransactionReceipt {
         TransactionReceipt {
             transaction_hash: Some(self.transaction_hash.into_reth()),
-            transaction_index: Some(self.transaction_index.into_reth()),
+            transaction_index: self.transaction_index.into_reth(),
             block_hash: self.block_hash.into_reth(),
             block_number: self.block_number.into_reth(),
             from: self.from.into_reth(),
@@ -122,7 +116,7 @@ impl ToEthers<EthersTransactionReceipt> for TransactionReceipt {
     fn into_ethers(self) -> EthersTransactionReceipt {
         EthersTransactionReceipt {
             transaction_hash: self.transaction_hash.into_ethers().unwrap(),
-            transaction_index: self.transaction_index.into_ethers().unwrap(),
+            transaction_index: self.transaction_index.into_ethers(),
             block_hash: self.block_hash.into_ethers(),
             block_number: self.block_number.into_ethers(),
             from: self.from.into_ethers(),
@@ -153,12 +147,8 @@ mod tests {
         U256 as EthersU256, U64 as EthersU64,
     };
 
-    use pretty_assertions::assert_eq;
-    use reth_primitives::{
-        hex_literal::hex, Address, Bloom, Bytes, Signature as PrimitiveSignature,
-        TxType as PrimitiveTxType, H256, U128, U256, U64, U8,
-    };
-    use reth_rpc_types::{Signature, Transaction, TransactionReceipt};
+    use reth_primitives::{hex_literal::hex, Address, Bloom, Bytes, H256, U128, U256, U64, U8};
+    use reth_rpc_types::{Parity, Signature, Transaction, TransactionReceipt};
 
     #[test]
     fn transaction() {
@@ -174,11 +164,12 @@ mod tests {
             gas_price: Some(U128::from(9)),
             gas: U256::from(10),
             input: Bytes::from(vec![11, 12, 13]),
-            signature: Some(Signature::from_primitive_signature(
-                PrimitiveSignature { r: U256::from(14), s: U256::from(14), odd_y_parity: true },
-                PrimitiveTxType::EIP1559,
-                Some(1),
-            )),
+            signature: Some(Signature {
+                r: U256::from(14),
+                s: U256::from(14),
+                v: U256::from(38),
+                y_parity: Some(Parity(true)),
+            }),
             chain_id: Some(U64::from(1)),
             access_list: None,
             transaction_type: Some(U64::from(2)),
@@ -205,7 +196,7 @@ mod tests {
             gas_price: Some(EthersU256::from(9)),
             gas: EthersU256::from(10),
             input: EthersBytes::from(vec![11, 12, 13]),
-            v: EthersU64::from(1),
+            v: EthersU64::from(38),
             r: EthersU256::from(14),
             s: EthersU256::from(14),
             chain_id: Some(EthersU256::from(1)),
@@ -232,7 +223,7 @@ mod tests {
         );
         let r: TransactionReceipt = TransactionReceipt {
             transaction_hash: Some(H256::from_low_u64_be(1)),
-            transaction_index: Some(U256::from(2)),
+            transaction_index: U64::from(2),
             block_hash: Some(H256::from_low_u64_be(3)),
             block_number: Some(U256::from(4)),
             from: Address::from_low_u64_be(6),

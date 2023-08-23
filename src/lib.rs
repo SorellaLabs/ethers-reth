@@ -14,7 +14,7 @@ use reth_provider::providers::BlockchainProvider;
 use reth_revm::Factory;
 use reth_rpc::{eth::error::EthApiError, DebugApi, EthApi, EthFilter, TraceApi};
 use reth_transaction_pool::{
-    CoinbaseTipOrdering, EthTransactionValidator, Pool, PooledTransaction,
+    CoinbaseTipOrdering, EthTransactionValidator, Pool, EthPooledTransaction, blobstore::InMemoryBlobStore, TransactionValidationTaskExecutor,
 };
 //Error
 use jsonrpsee::types::ErrorObjectOwned;
@@ -32,8 +32,9 @@ pub type RethClient = BlockchainProvider<
 >;
 
 pub type RethTxPool = Pool<
-    EthTransactionValidator<RethClient, PooledTransaction>,
-    CoinbaseTipOrdering<PooledTransaction>,
+    TransactionValidationTaskExecutor<EthTransactionValidator<RethClient, EthPooledTransaction>>,
+    CoinbaseTipOrdering<EthPooledTransaction>,
+    InMemoryBlobStore
 >;
 
 pub type RethApi = EthApi<RethClient, RethTxPool, NoopNetwork>;
