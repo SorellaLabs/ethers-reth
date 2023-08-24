@@ -26,7 +26,8 @@ use reth_rpc::{
 };
 use reth_tasks::TaskManager;
 use reth_transaction_pool::{
-    CoinbaseTipOrdering, EthTransactionValidator, Pool, PooledTransaction,
+    blobstore::InMemoryBlobStore, CoinbaseTipOrdering, EthPooledTransaction,
+    EthTransactionValidator, Pool, TransactionValidationTaskExecutor,
 };
 // Std
 use std::{fmt::Debug, path::Path, sync::Arc};
@@ -38,8 +39,9 @@ pub type Provider = BlockchainProvider<
 >;
 
 pub type RethTxPool = Pool<
-    EthTransactionValidator<Provider, PooledTransaction>,
-    CoinbaseTipOrdering<PooledTransaction>,
+    EthTransactionValidator<Provider, EthPooledTransaction>,
+    CoinbaseTipOrdering<EthPooledTransaction>,
+    InMemoryBlobStore,
 >;
 
 impl<M> RethMiddleware<M>
@@ -91,12 +93,15 @@ where
 
         let state_cache = EthStateCache::spawn(provider.clone(), EthStateCacheConfig::default());
 
+        let blob_store = InMemoryBlobStore::default();
         let tx_pool = reth_transaction_pool::Pool::eth_pool(
-            EthTransactionValidator::new(
+            TransactionValidationTaskExecutor::eth(
                 provider.clone(),
                 chain_spec.clone(),
+                blob_store.clone(),
                 task_executor.clone(),
             ),
+            blob_store,
             Default::default(),
         );
 

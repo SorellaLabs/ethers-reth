@@ -25,7 +25,13 @@ pub async fn spawn_reth_middleware(
 ) -> Result<RethMiddleware<Provider<Ipc>>, RethMiddlewareError<Provider<Ipc>>> {
     let rt = Runtime::new().unwrap();
     let handle = rt.handle().clone();
-    Ok(RethMiddleware::new(provider, db_path, handle, chain.unwrap_or(MAINNET.clone())).unwrap())
+    Ok(RethMiddleware::new(
+        provider,
+        db_path,
+        handle,
+        chain.unwrap_or(MAINNET.clone()).chain().id(),
+    )
+    .unwrap())
 }
 
 pub async fn spawn_bench_reth_middleware(
