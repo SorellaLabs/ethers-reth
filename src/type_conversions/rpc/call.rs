@@ -21,11 +21,11 @@ impl ToReth<CallRequest> for EthersTypedTransaction {
             max_fee_per_gas: self
                 .as_eip1559_ref()
                 .map(|tx| tx.max_fee_per_gas.into_reth())
-                .unwrap(),
+                .unwrap_or_default(),
             max_priority_fee_per_gas: self
                 .as_eip1559_ref()
                 .map(|tx| tx.max_priority_fee_per_gas.into_reth())
-                .unwrap(),
+                .unwrap_or_default(),
             gas: self.gas().into_reth(),
             value: self.value().into_reth(),
             input: self.data().into_reth().into(),
