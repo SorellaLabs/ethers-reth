@@ -5,22 +5,22 @@ edition = "2021"
 
 
 [dependencies]
-reth-tasks = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-tasks" }
-reth-rpc = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-rpc" }
-reth-rpc-api = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-api" }
-reth-rpc-types = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-types" }
-reth-provider = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-provider" }
+reth-tasks = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-tasks" }
+reth-rpc = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-rpc" }
+reth-rpc-api = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-api" }
+reth-rpc-types = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-types" }
+reth-provider = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-provider" }
 reth-transaction-pool = { git = "https://github.com/paradigmxyz/reth", package = "reth-transaction-pool" }
-reth-network-api = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-network-api" }
-reth-primitives = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-primitives" }
-reth-db = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-db", features = ["test-utils"] }
-reth-blockchain-tree = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-blockchain-tree" }
-reth-beacon-consensus = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-beacon-consensus" }
-reth-revm = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-revm"}
-reth-interfaces = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-interfaces", features = ["test-utils"] }
-reth-stages = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-stages", features = ["test-utils"] }
-reth-trie = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-trie"}
-reth-eth-wire = { version = "0.1.0-alpha.7", git = "https://github.com/paradigmxyz/reth", package = "reth-eth-wire"}
+reth-network-api = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-network-api" }
+reth-primitives = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-primitives" }
+reth-db = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-db", features = ["test-utils"] }
+reth-blockchain-tree = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-blockchain-tree" }
+reth-beacon-consensus = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-beacon-consensus" }
+reth-revm = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-revm"}
+reth-interfaces = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-interfaces", features = ["test-utils"] }
+reth-stages = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-stages", features = ["test-utils"] }
+reth-trie = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-trie"}
+reth-eth-wire = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-eth-wire"}
 
 # ethers
 ethers = { version = "2.0.8", default-features = false, features = ["ipc", "ws", "rustls", "ethers-solc"] }
@@ -35,7 +35,7 @@ thiserror = "1.0.40"
 
 jsonrpsee = { version = "0.20", features = ["server", "macros"] }
 serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+serde_json = "1.0.94"
 serial_test = "2.0.0"
 
 [patch.crates-io]
@@ -43,9 +43,5 @@ serial_test = "2.0.0"
 revm = { git = "https://github.com/bluealloy/revm/", branch = "release/v25" }
 revm-primitives = { git = "https://github.com/bluealloy/revm/", branch = "release/v25" }
 
-[patch."https://github.com/ethereum/c-kzg-4844"]
-c-kzg = { git = "https://github.com/rjected/c-kzg-4844", branch = "dan/add-serde-feature" }
-
 [dev-dependencies]
 pretty_assertions = "1.4.0"
-
