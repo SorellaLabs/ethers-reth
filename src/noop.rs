@@ -6,7 +6,8 @@
 use async_trait::async_trait;
 use reth_eth_wire::{DisconnectReason, ProtocolVersion};
 use reth_network_api::{
-    NetworkError, NetworkInfo, PeerKind, Peers, PeersInfo, Reputation, ReputationChangeKind,
+    NetworkError, NetworkInfo, PeerInfo, PeerKind, Peers, PeersInfo, Reputation,
+    ReputationChangeKind,
 };
 use reth_primitives::{Chain, NodeRecord, PeerId};
 use reth_rpc_types::{EthProtocolInfo, NetworkStatus};
@@ -82,5 +83,10 @@ impl Peers for NoopNetwork {
 
     async fn reputation_by_id(&self, _peer_id: PeerId) -> Result<Option<Reputation>, NetworkError> {
         Ok(None)
+    }
+
+    /// Returns the rpc [PeerInfo] for all connected peers.
+    async fn get_peers(&self) -> Result<Vec<PeerInfo>, NetworkError> {
+        Ok(vec![])
     }
 }
