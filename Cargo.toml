@@ -21,9 +21,10 @@ reth-interfaces = { version = "0.1.0-alpha.8", git = "https://github.com/paradig
 reth-stages = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-stages", features = ["test-utils"] }
 reth-trie = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-trie"}
 reth-eth-wire = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-eth-wire"}
+reth-payload-builder ={ version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-payload-builder"}
 
 # ethers
-ethers = { version = "2.0.8", default-features = false, features = ["ipc", "ws", "rustls", "ethers-solc"] }
+ethers = { version = "2.0.10", default-features = false, features = ["ipc", "ws", "rustls", "ethers-solc"] }
 
 # Async
 tokio = { version = "1.28.2", features = ["full"] }
