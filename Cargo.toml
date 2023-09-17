@@ -5,23 +5,24 @@ edition = "2021"
 
 
 [dependencies]
-reth-tasks = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-tasks" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-rpc = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-rpc" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-rpc-api = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-api" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-rpc-types = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-types" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-provider = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-provider" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-tasks = { git = "https://github.com/paradigmxyz/reth", package = "reth-tasks" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-rpc = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-rpc-api = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-api" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-rpc-types = { git = "https://github.com/paradigmxyz/reth", package = "reth-rpc-types" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-provider = { git = "https://github.com/paradigmxyz/reth", package = "reth-provider" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
 reth-transaction-pool = { git = "https://github.com/paradigmxyz/reth", package = "reth-transaction-pool" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-network-api = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-network-api" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-primitives = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-primitives" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-db = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-db", features = ["test-utils"] , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-blockchain-tree = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-blockchain-tree" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-beacon-consensus = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-beacon-consensus" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-revm = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-revm", rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-interfaces = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-interfaces", features = ["test-utils"] , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-stages = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-stages", features = ["test-utils"] , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-trie = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-trie", rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-eth-wire = { version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-eth-wire", rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
-reth-payload-builder ={ version = "0.1.0-alpha.8", git = "https://github.com/paradigmxyz/reth", package = "reth-payload-builder", rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-network-api = { git = "https://github.com/paradigmxyz/reth", package = "reth-network-api" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-primitives = { git = "https://github.com/paradigmxyz/reth", package = "reth-primitives" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-db = { git = "https://github.com/paradigmxyz/reth", package = "reth-db", features = ["test-utils"] , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-blockchain-tree = { git = "https://github.com/paradigmxyz/reth", package = "reth-blockchain-tree" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-beacon-consensus = { git = "https://github.com/paradigmxyz/reth", package = "reth-beacon-consensus" , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-revm = { git = "https://github.com/paradigmxyz/reth", package = "reth-revm", rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-interfaces = { git = "https://github.com/paradigmxyz/reth", package = "reth-interfaces", features = ["test-utils"] , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-stages = { git = "https://github.com/paradigmxyz/reth", package = "reth-stages", features = ["test-utils"] , rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-trie = { git = "https://github.com/paradigmxyz/reth", package = "reth-trie", rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-eth-wire = { git = "https://github.com/paradigmxyz/reth", package = "reth-eth-wire", rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+reth-payload-builder ={ git = "https://github.com/paradigmxyz/reth", package = "reth-payload-builder", rev="62e7d98202a10bf1333836bf74f9e7e1827aa6d1"}
+
 
 # ethers
 ethers = { version = "2.0.10", default-features = false, features = ["ipc", "ws", "rustls", "ethers-solc"] }
