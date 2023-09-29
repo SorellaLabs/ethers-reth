@@ -54,10 +54,10 @@ where
         handle: Handle,
         chain_id: u64,
     ) -> Result<(RethApi, RethFilter, RethTrace, RethDebug), DatabaseError> {
-        let task_manager = TaskManager::new(handle);
+        let task_manager = TaskManager::new(handle.clone());
         let task_executor = task_manager.executor();
 
-        tokio::task::spawn(task_manager);
+        handle.spawn(task_manager);
 
         let db = Arc::new(init_db(db_path).unwrap());
         let chain_spec = match chain_id {
