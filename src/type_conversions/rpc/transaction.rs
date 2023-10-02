@@ -51,6 +51,8 @@ impl ToReth<Transaction> for EthersTransaction {
             chain_id: self.chain_id.into_reth(),
             access_list: self.access_list.map(|a| a.into_reth().0),
             transaction_type: self.transaction_type,
+            max_fee_per_blob_gas: None,
+            blob_versioned_hashes: vec![],
         }
     }
 }
@@ -107,6 +109,8 @@ impl ToReth<TransactionReceipt> for EthersTransactionReceipt {
             logs_bloom: self.logs_bloom.into_reth(),
             transaction_type: self.transaction_type.into_reth().unwrap(),
             effective_gas_price: self.effective_gas_price.into_reth().unwrap(),
+            blob_gas_used: None,
+            blob_gas_price: None,
         }
     }
 }
@@ -154,7 +158,7 @@ mod tests {
     fn transaction() {
         let r: Transaction = Transaction {
             hash: H256::from_low_u64_be(1),
-            nonce: U256::from(2),
+            nonce: U64::from(2),
             block_hash: Some(H256::from_low_u64_be(3)),
             block_number: Some(U256::from(4)),
             transaction_index: Some(U256::from(5)),
@@ -175,6 +179,8 @@ mod tests {
             transaction_type: Some(U64::from(2)),
             max_fee_per_gas: Some(U128::from(21)),
             max_priority_fee_per_gas: Some(U128::from(22)),
+            max_fee_per_blob_gas: None,
+            blob_versioned_hashes: vec![],
         };
         let e: EthersTransaction = EthersTransaction {
             hash: EthersH256::from_str(
@@ -237,6 +243,8 @@ mod tests {
             status_code: Some(U64::from(15)),
             effective_gas_price: U128::from(16),
             transaction_type: U8::from(0),
+            blob_gas_used: None,
+            blob_gas_price: None,
         };
         let e: EthersTransactionReceipt = EthersTransactionReceipt {
             transaction_hash: H256::from_low_u64_be(1).into_ethers(),

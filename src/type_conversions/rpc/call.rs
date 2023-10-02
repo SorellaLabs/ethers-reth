@@ -37,6 +37,8 @@ impl ToReth<CallRequest> for EthersTypedTransaction {
                 EthersTypedTransaction::Eip2930(_) => Some(Uint::from(1)),
                 EthersTypedTransaction::Eip1559(_) => Some(Uint::from(2)),
             },
+            max_fee_per_blob_gas: None,
+            blob_versioned_hashes: None,
         }
     }
 }
