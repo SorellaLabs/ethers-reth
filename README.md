@@ -12,7 +12,7 @@ In order to keep this codebase working under Reth rapid developement, we are pin
 
 ## Todo:
 
-- [ ] Full log functionality
+- [x] Full log functionality
 - [x] Full parity & geth trace functionality, not currently functional hope to fix this week
 - [x] Mock ethers-reth client for github CI testing
 - [x] Integration with Anvil: We plan to integrate with Anvil to offer super-fast simulation in fork mode. See [fastfoundry](https://github.com/SorellaLabs/fastfoundry) & [anvil-benchmarks](https://github.com/SorellaLabs/anvil-benchmarks)
